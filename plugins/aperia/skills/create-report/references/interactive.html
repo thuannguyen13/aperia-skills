@@ -1,0 +1,820 @@
+<!-- ============================================================
+     APERIA REPORT: SCRIPT-DRIVEN DELIVERY-PLAN COMPONENTS
+     Markup + the render script for the grouped Gantt, its toolbar,
+     the hover tooltip, edit mode, the milestone row and the A/R/D block.
+
+     These components are NOT hand-written row by row. You write one DATA
+     object and the script renders every one of them. Paste the markup where
+     the component belongs, paste the script once before </body>, and put your
+     content in DATA.
+
+     Styles for all of this live in references/styles.css. Nothing here needs
+     an external library. The static pieces that go around these components
+     (part header, environment chain, tagged callout) are in snippets.html.
+     ============================================================ -->
+
+
+<p class="sub-h">Key Milestones</p>
+<p class="sub-note">Optional line under a sub-heading, for a caveat or a how-to-read note.</p>
+
+
+<!-- ========== MILESTONES (rendered from DATA[key].milestones) ========== -->
+<!-- The div is empty in the source. renderMilestones() fills it and sets the
+     container class from milestoneForm, so this one mount serves both forms:
+     "cards" gives .mstone-row, "timeline" gives .vtimeline.
+     id must be "m-" + the DATA key. Four or fewer entries use cards, more than
+     four use timeline; see SKILL.md, "Milestones: cards or timeline". -->
+<div id="m-mvp"></div>
+
+
+<!-- ========== GANTT TOOLBAR + LEGEND + COUNT LINE ========== -->
+<!-- ids are "f-" (search), "fc-" (match count), "ct-" (status summary),
+     "g-" (the Gantt itself), each followed by the DATA key.
+     The expand/collapse buttons carry the key in a data attribute. -->
+<div class="sg-bar">
+  <input id="f-mvp" type="search" placeholder="Search features, descriptions or tags…" aria-label="Search MVP features">
+  <button class="sg-btn" data-expand="mvp">Expand All</button>
+  <button class="sg-btn" data-collapse="mvp">Collapse All</button>
+  <span class="sg-fcount" id="fc-mvp"></span>
+</div>
+<div class="sg-legend">
+  <span class="k"><span class="sg-sw done"></span>Done</span>
+  <span class="k"><span class="sg-sw prog"></span>In progress</span>
+  <span class="k"><span class="sg-sw plan"></span>Planned</span>
+  <span class="k"><span class="sg-sw risk"></span>At risk</span>
+  <span class="k">✓ completed · → target</span>
+</div>
+<div class="sg-counts" id="ct-mvp"></div>
+<div class="sgantt"><div id="g-mvp"></div></div>
+<p class="sg-cap">Caption: what the columns are, what is shown, and that dates are targets.</p>
+
+
+<!-- ========== EDIT MODE (optional, only for a plan with editable:true) ========== -->
+<!-- Put the Edit button in that plan's .sg-bar:
+       <button class="sg-btn" data-edit="p1" aria-pressed="false">Edit Plan</button>
+     Edit mode toggles an .editing class on the nearest <section>, which is what
+     reveals the delete buttons, the tag ✕ buttons and the + tag buttons. -->
+<div class="sg-editnote">
+  <span class="callout-tag">Editing</span>
+  <p style="margin:0">Add or delete features, and tag them. Changes live in this browser tab only.
+    <strong>Use Export to keep them.</strong>
+    <span style="display:inline-flex;gap:8px;margin-left:8px;flex-wrap:wrap;vertical-align:middle">
+      <button class="sg-btn" data-addopen="p1">+ Add Feature</button>
+      <button class="sg-btn" data-undo="p1" disabled>Undo Delete</button>
+      <button class="sg-btn" data-export="p1">Export</button>
+    </span>
+  </p>
+</div>
+
+<form class="sg-form" data-addform="p1" autocomplete="off">
+  <h3>Add A Feature</h3>
+  <div class="sg-fgrid">
+    <div class="sg-field wide"><label for="nf-p1-name">Feature Name</label>
+      <input id="nf-p1-name" required placeholder="e.g. Square POS connector"></div>
+    <div class="sg-field wide"><label for="nf-p1-group">Group</label>
+      <input id="nf-p1-group" list="groups-p1" placeholder="Existing group, or type a new one">
+      <datalist id="groups-p1"></datalist></div>
+    <div class="sg-field full"><label for="nf-p1-desc">Short Description</label>
+      <input id="nf-p1-desc" placeholder="One plain line: what it is and why it matters"></div>
+    <div class="sg-field"><label for="nf-p1-from">Starts</label><select id="nf-p1-from"></select></div>
+    <div class="sg-field"><label for="nf-p1-to">Ends</label><select id="nf-p1-to"></select></div>
+    <div class="sg-field"><label for="nf-p1-status">Status</label>
+      <select id="nf-p1-status">
+        <option value="plan">Planned</option>
+        <option value="prog">In progress</option>
+        <option value="done">Done</option>
+        <option value="risk">At risk</option>
+      </select></div>
+    <div class="sg-field"><label for="nf-p1-tags">Tags</label>
+      <input id="nf-p1-tags" placeholder="comma, separated"></div>
+  </div>
+  <div class="sg-formbtns">
+    <button type="submit" class="sg-primary">Add Feature</button>
+    <button type="button" class="sg-btn" data-addcancel="p1">Cancel</button>
+    <span class="sg-formerr" id="err-p1"></span>
+  </div>
+</form>
+
+
+<!-- ========== ASSUMPTIONS / RISKS / DEPENDENCIES (rendered from DATA[key].ard) ========== -->
+<div class="ard" id="ard-mvp"></div>
+
+
+<!-- ============================================================
+     THE SCRIPT. Paste once, just before </body>, after the accordion
+     and nav-drawer scripts. Everything above is rendered from DATA.
+     ============================================================ -->
+<script>
+/* =======================================================================
+   DATA
+   -----------------------------------------------------------------------
+   One key per plan. The key is what every element id ends with:
+   m-<key>, f-<key>, fc-<key>, ct-<key>, g-<key>, ard-<key>.
+
+   PLAN SHAPE
+     unit             string, optional. Noun in the count line. Default "features".
+     sortByCompletion boolean, optional. Orders groups, then rows, by the
+                      column each one finishes in. Leave it off to keep source order.
+     editable         boolean, optional. Turns on tag chips, the add form,
+                      row delete, undo and JSON export for this plan.
+     milestoneForm    "cards" (default) or "timeline". Which of the two forms
+                      renders the milestones array. Four or fewer entries fit one
+                      row of cards in .wrap; more than four must use "timeline",
+                      or the card grid wraps and leaves an orphan on the last row.
+                      The rule is in SKILL.md under "Milestones: cards or timeline".
+                      The mount point is m-<key> either way; the script sets the
+                      container class, so the value here always wins.
+     milestones []    {d, t, x, cls, flag}
+                      d    date label, e.g. "25–30 Sep"
+                      t    title
+                      x    one-line note
+                      cls  done | next | goal | risk, plus est for a dashed
+                           (estimated) border, or "envc e-qa" for an
+                           environment-coloured card
+                      flag optional short chip, e.g. "Only real data"
+     envForm          "cards" (default) or "timeline". Which form renders the
+                      environments array. Four or fewer fit one row in .wrap; more
+                      must use "timeline", or the row wraps and the last card
+                      stretches across a row of its own. Mount is env-<key>; the
+                      script sets the container class, so this value always wins.
+     environments []  {cls, name, badge, note, client}
+                      cls    e-dev | e-qa | e-uat | e-stag | e-prod
+                      name   "DEV". Leads the entry in the timeline form
+                      badge  "Synthetic" or "Production"
+                      note   one line on what happens there
+                      client optional trailing line, e.g. "Demo environment"
+     cols []          {label, dates, s, e, phase}
+                      label  column head, e.g. "Sprint 4"
+                      dates  sub-label, e.g. "29 Jul–11 Aug"
+                      s, e   ISO start and end. The tooltip does its date maths
+                             from these, so they are required.
+                      phase  true for a release stage rather than a sprint.
+                             Shades the column.
+     ends []          optional, one end-date label per column. The add form
+                      uses it to write the "Completes" value of a new row.
+     rows []          {g, l, d, segs, end, st, tags}
+                      g     group name. Consecutive rows sharing it get one band.
+                      l     feature name
+                      d     one-line description
+                      segs  {columnIndex: status}. Status is done | prog | plan | risk.
+                            Adjacent indexes merge into one continuous bar.
+                            An empty object means no dates yet: the row still
+                            renders, sorts to the end, and has no bar.
+                      end   "✓ 25 Aug" for completed, "→ 8 Sep" for a target
+                      st    Done | In progress | Planned | At risk. Drives the
+                            count line and the tooltip chip, so spell it exactly.
+                      tags  optional array of strings
+     ard {}           {A:[], R:[], D:[]}
+                      A item {t, o}          text, owner
+                      R item {t, o, sev}     sev is "High" or "Med"
+                      D item {t, o, w}       w is when it is needed
+   ======================================================================= */
+const DATA = {
+  mvp: {
+    milestoneForm: "cards",
+    milestones: [
+      {d:"8 Sep", t:"Dev Complete", x:"End of Sprint 6.", cls:"goal"},
+      {d:"25–30 Sep", t:"Staging On Live Data", x:"The only pass on real data.", cls:"risk", flag:"Only real data"}
+    ],
+    envForm: "cards",
+    environments: [
+      {cls:"e-dev", name:"DEV", badge:"Synthetic", note:"Feature work."},
+      {cls:"e-qa",  name:"QA",  badge:"Synthetic", note:"Functional pass."}
+    ],
+    cols: [
+      {label:"Sprint 1", dates:"17–30 Jun", s:"2026-06-17", e:"2026-06-30"},
+      {label:"QA", dates:"17–22 Sep", s:"2026-09-17", e:"2026-09-22", phase:true}
+    ],
+    rows: [
+      {g:"Conversational core", l:"Agent runtime", d:"Routes every question.",
+       segs:{0:"done"}, end:"✓ 30 Jun", st:"Done"},
+      {g:"Release sequence", l:"QA deep pass", d:"One risk-ranked sweep.",
+       segs:{1:"risk"}, end:"→ 22 Sep", st:"At risk"}
+    ],
+    ard: {
+      A: [{t:"DEV, QA and UAT run on synthetic data.", o:"DevOps"}],
+      R: [{t:"No dedicated QA on the team.", o:"Program", sev:"High"}],
+      D: [{t:"QA environment ready for the first build.", o:"DevOps", w:"8 Sep"}]
+    }
+  }
+};
+
+/* =======================================================================
+   RENDER
+   ======================================================================= */
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const PLANS = Object.keys(DATA);
+const collapsed = {};
+PLANS.forEach(k => { collapsed[k] = new Set(); });
+
+/* Stable row ids, so add and delete never depend on array position. */
+let idSeed = 0;
+PLANS.forEach(k => DATA[k].rows.forEach(r => {
+  r.id = "r" + (++idSeed);
+  if (!r.tags) r.tags = [];
+}));
+
+/* Column widths come from CSS custom properties, so the ≤700px breakpoint can
+   narrow the label column without touching this script. */
+function gridStyle(n){
+  return "grid-template-columns:var(--sg-labelw) repeat(" + n + ",1fr) var(--sg-endw)";
+}
+
+/* =======================================================================
+   VTIMELINE ENTRY CONTRACT
+   -----------------------------------------------------------------------
+   Every .vtimeline entry, whatever it describes, is built from four fields.
+   The renderer places them identically, so a new content type adapts by
+   filling the same fields and needs no new CSS.
+
+     lead   string, required. The prominent top slot. A date for milestones,
+            an environment name for the chain, whatever identifies the entry
+            for a future use. Never a bare ordinal: the rail already shows order.
+     chip   string, optional. A small chip inline beside the lead. The flag for
+            milestones, the Synthetic / Production badge for environments.
+     title  string, optional. A second line under the head. Milestones use it;
+            environments have nothing to put there and omit it.
+     note   string, optional. The body line.
+     cls    string, optional. Marker state and variant: done | next | goal | risk,
+            plus est, or "envc e-qa" for an environment entry.
+
+   An entry may declare lead/chip/title/note directly. The two built-in mappers
+   below translate the friendlier milestone and environment shapes onto it.
+   ======================================================================= */
+function vtEntry(e){
+  return '<div class="vt-item ' + (e.cls || "") + '">' +
+      '<div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>' +
+      '<div class="vt-body">' +
+        '<div class="vt-head"><span class="vt-lead">' + esc(e.lead) + '</span>' +
+          (e.chip ? '<span class="vt-chip">' + esc(e.chip) + '</span>' : '') +
+        '</div>' +
+        (e.title ? '<div class="vt-title">' + esc(e.title) + '</div>' : '') +
+        (e.note ? '<div class="vt-note">' + esc(e.note) + '</div>' : '') +
+      '</div>' +
+    '</div>';
+}
+
+/* Two renderings of one milestones array. `cards` is the horizontal row, `timeline`
+   the vertical rail. Entry data and the cls vocabulary are identical, so switching
+   milestoneForm is the only edit needed to change form. The script owns the
+   container class so the markup cannot disagree with the DATA. */
+function renderMilestones(key){
+  const box = document.getElementById("m-" + key);
+  if (!box) return;
+  const P = DATA[key];
+  const timeline = P.milestoneForm === "timeline";
+  box.classList.toggle("vtimeline", timeline);
+  box.classList.toggle("mstone-row", !timeline);
+
+  box.innerHTML = P.milestones.map(m => timeline
+    ? vtEntry({lead: m.lead || m.d, chip: m.chip || m.flag, title: m.title || m.t,
+               note: m.note || m.x, cls: m.cls})
+    : '<div class="mstone ' + (m.cls || "") + '">' +
+        '<div class="m-date">' + esc(m.d) + '</div>' +
+        '<div class="m-title">' + esc(m.t) + '</div>' +
+        '<div class="m-note">' + esc(m.x) + '</div>' +
+        (m.flag ? '<span class="m-flag">' + esc(m.flag) + '</span>' : '') +
+      '</div>').join("");
+}
+
+/* Order groups by when the whole group completes, then each row inside it by
+   its own completion. Rows with no dates sort to the end, not the front.
+   Sorting a copy keeps add and delete working against the source array. */
+function displayRows(P){
+  if (!P.sortByCompletion) return P.rows;
+  const last  = r => { const k = Object.keys(r.segs).map(Number); return k.length ? Math.max.apply(null,k) : Infinity; };
+  const first = r => { const k = Object.keys(r.segs).map(Number); return k.length ? Math.min.apply(null,k) : Infinity; };
+  const groupEnd = {};
+  P.rows.forEach(r => {
+    const v = last(r);
+    if (groupEnd[r.g] === undefined || v > groupEnd[r.g]) groupEnd[r.g] = v;
+  });
+  const rank = {};
+  Object.keys(groupEnd)
+    .sort((a,b) => groupEnd[a] - groupEnd[b] || a.localeCompare(b))
+    .forEach((g,i) => { rank[g] = i; });
+  const pos = new Map();
+  P.rows.forEach((r,i) => pos.set(r,i));
+  return P.rows.slice().sort((a,b) =>
+    rank[a.g] - rank[b.g] || last(a) - last(b) || first(a) - first(b) || pos.get(a) - pos.get(b));
+}
+
+function renderGantt(key){
+  const P = DATA[key], n = P.cols.length, rows = displayRows(P);
+  const host = document.getElementById("g-" + key);
+  if (!host) return;
+
+  let html = '<div class="sg-row sg-head" style="' + gridStyle(n) + '"><div class="sg-name"></div>';
+  P.cols.forEach(c => {
+    html += '<div class="sg-col' + (c.phase ? " ph" : "") + '"><b>' + esc(c.label) +
+            '</b><small>' + esc(c.dates) + '</small></div>';
+  });
+  html += '<div class="sg-col" style="border-left:none"><b>Completes</b></div></div>';
+
+  let lastGroup = null;
+  rows.forEach(r => {
+    if (r.g !== lastGroup){
+      html += '<button type="button" class="sg-band" data-band="1" data-gname="' + esc(r.g) + '" ' +
+              'aria-expanded="true"><span class="sg-cv">▾</span>' + esc(r.g) +
+              '<span class="sg-bcount"></span></button>';
+      lastGroup = r.g;
+    }
+
+    /* One cell per column. Where two lit cells sit side by side, square the
+       shared edges so the run reads as one bar spanning both columns. */
+    let cells = "";
+    for (let i = 0; i < n; i++){
+      const st = r.segs[i];
+      let run = "";
+      if (st !== undefined){
+        const pl = r.segs[i-1] !== undefined, pr = r.segs[i+1] !== undefined;
+        run = pl && pr ? "runm" : (pr ? "runl" : (pl ? "runr" : ""));
+      }
+      cells += '<div class="sg-cell' + (P.cols[i].phase ? " ph" : "") + '">' +
+               (st !== undefined ? '<div class="sg-blk ' + st + ' ' + run + '"></div>' : '') + '</div>';
+    }
+
+    const endcls = (r.end || "").indexOf("✓") === 0 ? "done" : "target";
+    const tags = r.tags || [];
+    const tagHtml = (tags.length || P.editable)
+      ? '<div class="sg-tags">' +
+          tags.map(t => '<span class="sg-tag" data-tag="' + esc(t) + '">' + esc(t) +
+            (P.editable ? '<button type="button" class="sg-tx" data-untag="' + esc(t) + '" ' +
+                          'aria-label="Remove tag ' + esc(t) + '">✕</button>' : '') +
+            '</span>').join("") +
+          (P.editable ? '<button type="button" class="sg-tadd" data-addtag="1">+ tag</button>' : "") +
+        '</div>'
+      : "";
+
+    html += '<div class="sg-row' + (r.isnew ? " isnew" : "") + '" data-g="1" data-id="' + r.id + '" ' +
+            'data-gname="' + esc(r.g) + '" ' +
+            'data-search="' + esc((r.l + " " + r.d + " " + r.g + " " + tags.join(" ")).toLowerCase()) + '" ' +
+            'style="' + gridStyle(n) + '">' +
+            '<div class="sg-name"><div class="sg-l">' + esc(r.l) + '</div>' +
+            '<div class="sg-d">' + esc(r.d) + '</div>' + tagHtml + '</div>' +
+            cells +
+            '<div class="sg-end ' + endcls + '"><span class="sg-end-wrap">' + esc(r.end || "") +
+            (P.editable ? '<button type="button" class="sg-del" data-del="1" aria-label="Delete row">✕</button>' : "") +
+            '</span></div></div>';
+  });
+
+  /* Bump the version so cached tooltips are rebuilt after any edit. */
+  window.__sgv = (window.__sgv || 0) + 1;
+
+  /* min-width keeps the columns legible; the .sgantt box scrolls, not the page. */
+  const minw = "calc(var(--sg-labelw) + var(--sg-endw) + " + n + " * var(--sg-colw))";
+  host.innerHTML = '<div class="sg-wrap" style="min-width:' + minw + '">' + html + '</div>';
+
+  const c = {};
+  P.rows.forEach(r => { c[r.st] = (c[r.st] || 0) + 1; });
+  const counts = document.getElementById("ct-" + key);
+  if (counts) counts.innerHTML =
+    '<b>' + P.rows.length + '</b> ' + (P.unit || "features") + ' · ' +
+    '<b>' + (c["Done"] || 0) + '</b> done · ' +
+    '<b>' + (c["In progress"] || 0) + '</b> in progress · ' +
+    '<b>' + (c["Planned"] || 0) + '</b> planned · ' +
+    '<b class="risk">' + (c["At risk"] || 0) + '</b> at risk';
+
+  syncScrollbox(key);
+  applyView(key);
+}
+
+/* The horizontal scrollbox is conditional, because an overflow ancestor would
+   capture the sticky header. Add .scrolls only when the grid genuinely overflows.
+   Always measure with the class off: once it is on, clientWidth excludes the
+   scrollbar, and comparing against that oscillates on the boundary. */
+function syncScrollbox(key){
+  const host = document.getElementById("g-" + key);
+  if (!host) return;
+  const box = host.closest(".sgantt");
+  const wrap = host.querySelector(".sg-wrap");
+  if (!box || !wrap) return;
+  box.classList.remove("scrolls");
+  box.classList.toggle("scrolls", wrap.scrollWidth > box.clientWidth + 1);
+}
+
+/* Re-measure on resize, coalesced to one pass per frame, and once more after web
+   fonts land: Inter is wider than the fallback, so the label column and the whole
+   grid grow when it swaps in, which can cross the fit boundary. */
+(function(){
+  const remeasure = () => PLANS.forEach(k => syncScrollbox(k));
+  let queued = false;
+  window.addEventListener("resize", () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; remeasure(); });
+  }, {passive:true});
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure).catch(() => {});
+})();
+
+/* Search + collapse are one pass: a row shows only if it matches the query and
+   its group is not collapsed. Bands hide when nothing in them matches. */
+function applyView(key){
+  const input = document.getElementById("f-" + key);
+  const box = document.getElementById("g-" + key);
+  if (!box) return;
+  const q = ((input && input.value) || "").trim().toLowerCase();
+  const match = {};
+  let shown = 0;
+
+  box.querySelectorAll(".sg-row[data-g]").forEach(row => {
+    const g = row.dataset.gname || "";
+    const hit = !q || (row.dataset.search || "").indexOf(q) > -1;
+    match[g] = (match[g] || 0) + (hit ? 1 : 0);
+    row.style.display = (hit && !collapsed[key].has(g)) ? "" : "none";
+    if (hit) shown++;
+  });
+
+  box.querySelectorAll(".sg-band[data-band]").forEach(b => {
+    const g = b.dataset.gname || "", m = match[g] || 0;
+    b.style.display = m > 0 ? "" : "none";
+    const isCollapsed = collapsed[key].has(g);
+    b.classList.toggle("collapsed", isCollapsed);
+    b.setAttribute("aria-expanded", String(!isCollapsed));
+    const cc = b.querySelector(".sg-bcount");
+    if (cc) cc.textContent = m + (m === 1 ? " item" : " items");
+  });
+
+  const fc = document.getElementById("fc-" + key);
+  if (fc) fc.textContent = q ? (shown + (shown === 1 ? " match" : " matches")) : "";
+
+  let empty = box.querySelector(".sg-empty");
+  if (q && shown === 0){
+    if (!empty){
+      empty = document.createElement("div");
+      empty.className = "sg-empty";
+      box.querySelector(".sg-wrap").appendChild(empty);
+    }
+    empty.textContent = 'Nothing matches "' + q + '".';
+    empty.style.display = "";
+  } else if (empty){
+    empty.style.display = "none";
+  }
+}
+
+function renderARD(key){
+  const host = document.getElementById("ard-" + key);
+  if (!host) return;
+  const A = DATA[key].ard || {};
+  const defs = [
+    {k:"A", title:"Assumptions",  tag:"What we are taking as true"},
+    {k:"R", title:"Risks",        tag:"What could move the date"},
+    {k:"D", title:"Dependencies", tag:"What we need from others"}
+  ];
+  host.innerHTML = defs.map(def => {
+    const items = A[def.k] || [];
+    const body = items.map(x => {
+      const meta = [];
+      if (x.o) meta.push(esc(x.o));
+      if (x.w) meta.push(esc(x.w));
+      return '<div class="ard-item">' + esc(x.t) +
+        '<div class="ard-meta">' +
+          (x.sev ? '<span class="ard-sev ' + (x.sev === "High" ? "high" : "med") + '">' + esc(x.sev) + '</span>' : '') +
+          (meta.length ? '<span>' + meta.join(" · ") + '</span>' : '') +
+        '</div></div>';
+    }).join("");
+    return '<article class="ard-col ' + def.k + '">' +
+      '<span class="ard-tag">' + esc(def.tag) + '</span>' +
+      '<h3>' + def.title + '<span class="ard-cnt">' + items.length + '</span></h3>' +
+      body + '</article>';
+  }).join("");
+}
+
+/* Two renderings of one environments array, the same pattern as renderMilestones.
+   The timeline form reuses .vtimeline with envc entries rather than a second
+   vertical component: step as the date slot, name as the title, badge as the flag
+   chip, note and client as the body copy. */
+function renderEnvs(key){
+  const box = document.getElementById("env-" + key);
+  if (!box) return;
+  const P = DATA[key], list = P.environments || [];
+  if (!list.length) return;
+  const timeline = P.envForm === "timeline";
+  box.classList.toggle("vtimeline", timeline);
+  box.classList.toggle("envchain", !timeline);
+
+  box.innerHTML = timeline
+    ? list.map(e => vtEntry({
+        lead: e.lead || e.name,
+        chip: e.chip || e.badge,
+        note: (e.note || "") + (e.client ? "  " + e.client : ""),
+        cls: "envc " + (e.cls || "")
+      })).join("")
+    : list.map((e, i) =>
+        '<div class="envcard ' + esc(e.cls) + '">' +
+          '<span class="e-step">' + esc(e.step) + '</span>' +
+          '<h3>' + esc(e.name) + '</h3>' +
+          (e.badge ? '<span class="env-badge">' + esc(e.badge) + '</span>' : '') +
+          '<div class="e-note">' + esc(e.note) + '</div>' +
+          (e.client ? '<div class="e-client">' + esc(e.client) + '</div>' : '') +
+        '</div>' +
+        (i < list.length - 1 ? '<div class="env-arrow">→</div>' : '')).join("");
+}
+
+/* --- wire every plan --- */
+PLANS.forEach(key => {
+  renderMilestones(key);
+  renderEnvs(key);
+  renderGantt(key);
+  renderARD(key);
+  const input = document.getElementById("f-" + key);
+  if (input) input.addEventListener("input", () => applyView(key));
+  const box = document.getElementById("g-" + key);
+  if (box) box.addEventListener("click", e => {
+    const b = e.target.closest(".sg-band[data-band]");
+    if (!b) return;
+    const g = b.dataset.gname;
+    if (collapsed[key].has(g)) collapsed[key].delete(g); else collapsed[key].add(g);
+    applyView(key);
+  });
+});
+
+document.querySelectorAll("[data-expand]").forEach(b => b.addEventListener("click", () => {
+  const k = b.dataset.expand; collapsed[k].clear(); applyView(k);
+}));
+document.querySelectorAll("[data-collapse]").forEach(b => b.addEventListener("click", () => {
+  const k = b.dataset.collapse;
+  document.querySelectorAll("#g-" + k + " .sg-band[data-band]")
+    .forEach(x => collapsed[k].add(x.dataset.gname));
+  applyView(k);
+}));
+
+/* =======================================================================
+   PRINT: show every row
+   -----------------------------------------------------------------------
+   A printed plan that silently omits collapsed groups or the rows a live search
+   filtered out is worse than no plan. CSS alone cannot undo this: applyView()
+   sets inline display:none per row, which a print stylesheet would have to
+   fight with !important on every selector, and the band counts would still read
+   the filtered numbers. So the state is cleared before printing and restored
+   after, leaving the reader's search and collapse intact on screen.
+   ======================================================================= */
+(function(){
+  let saved = null;
+  window.addEventListener("beforeprint", () => {
+    if (saved) return;
+    saved = PLANS.map(key => {
+      const input = document.getElementById("f-" + key);
+      const state = {key, query: input ? input.value : "", groups: new Set(collapsed[key])};
+      if (input) input.value = "";
+      collapsed[key].clear();
+      applyView(key);
+      return state;
+    });
+  });
+  window.addEventListener("afterprint", () => {
+    if (!saved) return;
+    saved.forEach(state => {
+      const input = document.getElementById("f-" + state.key);
+      if (input) input.value = state.query;
+      collapsed[state.key].clear();
+      state.groups.forEach(g => collapsed[state.key].add(g));
+      applyView(state.key);
+    });
+    saved = null;
+  });
+})();
+
+/* =======================================================================
+   HOVER TOOLTIP: start and end dates, elapsed weeks, span, tags
+   Built from cols[].s / cols[].e, cached per row until an edit bumps __sgv.
+   ======================================================================= */
+(function(){
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const STATUS_CLS = {"Done":"done","In progress":"prog","Planned":"plan","At risk":"risk"};
+  const tip = document.createElement("div");
+  tip.className = "sg-tip";
+  tip.setAttribute("role","tooltip");
+  document.body.appendChild(tip);
+
+  const parse = iso => { const p = iso.split("-").map(Number); return new Date(p[0], p[1]-1, p[2]); };
+  const fmt = iso => { const d = parse(iso); return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear(); };
+  const weeks = (a,b) => Math.max(1, Math.round((parse(b) - parse(a)) / 6048e5));
+
+  function build(key, id){
+    const P = DATA[key];
+    const r = P.rows.find(x => x.id === id);
+    if (!r) return "";
+    const idx = Object.keys(r.segs).map(Number).sort((a,b) => a-b);
+    if (!idx.length) return "";
+    const first = P.cols[idx[0]], last = P.cols[idx[idx.length-1]];
+    const span = idx.length === 1 ? first.label : first.label + " → " + last.label;
+    const unit = first.phase ? "release stage" : "column";
+    const active = idx.length === 1 ? "1 " + unit : idx.length + " " + unit + "s with work in them";
+    const wk = weeks(first.s, last.e);
+    return '<div class="tip-t">' + esc(r.l) + '</div>' +
+      '<span class="tip-s ' + (STATUS_CLS[r.st] || "plan") + '">' + esc(r.st) + '</span>' +
+      '<dl>' +
+        '<dt>Starts</dt><dd>' + fmt(first.s) + '</dd>' +
+        '<dt>Ends</dt><dd>' + fmt(last.e) + '</dd>' +
+        '<dt>Elapsed</dt><dd class="soft">' + wk + (wk === 1 ? ' week' : ' weeks') + '</dd>' +
+        '<dt>Spans</dt><dd class="soft">' + esc(span) + '</dd>' +
+        '<dt>Active</dt><dd class="soft">' + esc(active) + '</dd>' +
+      '</dl>' +
+      (r.tags && r.tags.length
+        ? '<div class="tip-tags">' + r.tags.map(t => '<span>' + esc(t) + '</span>').join("") + '</div>'
+        : "");
+  }
+
+  /* Flip the tooltip back across the cursor when it would run off the viewport. */
+  function place(e){
+    const pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = e.clientX + pad, y = e.clientY + pad;
+    if (x + w > window.innerWidth - 8) x = e.clientX - w - pad;
+    if (y + h > window.innerHeight - 8) y = e.clientY - h - pad;
+    tip.style.left = Math.max(8, x) + "px";
+    tip.style.top = Math.max(8, y) + "px";
+  }
+  function hide(){ tip.classList.remove("on"); }
+
+  PLANS.forEach(key => {
+    const box = document.getElementById("g-" + key);
+    if (!box) return;
+    box.addEventListener("mousemove", e => {
+      const target = e.target.closest(".sg-blk, .sg-end");
+      if (!target){ hide(); return; }
+      const row = target.closest(".sg-row[data-id]");
+      if (!row){ hide(); return; }
+      const cacheKey = key + ":" + row.dataset.id + ":" + (window.__sgv || 0);
+      if (tip.dataset.for !== cacheKey){
+        const html = build(key, row.dataset.id);
+        if (!html){ hide(); return; }
+        tip.innerHTML = html;
+        tip.dataset.for = cacheKey;
+      }
+      tip.classList.add("on");
+      place(e);
+    });
+    box.addEventListener("mouseleave", hide);
+    /* The scrollport is .sgantt, the ancestor, not this div, and scroll events do
+       not bubble. Listen on both: the box in case a report nests it differently,
+       and the .sgantt that actually scrolls in either axis. */
+    box.addEventListener("scroll", hide, {passive:true});
+    const scroller = box.closest(".sgantt");
+    if (scroller) scroller.addEventListener("scroll", hide, {passive:true});
+  });
+  window.addEventListener("scroll", hide, {passive:true});
+})();
+
+/* =======================================================================
+   EDIT MODE: add, delete with one-level undo, tag, untag, tag-filter, export
+   State lives in memory for this tab only. Export writes it out as JSON.
+   Runs only for plans with editable:true.
+   ======================================================================= */
+PLANS.filter(k => DATA[k].editable).forEach(function(key){
+  const P = DATA[key];
+  const gantt = document.getElementById("g-" + key);
+  const editBtn = document.querySelector('[data-edit="' + key + '"]');
+  const form = document.querySelector('[data-addform="' + key + '"]');
+  const undoBtn = document.querySelector('[data-undo="' + key + '"]');
+  const err = document.getElementById("err-" + key);
+  const scope = gantt && gantt.closest("section");
+  if (!gantt || !scope) return;
+  let lastDeleted = null, newSeed = 0;
+
+  const rowById = id => P.rows.find(r => r.id === id);
+  function refresh(){ renderGantt(key); syncGroups(); }
+
+  /* The group datalist and the column selects stay in step with the data. */
+  function syncGroups(){
+    const list = document.getElementById("groups-" + key);
+    if (!list) return;
+    const groups = [];
+    P.rows.forEach(r => { if (groups.indexOf(r.g) === -1) groups.push(r.g); });
+    list.innerHTML = groups.map(g => '<option value="' + esc(g) + '">').join("");
+  }
+  function fillCols(){
+    const opts = P.cols.map((c,i) =>
+      '<option value="' + i + '">' + esc(c.label) + ' · ' + esc(c.dates) + '</option>').join("");
+    const from = document.getElementById("nf-" + key + "-from");
+    const to = document.getElementById("nf-" + key + "-to");
+    if (from) from.innerHTML = opts;
+    if (to) to.innerHTML = opts;
+  }
+  fillCols(); syncGroups();
+
+  if (editBtn) editBtn.addEventListener("click", () => {
+    const on = !scope.classList.contains("editing");
+    scope.classList.toggle("editing", on);
+    editBtn.classList.toggle("on", on);
+    editBtn.setAttribute("aria-pressed", String(on));
+    editBtn.textContent = on ? "Done Editing" : "Edit Plan";
+    if (!on && form) form.classList.remove("open");
+  });
+
+  const addOpen = document.querySelector('[data-addopen="' + key + '"]');
+  const addCancel = document.querySelector('[data-addcancel="' + key + '"]');
+  if (addOpen && form) addOpen.addEventListener("click", () => {
+    form.classList.add("open");
+    if (err) err.textContent = "";
+    const name = document.getElementById("nf-" + key + "-name");
+    if (name) name.focus();
+  });
+  if (addCancel && form) addCancel.addEventListener("click", () => form.classList.remove("open"));
+
+  if (form) form.addEventListener("submit", e => {
+    e.preventDefault();
+    const val = id => (document.getElementById("nf-" + key + "-" + id) || {}).value || "";
+    const name = val("name").trim();
+    if (!name){ if (err) err.textContent = "A row needs a name."; return; }
+    let from = +val("from"), to = +val("to");
+    if (to < from){ const t = from; from = to; to = t; }
+    const status = val("status");
+    const stLabel = {done:"Done", prog:"In progress", plan:"Planned", risk:"At risk"}[status];
+    const segs = {};
+    for (let i = from; i <= to; i++) segs[i] = status;
+
+    const row = {
+      id: "n" + (++newSeed),
+      g: val("group").trim() || "Added In This Session",
+      l: name,
+      d: val("desc").trim() || "No description yet.",
+      segs: segs,
+      end: (status === "done" ? "✓ " : "→ ") + ((P.ends && P.ends[to]) || P.cols[to].label),
+      st: stLabel,
+      tags: val("tags").split(",").map(t => t.trim()).filter(Boolean),
+      isnew: true
+    };
+
+    /* Keep the new row beside its group when that group already exists. */
+    let at = -1;
+    P.rows.forEach((r,i) => { if (r.g === row.g) at = i; });
+    if (at === -1) P.rows.push(row); else P.rows.splice(at + 1, 0, row);
+
+    form.reset(); fillCols(); form.classList.remove("open");
+    refresh();
+    const el = gantt.querySelector('[data-id="' + row.id + '"]');
+    if (el) el.scrollIntoView({block:"center"});
+  });
+
+  gantt.addEventListener("click", e => {
+    const row = e.target.closest(".sg-row[data-id]");
+    if (!row) return;
+    const r = rowById(row.dataset.id);
+    if (!r) return;
+
+    if (e.target.closest("[data-del]")){
+      const i = P.rows.indexOf(r);
+      lastDeleted = {row:r, index:i};
+      P.rows.splice(i, 1);
+      if (undoBtn) undoBtn.disabled = false;
+      refresh();
+      return;
+    }
+    const untag = e.target.closest("[data-untag]");
+    if (untag){
+      r.tags = r.tags.filter(t => t !== untag.dataset.untag);
+      refresh();
+      return;
+    }
+    if (e.target.closest("[data-addtag]")){
+      const v = window.prompt('Tag for "' + r.l + '", commas add several:', "");
+      if (v){
+        v.split(",").map(t => t.trim()).filter(Boolean)
+         .forEach(t => { if (r.tags.indexOf(t) === -1) r.tags.push(t); });
+        refresh();
+      }
+      return;
+    }
+    /* Outside edit mode, clicking a tag chip filters the plan by that tag. */
+    const chip = e.target.closest(".sg-tag[data-tag]");
+    if (chip && !scope.classList.contains("editing")){
+      const input = document.getElementById("f-" + key);
+      if (input){
+        input.value = chip.dataset.tag;
+        applyView(key);
+        input.scrollIntoView({block:"center"});
+      }
+    }
+  });
+
+  if (undoBtn) undoBtn.addEventListener("click", () => {
+    if (!lastDeleted) return;
+    P.rows.splice(Math.min(lastDeleted.index, P.rows.length), 0, lastDeleted.row);
+    lastDeleted = null;
+    undoBtn.disabled = true;
+    refresh();
+  });
+
+  const exportBtn = document.querySelector('[data-export="' + key + '"]');
+  if (exportBtn) exportBtn.addEventListener("click", () => {
+    const out = P.rows.map(r => ({
+      group: r.g, item: r.l, description: r.d, status: r.st,
+      columns: Object.keys(r.segs).map(i => P.cols[i].label),
+      completes: r.end, tags: r.tags
+    }));
+    const text = JSON.stringify({plan: key, items: out}, null, 2);
+    const blob = new Blob([text], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = key + "-plan.json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+    exportBtn.textContent = "Exported ✓";
+    setTimeout(() => { exportBtn.textContent = "Export"; }, 2200);
+  });
+});
+</script>

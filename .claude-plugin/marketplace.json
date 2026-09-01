@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "aperia-skills",
+  "description": "On-brand Aperia documents as Claude skills, built from one shared brand layer.",
+  "owner": {
+    "name": "Aperia"
+  },
+  "plugins": [
+    {
+      "name": "aperia",
+      "source": "./plugins/aperia",
+      "description": "On-brand Aperia reports and slide decks, built from a single shared brand layer. Decks are self-contained HTML, not PowerPoint."
+    }
+  ]
+}

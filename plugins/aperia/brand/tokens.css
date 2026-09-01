@@ -1,0 +1,84 @@
+/* Aperia brand tokens. Aperia Brand Guidelines v1.0
+   Source of truth: ../BRAND.md. Do not add values that are not in the guideline.
+   This is the only token file. Anything that needs the values programmatically
+   parses the custom properties below; rules and metadata that are not values
+   (accessible pairings, logo clearspace, graphic-element placement, the 5pt
+   print minimum, Office body weight) live in ../BRAND.md prose. */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* --- Core palette ------------------------------------------------------ */
+  --aperia-blue:    #002F67;  /* primary: hero fills, dark panels, headings on light */
+  --dark-blue:      #004785;  /* secondary blue, gradient partner                     */
+  --sapphire-blue:  #0072BC;  /* accent: labels, links, highlights, chart series      */
+  --sky-blue:       #7ED3F7;  /* light accent, eyebrow text on dark                   */
+  --light-blue:     #C8EAF5;  /* tints, soft fills                                    */
+
+  /* --- Neutral palette --------------------------------------------------- */
+  --black:          #000000;
+  --dark-gray:      #58595B;  /* muted body copy, captions   */
+  --medium-gray:    #A7A9AC;  /* subtle UI, rules, disabled  */
+  --light-gray:     #F1F2F2;  /* muted backgrounds, cards    */
+  --white:          #FFFFFF;
+
+  /* --- Semantic aliases (map to palette only, never new hex) ------------- */
+  --bg:             var(--white);
+  --bg-muted:       var(--light-gray);
+  --fg:             var(--aperia-blue);
+  --fg-muted:       var(--dark-gray);
+  --rule:           var(--medium-gray);
+  --link:           var(--sapphire-blue);
+  --on-dark:        var(--white);
+  --eyebrow-on-dark: var(--sky-blue);
+
+  /* --- Approved gradients (palette colors only) -------------------------- */
+  --grad-hero:      linear-gradient(135deg, var(--aperia-blue), var(--dark-blue));
+  --grad-light:     linear-gradient(135deg, var(--white), var(--light-blue));
+
+  /* --- Chart series order -------------------------------------------------
+     The sanctioned ramp, in order: build every chart from series-1 outward. */
+  --series-1: var(--aperia-blue);
+  --series-2: var(--dark-blue);
+  --series-3: var(--sapphire-blue);
+  --series-4: var(--sky-blue);
+  --series-5: var(--light-blue);
+  --series-6: var(--dark-gray);
+  --series-7: var(--medium-gray);
+
+  /* --- Shape --------------------------------------------------------------- */
+  --radius:      8px;     /* cards, panels, inputs                      */
+  --radius-pill: 100px;   /* pills: badges, tags, chips, round buttons  */
+
+  /* --- Typography -------------------------------------------------------- */
+  --font-sans: 'Inter', Arial, Helvetica, sans-serif;  /* Arial is the sanctioned fallback */
+  --fw-light:  300;   /* body (web) */
+  --fw-regular: 400;  /* body (Office) */
+  --fw-medium: 500;   /* pull quotes, large paragraphs */
+  --fw-semibold: 600; /* UI emphasis in the HTML themes, never body copy */
+  --fw-bold:   700;   /* brief highlights, headings */
+  --leading-body: 1.5;
+  --min-size: 12px;   /* on-screen floor: nothing renders below this */
+
+  /* Type scale, from the Aperia Figma design system. See BRAND.md > Typography.
+     Size-semantic names, never role names, never tied to an h1..h6 tag.
+     Use each size with its paired leading. Ten steps. Figma's 10 and 11 are
+     omitted: they sit below the 12px on-screen floor. */
+  --text-xs:   12px;  --leading-xs:   16px;
+  --text-sm:   14px;  --leading-sm:   20px;
+  --text-base: 16px;  --leading-base: 24px;
+  --text-md:   18px;  --leading-md:   28px;
+  --text-lg:   20px;  --leading-lg:   32px;
+  --text-xl:   24px;  --leading-xl:   36px;
+  --text-2xl:  28px;  --leading-2xl:  40px;
+  --text-3xl:  32px;  --leading-3xl:  48px;
+  --text-4xl:  36px;  --leading-4xl:  52px;   /* leading derived, not from Figma */
+  --text-5xl:  40px;  --leading-5xl:  56px;   /* leading derived, not from Figma */
+}
+
+/* Guideline defaults: never underline, never justify, left-align by default. */
+body { font-family: var(--font-sans); font-weight: var(--fw-light);
+       line-height: var(--leading-body); text-align: left;
+       color: var(--fg); background: var(--bg); }
+h1, h2, h3, h4 { text-decoration: none; text-align: left; }
+a { color: var(--link); text-decoration: none; }

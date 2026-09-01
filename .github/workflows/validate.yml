@@ -1,0 +1,62 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate manifests, skills, and palette
+        run: python3 scripts/validate.py
+
+      # Schema-level checks the script above does not do. The two are
+      # complementary: this one knows the manifest schema, ours knows the
+      # brand palette and the skill-name rules.
+      - name: Validate against the official plugin schema
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash -s -- stable
+          export PATH="$HOME/.local/bin:$PATH"
+          claude plugin validate .
+
+      - name: Require a version bump when the plugin changes
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          manifest="plugins/aperia/.claude-plugin/plugin.json"
+          base="origin/$BASE_REF"
+
+          if git diff --quiet "$base" -- plugins/; then
+            echo "plugins/ unchanged, no bump needed."
+            exit 0
+          fi
+
+          read_version() { python3 -c "import json,sys;print(json.load(sys.stdin)['version'])"; }
+          before="$(git show "$base:$manifest" | read_version)"
+          after="$(read_version < "$manifest")"
+
+          if [ "$before" = "$after" ]; then
+            echo "FAIL: plugins/ changed but version is still $after."
+            echo "Bump 'version' in $manifest."
+            echo "The installed version is the cache directory name, so without a"
+            echo "bump teammates can sit on stale files."
+            exit 1
+          fi
+
+          # A lower version leaves teammates on the newer cached copy, which is
+          # the same stale-files failure the bump exists to prevent.
+          newer="$(printf '%s\n%s\n' "$before" "$after" | sort -V | tail -1)"
+          if [ "$newer" != "$after" ]; then
+            echo "FAIL: version went backwards, $before -> $after."
+            exit 1
+          fi
+
+          echo "ok: $before -> $after"

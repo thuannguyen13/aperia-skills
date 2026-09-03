@@ -8,9 +8,13 @@
      the component belongs, paste the script once before </body>, and put your
      content in DATA.
 
-     Styles for all of this live in references/styles.css. Nothing here needs
-     an external library. The static pieces that go around these components
-     (part header, environment chain, tagged callout) are in snippets.html.
+     Styles for the mstone-row/vtimeline/envchain/ard/callout-tag classes these
+     mount points render into live in apply-ui-components' references/styles.css
+     (the base component library); sgantt's own styles live in this skill's
+     references/styles.css. Nothing here needs an external library. The static
+     pieces that go around these components (part header, tagged callout) are
+     in apply-ui-components' snippets.html; this skill's own snippets.html has
+     the delivery-plan mount-point example.
      ============================================================ -->
 
 
@@ -23,7 +27,7 @@
      container class from milestoneForm, so this one mount serves both forms:
      "cards" gives .mstone-row, "timeline" gives .vtimeline.
      id must be "m-" + the DATA key. Four or fewer entries use cards, more than
-     four use timeline; see SKILL.md, "Milestones: cards or timeline". -->
+     four use timeline; see SKILL.md, "Milestones and environment chains: cards or timeline". -->
 <div id="m-mvp"></div>
 
 
@@ -121,7 +125,7 @@
                       renders the milestones array. Four or fewer entries fit one
                       row of cards in .wrap; more than four must use "timeline",
                       or the card grid wraps and leaves an orphan on the last row.
-                      The rule is in SKILL.md under "Milestones: cards or timeline".
+                      The rule is in SKILL.md under "Milestones and environment chains: cards or timeline".
                       The mount point is m-<key> either way; the script sets the
                       container class, so the value here always wins.
      milestones []    {d, t, x, cls, flag}

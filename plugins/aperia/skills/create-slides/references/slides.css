@@ -220,7 +220,7 @@ ul.s-list li small { display:block; font-size:var(--slide-text-sm); color:var(--
 .b-red { background:#fef2f2; color:#dc2626; border:1.5px solid #fecaca }
 
 /* callout */
-.callout { border-left:6px solid var(--sapphire); background:#f4f8fc; padding:27px 33px;
+.callout { border-left:6px solid var(--aperia-blue); background:#f4f8fc; padding:27px 33px;
            border-radius:0 var(--radius) var(--radius) 0; font-size:var(--slide-text-base); line-height:1.6; color:var(--muted-fg) }
 .callout strong { color:var(--aperia-blue) }
 .callout.green { border-left-color:var(--success); background:#f0fdf4 }

@@ -1,0 +1,657 @@
+<!-- ============================================================
+     APERIA UI COMPONENTS: READY-TO-PASTE HTML SNIPPETS
+     Copy what you need into the page you're building. Wrap content in
+     <div class="wrap">...</div> unless it already sits in a container with
+     its own width constraint. Keep gradient ids unique across the page if
+     you paste more than one dark-panel/cta-box.
+     ============================================================ -->
+
+
+<!-- ========== 2×2 CARD GRID ========== -->
+<div class="g2">
+  <div class="card"><div class="mb-3"><span class="badge b-blue">Direction</span></div><h3>Card Title</h3><p>Concise body text.</p></div>
+  <div class="card"><div class="mb-3"><span class="badge b-sky">Theme</span></div><h3>Card Title</h3><p>Concise body text.</p></div>
+  <div class="card"><div class="mb-3"><span class="badge b-green">Positive</span></div><h3>Card Title</h3><p>Concise body text.</p></div>
+  <div class="card"><div class="mb-3"><span class="badge b-amber">Caution</span></div><h3>Card Title</h3><p>Concise body text.</p></div>
+</div>
+<!-- 3- or 4-up variants: swap .g2 for .g3 or .g4 -->
+
+
+<!-- ========== STAT ROW (2 to 4 standalone key numbers) ========== -->
+<!-- Use when the number itself is the message. If you'd need bars to compare
+     several numbers on a common scale, use bchart instead. -->
+<div class="stat-row">
+  <div class="stat-card"><div class="stat-val">42%</div><div class="stat-lbl">Metric label, one line</div></div>
+  <div class="stat-card"><div class="stat-val">3.2x</div><div class="stat-lbl">Metric label, one line</div></div>
+  <div class="stat-card"><div class="stat-val">18</div><div class="stat-lbl">Metric label, one line</div></div>
+</div>
+
+
+<!-- ========== BADGES (inline, standalone) ========== -->
+<span class="badge b-blue">Direction</span>
+<span class="badge b-sky">Theme</span>
+<span class="badge b-green">Positive</span>
+<span class="badge b-amber">Caution</span>
+<span class="badge b-red">Problem</span>
+<span class="badge b-gray">Neutral</span>
+
+
+<!-- ========== CALLOUT (blue / green / amber / red) ========== -->
+<div class="callout"><strong>Note:</strong> neutral information.</div>
+<div class="callout green"><strong>Good:</strong> a positive result.</div>
+<div class="callout amber"><strong>Caution:</strong> a warning.</div>
+<div class="callout red"><strong>Never:</strong> a critical do-not.</div>
+
+<!-- Tagged variant: a labelled chip beside the text instead of the plain border -->
+<div class="callout tagged">
+  <span class="callout-tag">Watch This</span>
+  <p>The thing outside the team's control, what it blocks, and what happens if it slips.</p>
+</div>
+<div class="callout tagged soft">
+  <span class="callout-tag">Draft</span>
+  <p>A neutral note: where this section came from and what would replace it.</p>
+</div>
+
+
+<!-- ========== COLOR SWATCH GRID ========== -->
+<!-- A small set of named colors with hex, e.g. a palette strip. -->
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-chip" style="background:var(--aperia-blue)"></div>
+    <div class="swatch-body"><div class="swatch-name">Aperia Blue</div><span class="swatch-hex">#002F67</span></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-chip" style="background:var(--sapphire)"></div>
+    <div class="swatch-body"><div class="swatch-name">Sapphire</div><span class="swatch-hex">#0072BC</span></div>
+  </div>
+</div>
+
+
+<!-- ========== COMPARISON TABLE (recommended column gets .hl) ========== -->
+<table class="cmp-table">
+  <thead><tr><th>Criterion</th><th>Option A</th><th class="hl">Option B (Recommended)</th><th>Option C</th></tr></thead>
+  <tbody>
+    <tr><td>Feature X</td><td><span class="ic-mid">~</span> Partial</td><td class="hl"><span class="ic-ok">✓</span> Full</td><td><span class="ic-no">✗</span> None</td></tr>
+  </tbody>
+</table>
+
+
+<!-- ========== STACK TABLE (categorical rows with role/type/focus badges) ========== -->
+<!-- Use when data is categorical with no real numeric axis, or the end column
+     needs a text label / badge rather than a number. Never invent a % to force
+     this into a bar chart instead — see bchart's notes below. -->
+<table class="stack-table">
+  <thead>
+    <tr>
+      <th style="width:200px">Source / Item</th>
+      <th style="width:120px">Type</th>
+      <th>Focus / Description</th>
+      <th style="width:110px">Priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><div class="layer-name">Item Name A</div><div class="layer-tool">Subtitle or tool name</div></td>
+      <td><span class="badge b-blue">Network</span></td>
+      <td>Description of what this item covers, its role, or key characteristics.</td>
+      <td><span class="badge b-blue">Required</span></td>
+    </tr>
+    <tr>
+      <td><div class="layer-name">Item Name B</div><div class="layer-tool">Subtitle or tool name</div></td>
+      <td><span class="badge b-gray">Validation</span></td>
+      <td>Description of what this item covers.</td>
+      <td><span class="badge b-amber">Conditional</span></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<!-- ========== OUTCOME GRID (role-based before/after) ========== -->
+<div class="outcome-grid">
+  <div class="outcome-card">
+    <div class="outcome-role">Support Team</div>
+    <div class="outcome-from">↓ Manual triage on every ticket</div>
+    <div class="outcome-to">↑ Auto-routed by category</div>
+  </div>
+  <div class="outcome-card">
+    <div class="outcome-role">End User</div>
+    <div class="outcome-from">↓ 3-day average response</div>
+    <div class="outcome-to">↑ Same-day response</div>
+  </div>
+</div>
+
+
+<!-- ========== CONCERNS ACCORDION (interactive, script required) ========== -->
+<div class="concerns">
+  <div class="concern">
+    <div class="c-hdr">
+      <div class="c-left"><span class="c-icon">Q</span><span class="c-title">Question or concern, stated plainly</span></div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="c-body">Answer or resolution, two or three sentences.</div>
+  </div>
+  <div class="concern">
+    <div class="c-hdr">
+      <div class="c-left"><span class="c-icon">Q</span><span class="c-title">Another question</span></div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="c-body">Answer or resolution.</div>
+  </div>
+</div>
+<!-- Script (place before </body>, once per page): -->
+<script>
+  document.querySelectorAll('.c-hdr').forEach(hdr => {
+    hdr.addEventListener('click', () => hdr.closest('.concern').classList.toggle('open'));
+  });
+</script>
+
+
+<!-- ========== PRINCIPLES GRID (parallel, unordered items) ========== -->
+<!-- If the items happen in order and feed each other, use the flow component
+     below instead — a grid implies parallel/unordered. -->
+<div class="principles">
+  <div class="principle"><span class="num">01</span><div><div class="ptext">Principle Name</div><div class="pdesc">Short explanation.</div></div></div>
+  <div class="principle"><span class="num">02</span><div><div class="ptext">Principle Name</div><div class="pdesc">Short explanation.</div></div></div>
+</div>
+
+
+<!-- ========== DARK PANEL (recommendation, Aperia Blue + graphic element) ========== -->
+<div class="dark-panel">
+  <svg class="dp-shape" viewBox="0 0 127.6 85.1" preserveAspectRatio="xMaxYMin meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="dpPat" x1="61.7" y1="83.4" x2="91.5" y2="1.5" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#002f67"/><stop offset="1" stop-color="#004583"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#dpPat)" d="M93.6,85.1H25.5l25.5-63.7C56.2,8.5,68.7,0,82.6,0h45l-34,85.1Z"/>
+  </svg>
+  <h3>Panel Heading</h3>
+  <p>Summary paragraph in light text on the Aperia Blue background.</p>
+  <div class="dp-cols">
+    <div class="dp-col"><div class="dp-label">Label</div><p>Column content.</p></div>
+    <div class="dp-col"><div class="dp-label">Label</div><p>Column content.</p></div>
+    <div class="dp-col"><div class="dp-label">Label</div><p>Column content.</p></div>
+  </div>
+</div>
+
+
+<!-- ========== CTA BOX (the ask, Aperia Blue + graphic element) ========== -->
+<div class="cta-box">
+  <svg class="cta-shape" viewBox="0 0 127.6 85.1" preserveAspectRatio="xMaxYMin meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ctaPat" x1="61.7" y1="83.4" x2="91.5" y2="1.5" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#002f67"/><stop offset="1" stop-color="#004583"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#ctaPat)" d="M93.6,85.1H25.5l25.5-63.7C56.2,8.5,68.7,0,82.6,0h45l-34,85.1Z"/>
+  </svg>
+  <h2 class="text-2xl">CTA Headline</h2>
+  <p>Supporting text for what you're asking the reader to do.</p>
+  <div class="cta-btns">
+    <button class="btn-w">Primary Action</button>
+    <button class="btn-o">Secondary Action</button>
+  </div>
+</div>
+
+
+<!-- ========== PERT RANGE (3-column + gradient confidence bar) ========== -->
+<!-- Use when a number has real uncertainty. pert-bar-fill right% = 1 - (pessimistic / scale_max).
+     E.g. max=800, pessimistic=657 → right:17.9% -->
+<div class="pert-card">
+  <p class="pert-title">PERT Estimate Range: Label</p>
+  <div class="pert-cols">
+    <div class="pert-col">
+      <div class="pert-col-label">Optimistic</div>
+      <div class="pert-col-hr">404</div>
+      <div class="pert-col-day">50 days</div>
+    </div>
+    <div class="pert-col center-col">
+      <div class="pert-col-label">Most Likely</div>
+      <div class="pert-col-hr">514</div>
+      <div class="pert-col-day">64 days</div>
+    </div>
+    <div class="pert-col">
+      <div class="pert-col-label">Pessimistic</div>
+      <div class="pert-col-hr">657</div>
+      <div class="pert-col-day">82 days</div>
+    </div>
+  </div>
+  <div class="pert-bar-wrap">
+    <div class="pert-bar-label"><span>0</span><span>800</span></div>
+    <div class="pert-bar-track">
+      <div class="pert-bar-fill" style="right:17.9%"></div>
+    </div>
+    <p class="pert-bar-foot"><strong>N-unit spread</strong> between best and worst case. Key drivers of uncertainty.</p>
+  </div>
+</div>
+
+
+<!-- ========== HORIZONTAL BAR CHART (bchart) ========== -->
+<!--
+  CONSISTENCY RULES — violating any of these causes unequal column widths:
+  1. NEVER use inline style= on .bval, .bname, or .beff
+  2. NEVER put <p> tags, headings, or non-row content inside .bchart
+  3. Header row (.brow-head) must have the SAME divs as data rows
+  4. NEVER mix rows with different column counts (all rows omit .beff, or none do)
+  5. .bval holds only a number, never a badge or text label (use stack-table for that)
+
+  Use when data has a real quantitative axis and you can sort rows descending.
+  Use stat-row instead for 2-4 standalone numbers. Use stack-table instead for
+  categorical role/type data.
+-->
+<div class="bchart">
+  <div class="brow brow-head">
+    <div class="bname">Bucket</div>
+    <div class="btrack-wrap">Hours (max = N)</div>
+    <div class="bval">Hr</div>
+    <div class="beff">Hr/pg</div>
+  </div>
+  <div class="brow">
+    <div class="bname">Row Name A<small>×44 instances</small></div>
+    <div class="btrack-wrap"><div class="btrack"><div class="bfill t1" style="width:100%"></div></div></div>
+    <div class="bval">114.7</div>
+    <div class="beff">2.6</div>
+  </div>
+  <div class="brow">
+    <div class="bname">Row Name B<small>×17 instances</small></div>
+    <div class="btrack-wrap"><div class="btrack"><div class="bfill t2" style="width:52%"></div></div></div>
+    <div class="bval">60.2</div>
+    <div class="beff">5.9</div>
+  </div>
+  <div class="bchart-foot">
+    <span class="lg-t1">Top tier · X% of total</span>
+    <span class="lg-t2">Mid tier · Y%</span>
+    <span class="lg-t3">Long tail · Z%</span>
+  </div>
+</div>
+
+
+<!-- ========== STACKED PROPORTIONAL BAR (proportions of a whole) ========== -->
+<!-- Each seg width% = (count / total) * 100. Add .hide-label to any segment
+     under about 6% or its text will not fit. Never use a pie chart for this. -->
+<div class="stack-wrap">
+  <div class="stack-title"><span>Distribution label</span><span>N total</span></div>
+  <div class="stack">
+    <div class="seg" style="width:36%;background:var(--aperia-blue)"><span>CAT A 44</span></div>
+    <div class="seg" style="width:25%;background:var(--dark-blue)"><span>CAT B 31</span></div>
+    <div class="seg" style="width:16%;background:var(--sapphire)"><span>CAT C 19</span></div>
+    <div class="seg" style="width:14%;background:#7ED3F7;color:#002F67"><span>CAT D 17</span></div>
+    <div class="seg hide-label" style="width:9%;background:var(--sky-blue);color:var(--aperia-blue)"><span></span></div>
+  </div>
+  <ul class="stack-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Category A, label</li>
+    <li><i style="background:var(--dark-blue)"></i>Category B, label</li>
+    <li><i style="background:var(--sapphire)"></i>Category C, label</li>
+  </ul>
+</div>
+
+
+<!-- ========== SCENARIO / WHAT-IF CHART ========== -->
+<!-- scn-seg-base width% = (baseline/scale_max)*100; scn-seg-add width% = (addition/scale_max)*100
+     scn-striped = out-of-scope/unknown rows. delta classes: pos, warn, danger, out -->
+<div class="scn-wrap">
+  <div class="scn-row scn-row-head">
+    <div class="scn-name text-xs">Scenario</div>
+    <div class="scn-bar-wrap text-xs">Hours (scale 0 to N)</div>
+    <div class="scn-val text-xs" style="text-align:right">Total</div>
+  </div>
+  <div class="scn-row">
+    <div class="scn-name">Baseline (current scope)<small>Single language · design only</small></div>
+    <div class="scn-bar-wrap"><div class="scn-bar-track"><div class="scn-seg-base" style="width:57%"></div></div></div>
+    <div class="scn-val"><span class="scn-val-hr">514 hr</span><span class="scn-val-delta pos">baseline</span></div>
+  </div>
+  <div class="scn-row">
+    <div class="scn-name">+ Factor A<small>Short description</small></div>
+    <div class="scn-bar-wrap"><div class="scn-bar-track"><div class="scn-seg-base" style="width:57%"></div><div class="scn-seg-add" style="width:17%"></div></div></div>
+    <div class="scn-val"><span class="scn-val-hr">668 hr</span><span class="scn-val-delta danger">+154 hr</span></div>
+  </div>
+  <ul class="scn-legend">
+    <li class="lg-base">Baseline</li>
+    <li class="lg-add">Scenario addition</li>
+  </ul>
+</div>
+
+
+<!-- ========== COMPLEXITY TIER CARDS ========== -->
+<div class="tier-wrap">
+  <div class="tier-card">
+    <div class="tier-label">High Complexity</div>
+    <div class="tier-count">7</div>
+    <div class="tier-of">Functional · ~70 hr</div>
+    <div class="tier-list">Item A · <strong>Item B</strong> · <strong>Item C</strong></div>
+  </div>
+  <div class="tier-card">
+    <div class="tier-label">Medium Complexity</div>
+    <div class="tier-count">7</div>
+    <div class="tier-of">Interactive · ~32 hr</div>
+    <div class="tier-list">Item D · Item E · Item F</div>
+  </div>
+  <div class="tier-card">
+    <div class="tier-label">Low Complexity</div>
+    <div class="tier-count">6</div>
+    <div class="tier-of">Static · ~12 hr</div>
+    <div class="tier-list">Item G · Item H · Item I</div>
+  </div>
+</div>
+
+
+<!-- ========== PROPORTIONAL TIMELINE (effort distribution, NOT a sequence) ========== -->
+<!-- Shows how total EFFORT is distributed across phases (relative size only).
+     flex:N where N = phase duration. Do NOT use this for a schedule where
+     phases start where the last ends — flush bars read as one segmented bar,
+     not a sequence. Use gantt or a milestone timeline for that. -->
+<div class="tline">
+  <div class="tline-bars">
+    <div class="tline-bar b1" style="flex:5"><div class="tl-inner">01 · Phase A · 5 d</div></div>
+    <div class="tline-bar b2" style="flex:17"><div class="tl-inner">02 · Phase B · 17 d</div></div>
+    <div class="tline-bar b3" style="flex:23"><div class="tl-inner">03 · Phase C · 23 d</div></div>
+    <div class="tline-bar b4" style="flex:15"><div class="tl-inner">04 · Phase D · 15 d</div></div>
+  </div>
+  <div class="tline-axis">
+    <span>0 d</span><span>~15 d</span><span>~30 d</span><span>~45 d</span><span>~60 d</span>
+  </div>
+  <div class="tline-detail">
+    <div class="tline-item">
+      <div class="tline-phase-name">01 · Phase A <span>~5 days</span></div>
+      <div class="tline-item-desc">What happens and why it matters.</div>
+    </div>
+    <div class="tline-item">
+      <div class="tline-phase-name">02 · Phase B <span>~17 days</span></div>
+      <div class="tline-item-desc">What happens and why it matters.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== GANTT TIMELINE (sequence/schedule, few phases) ========== -->
+<!--
+  Use for a phased plan/roadmap where phases progress over time. Each phase is
+  its own ROW, positioned on a shared axis.
+  POSITIONING MATH (T = total days): bar left% = (start day/T)*100, width% = (duration/T)*100
+  Example: T=60d. Foundations 0-5, Flagship 5-22, Content 22-45, Unique 45-60.
+    left/width: 0/8.3, 8.3/28.3, 36.7/38.3, 75/25 (verify each left+width lines up with the next left)
+  Axis ticks: no space ("60d" not "60 d"); first tick left-aligns, last tick
+  right-aligns to the axis edges (already handled by the CSS :first-child/:last-child rules).
+  MOBILE (≤700px): CSS resets bars to left-anchored fills; you MUST set per-bar
+  width overrides in the @media block scaled to the longest phase, or bars
+  render as slivers. See the shipped example in styles.css and recompute it.
+-->
+<div class="gantt">
+  <div class="gantt-axis">
+    <span class="gtick" style="left:0%">0d</span>
+    <span class="gtick" style="left:25%">15d</span>
+    <span class="gtick" style="left:50%">30d</span>
+    <span class="gtick" style="left:75%">45d</span>
+    <span class="gtick" style="left:100%">60d</span>
+  </div>
+  <div class="gantt-row">
+    <div class="gantt-label">
+      <div class="gl-name"><span class="gl-dot" style="background:var(--aperia-blue)">1</span>Phase A</div>
+      <div class="gl-sub">~5 days</div>
+    </div>
+    <div class="gantt-track"><div class="gantt-bar b1" style="left:0%;width:8.3%">5d</div></div>
+  </div>
+  <div class="gantt-row">
+    <div class="gantt-label">
+      <div class="gl-name"><span class="gl-dot" style="background:var(--dark-blue)">2</span>Phase B</div>
+      <div class="gl-sub">~17 days</div>
+    </div>
+    <div class="gantt-track"><div class="gantt-bar b2" style="left:8.3%;width:28.3%">17d</div></div>
+  </div>
+  <div class="gantt-detail">
+    <div class="gantt-item">
+      <div class="gantt-item-name">01 · Phase A <span>~5 days</span></div>
+      <div class="gantt-item-desc">What happens and why it matters.</div>
+    </div>
+    <div class="gantt-item">
+      <div class="gantt-item-name">02 · Phase B <span>~17 days</span></div>
+      <div class="gantt-item-desc">What happens and why it matters.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== STEP FLOW (sequential process / method pipeline) ========== -->
+<!-- Each stage FEEDS the next. Do not use principles for this: a grid implies
+     the items are parallel/unordered. Optional .flow-formula chip surfaces a
+     formula or multiplier inline. Node colors auto-cycle for the first 4 steps. -->
+<div class="flow">
+  <div class="flow-step">
+    <div class="flow-rail"><div class="flow-node">1</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Stage One Name</div>
+      <div class="flow-desc">What this stage does and what it produces for the next stage.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-rail"><div class="flow-node">2</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Stage Two Name <span class="flow-formula">(O + 4×M + P) ÷ 6</span></div>
+      <div class="flow-desc">What this stage does. The formula chip shows the calculation applied here.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-rail"><div class="flow-node">3</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Stage Three Name</div>
+      <div class="flow-desc">The final stage and how it rolls up to the result.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== MILESTONE / STATUS TIMELINES ==========
+     mstone-row, vtimeline, htimeline and envchain all render the same
+     four-field entry: lead / chip / title / note / cls. See SKILL.md, "The
+     entry contract", before mixing and matching. Status classes throughout:
+     done (green) · risk (amber) · est (amber, hollow marker, dashed line) ·
+     nothing (blue, "ahead"). Environment entries add envc plus one of
+     e-dev/e-qa/e-uat/e-stag/e-prod, which colors the chip only, never the
+     marker or a card edge. -->
+
+
+<!-- ========== MILESTONE CARDS (mstone-row): ≤4 dated checkpoints ========== -->
+<!-- More than 4 entries wraps this grid to a ragged second row — switch to
+     vtimeline instead of widening the container. -->
+<div class="mstone-row">
+  <div class="mstone done">
+    <div class="m-date">Jan 2026</div>
+    <div class="m-title">Milestone Title</div>
+    <div class="m-note">One line on what shipped or completed.</div>
+  </div>
+  <div class="mstone">
+    <div class="m-date">Mar 2026</div>
+    <div class="m-title">Milestone Title</div>
+    <div class="m-note">One line on what's next.</div>
+  </div>
+  <div class="mstone risk">
+    <div class="m-date">Jun 2026</div>
+    <div class="m-title">Milestone Title</div>
+    <div class="m-note">One line on what's at risk.</div>
+    <span class="m-flag">At Risk</span>
+  </div>
+  <div class="mstone est">
+    <div class="m-date">Sep 2026</div>
+    <div class="m-title">Milestone Title</div>
+    <div class="m-note">One line, estimated date.</div>
+  </div>
+</div>
+
+
+<!-- ========== VERTICAL TIMELINE (vtimeline): >4 checkpoints, or 5+ environments ========== -->
+<div class="vtimeline">
+  <div class="vt-item done">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Jan 2026</span></div>
+      <div class="vt-title">Milestone Title</div>
+      <div class="vt-note">What shipped or completed.</div>
+    </div>
+  </div>
+  <div class="vt-item risk">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Jun 2026</span><span class="vt-chip">At Risk</span></div>
+      <div class="vt-title">Milestone Title</div>
+      <div class="vt-note">What's at risk and why.</div>
+    </div>
+  </div>
+  <div class="vt-item est">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Sep 2026</span><span class="vt-chip">Estimated</span></div>
+      <div class="vt-title">Milestone Title</div>
+      <div class="vt-note">Estimated date, subject to change.</div>
+    </div>
+  </div>
+  <div class="vt-item">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Dec 2026</span></div>
+      <div class="vt-title">Final Milestone</div>
+      <div class="vt-note">The last item omits vt-line via :last-child, no class needed.</div>
+    </div>
+  </div>
+</div>
+
+<!-- vtimeline used for an environment chain of 5+: same shape, envc + e-* entries -->
+<div class="vtimeline">
+  <div class="vt-item envc e-dev">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Development</span><span class="vt-chip">Synthetic</span></div>
+      <div class="vt-note">What this environment is for.</div>
+    </div>
+  </div>
+  <div class="vt-item envc e-prod done">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Production</span><span class="vt-chip">Live</span></div>
+      <div class="vt-note">What this environment is for.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== HORIZONTAL TIMELINE (htimeline): NEW — sideways form, up to ~6 entries ========== -->
+<!-- Same entry shape and status vocabulary as vtimeline, laid out left to
+     right along a rail. Use for a short roadmap or compact process that
+     benefits from reading left-to-right; past ~6 entries or with more body
+     text per entry, use vtimeline instead. At <=700px this collapses to the
+     same vertical rail as vtimeline automatically (styles.css handles it) —
+     no separate markup needed for mobile. -->
+<div class="htimeline">
+  <div class="ht-item done">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body">
+      <div class="ht-head"><span class="ht-lead">Jan 2026</span></div>
+      <div class="ht-title">Kickoff</div>
+      <div class="ht-note">What shipped or completed.</div>
+    </div>
+  </div>
+  <div class="ht-item done">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body">
+      <div class="ht-head"><span class="ht-lead">Mar 2026</span></div>
+      <div class="ht-title">Phase 1 Complete</div>
+      <div class="ht-note">What shipped or completed.</div>
+    </div>
+  </div>
+  <div class="ht-item risk">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body">
+      <div class="ht-head"><span class="ht-lead">Jun 2026</span><span class="ht-chip">At Risk</span></div>
+      <div class="ht-title">Phase 2</div>
+      <div class="ht-note">What's at risk and why.</div>
+    </div>
+  </div>
+  <div class="ht-item est">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body">
+      <div class="ht-head"><span class="ht-lead">Sep 2026</span><span class="ht-chip">Estimated</span></div>
+      <div class="ht-title">Launch</div>
+      <div class="ht-note">Estimated date, subject to change.</div>
+    </div>
+  </div>
+</div>
+
+<!-- htimeline used for an environment chain: same envc + e-* entries as vtimeline -->
+<div class="htimeline">
+  <div class="ht-item envc e-dev">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body"><div class="ht-head"><span class="ht-lead">DEV</span><span class="ht-chip">Synthetic</span></div></div>
+  </div>
+  <div class="ht-item envc e-qa">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body"><div class="ht-head"><span class="ht-lead">QA</span><span class="ht-chip">Synthetic</span></div></div>
+  </div>
+  <div class="ht-item envc e-prod done">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body"><div class="ht-head"><span class="ht-lead">PROD</span><span class="ht-chip">Live</span></div></div>
+  </div>
+</div>
+
+
+<!-- ========== ENVIRONMENT CHAIN (envchain): DEV to PROD, ≤4 environments ========== -->
+<!-- 5+ environments do not get a vertical variant of this card — render them
+     as vtimeline (or htimeline) with envc e-* entries instead, above. -->
+<div class="envchain">
+  <div class="envcard e-dev">
+    <span class="e-step">Step 1</span>
+    <h3>Development</h3>
+    <span class="env-badge">Synthetic</span>
+    <div class="e-note">Where features are built and unit tested.</div>
+  </div>
+  <div class="env-arrow">→</div>
+  <div class="envcard e-uat">
+    <span class="e-step">Step 2</span>
+    <h3>UAT</h3>
+    <span class="env-badge">Synthetic</span>
+    <div class="e-note">Client sign-off environment.</div>
+    <div class="e-client">Client Access</div>
+  </div>
+  <div class="env-arrow">→</div>
+  <div class="envcard e-prod">
+    <span class="e-step">Step 3</span>
+    <h3>Production</h3>
+    <span class="env-badge">Live</span>
+    <div class="e-note">The environment end users touch.</div>
+  </div>
+</div>
+
+
+<!-- ========== ASSUMPTIONS / RISKS / DEPENDENCIES (ard) ========== -->
+<div class="ard">
+  <article class="ard-col A">
+    <span class="ard-tag">Assumptions</span>
+    <h3>Assumptions<span class="ard-cnt">2</span></h3>
+    <div class="ard-item">Stakeholders are available for weekly review.</div>
+    <div class="ard-item">Current infrastructure can absorb the added load.</div>
+  </article>
+  <article class="ard-col R">
+    <span class="ard-tag">Risks</span>
+    <h3>Risks<span class="ard-cnt">1</span></h3>
+    <div class="ard-item">
+      Vendor API rate limits may throttle peak traffic.
+      <div class="ard-meta"><span class="ard-sev high">High</span><span>Owner: Platform</span></div>
+    </div>
+  </article>
+  <article class="ard-col D">
+    <span class="ard-tag">Dependencies</span>
+    <h3>Dependencies<span class="ard-cnt">1</span></h3>
+    <div class="ard-item">
+      Design system tokens must ship before component work starts.
+      <div class="ard-meta"><span class="ard-sev med">Medium</span><span>Owner: Design</span></div>
+    </div>
+  </article>
+</div>
+
+
+<!-- ========== PART HEADER (for a multi-part document) ========== -->
+<div class="part-head">
+  <span class="part-n">Part 1</span>
+  <h2 class="text-2xl">Part Title In Title Case</h2>
+</div>
+<p class="sec-intro">One or two sentences on what this part covers.</p>
+<p class="sub-h">Key Milestones</p>
+<p class="sub-note">Optional line under a sub-heading, for a caveat or a how-to-read note.</p>

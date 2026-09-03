@@ -1,0 +1,26 @@
+/* ===== APERIA ICONS =====
+   Paste this AFTER references/styles.css (which is itself pasted after
+   tokens.css :root — see SKILL.md). Covers only the icon sizing/alignment
+   rules; the icons themselves are inline <svg> markup in icons.html, not
+   defined here — there is no sprite, no <symbol>/<use>, nothing to link.
+
+   Every icon fills with currentColor: it has NO color of its own and takes
+   whatever color the surrounding text or element already has. Recolor an
+   icon the same way you'd recolor text — a class, a wrapping element's
+   color, or (for a standalone icon) an inline style — never by editing the
+   path data. */
+.icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em; /* aligns the icon's optical center to the text baseline */
+  flex-shrink: 0;
+  fill: currentColor;
+}
+/* Fixed sizes for a standalone icon (not sitting inline with text, so 1em
+   has no useful font-size to inherit). Same steps as stat-card numerals,
+   not the full --text-* type ramp — icons don't need ten sizes. */
+.icon-sm { width: 16px; height: 16px }
+.icon-md { width: 20px; height: 20px }
+.icon-lg { width: 24px; height: 24px }
+.icon-xl { width: 32px; height: 32px }

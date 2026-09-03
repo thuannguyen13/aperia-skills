@@ -1,0 +1,488 @@
+<!-- ============================================================
+     APERIA ANALYTICAL CHARTS: READY-TO-PASTE HTML SNIPPETS
+     Paste references/charts.css AFTER references/styles.css (which is
+     itself pasted after tokens.css :root). Every SVG example below uses the
+     shared 640x300 chart frame documented at the top of charts.css:
+       plot origin (44,16), plot size 576x250, baseline y=266, right edge x=620
+       gridline y-values: 266, 203.5, 141, 78.5, 16  (0/25/50/75/100% of axis max)
+     Recompute point positions for your own data with the formulas in that
+     file's header comment — never eyeball pixel values.
+     ============================================================ -->
+
+
+<!-- ========== LINE CHART (single + multi-line) ========== -->
+<!-- Data: monthly volume, axis max 600. x_i = 44 + i*115.2 (n=6 points).
+     A second, dashed series reads as "the comparison", per the vt-item
+     convention elsewhere in this library (solid = current, dashed = other). -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Monthly transaction volume, current year vs prior year">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/>
+      <line x1="44" y1="203.5" x2="620" y2="203.5"/>
+      <line x1="44" y1="141" x2="620" y2="141"/>
+      <line x1="44" y1="78.5" x2="620" y2="78.5"/>
+      <line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="38" y="270" text-anchor="end">0</text>
+      <text x="38" y="207.5" text-anchor="end">150</text>
+      <text x="38" y="145" text-anchor="end">300</text>
+      <text x="38" y="82.5" text-anchor="end">450</text>
+      <text x="38" y="20" text-anchor="end">600</text>
+      <text x="44" y="284" text-anchor="middle">Jan</text>
+      <text x="159.2" y="284" text-anchor="middle">Feb</text>
+      <text x="274.4" y="284" text-anchor="middle">Mar</text>
+      <text x="389.6" y="284" text-anchor="middle">Apr</text>
+      <text x="504.8" y="284" text-anchor="middle">May</text>
+      <text x="620" y="284" text-anchor="middle">Jun</text>
+    </g>
+    <path class="cf-line s3 compare" d="M44,149.3 L159.2,141 L274.4,124.3 L389.6,116 L504.8,99.3 L620,86.8"/>
+    <path class="cf-line s1" d="M44,132.7 L159.2,95.2 L274.4,107.7 L389.6,74.3 L504.8,53.5 L620,32.7"/>
+    <g class="cf-dot s1">
+      <circle cx="44" cy="132.7" r="3.5"/><circle cx="159.2" cy="95.2" r="3.5"/><circle cx="274.4" cy="107.7" r="3.5"/>
+      <circle cx="389.6" cy="74.3" r="3.5"/><circle cx="504.8" cy="53.5" r="3.5"/><circle cx="620" cy="32.7" r="3.5"/>
+    </g>
+  </svg>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Volume, current year</li>
+    <li><i class="dashed" style="color:var(--sapphire)"></i>Volume, prior year</li>
+  </ul>
+</div>
+
+
+<!-- ========== AREA CHART (single + stacked) ========== -->
+<!-- Single: fill the line path down to the baseline (y=266) at low opacity,
+     stroke drawn separately for a crisp top edge.
+     Stacked: TWO layers, each a filled polygon whose bottom edge is the
+     cumulative total below it and whose top edge is the cumulative total
+     including it — never fill each series independently, which would hide
+     the lower layer. -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Volume, area chart">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/><line x1="44" y1="203.5" x2="620" y2="203.5"/>
+      <line x1="44" y1="141" x2="620" y2="141"/><line x1="44" y1="78.5" x2="620" y2="78.5"/><line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="44" y="284" text-anchor="middle">Jan</text><text x="159.2" y="284" text-anchor="middle">Feb</text>
+      <text x="274.4" y="284" text-anchor="middle">Mar</text><text x="389.6" y="284" text-anchor="middle">Apr</text>
+      <text x="504.8" y="284" text-anchor="middle">May</text><text x="620" y="284" text-anchor="middle">Jun</text>
+    </g>
+    <path class="cf-area s1" opacity=".16" d="M44,132.7 L159.2,95.2 L274.4,107.7 L389.6,74.3 L504.8,53.5 L620,32.7 L620,266 L44,266 Z"/>
+    <path class="cf-line s1" d="M44,132.7 L159.2,95.2 L274.4,107.7 L389.6,74.3 L504.8,53.5 L620,32.7"/>
+  </svg>
+  <ul class="cf-legend"><li><i style="background:var(--aperia-blue)"></i>Volume</li></ul>
+</div>
+
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Volume by channel, stacked area">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/><line x1="44" y1="203.5" x2="620" y2="203.5"/>
+      <line x1="44" y1="141" x2="620" y2="141"/><line x1="44" y1="78.5" x2="620" y2="78.5"/><line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="44" y="284" text-anchor="middle">Jan</text><text x="159.2" y="284" text-anchor="middle">Feb</text>
+      <text x="274.4" y="284" text-anchor="middle">Mar</text><text x="389.6" y="284" text-anchor="middle">Apr</text>
+      <text x="504.8" y="284" text-anchor="middle">May</text><text x="620" y="284" text-anchor="middle">Jun</text>
+    </g>
+    <!-- Layer 1, Card present: bottom edge is the baseline (266), top edge is its own cumulative -->
+    <polygon class="cf-area s1" opacity=".85" points="44,266 44,182.7 159.2,170.2 274.4,178.5 389.6,161.8 504.8,153.5 620,141 620,266"/>
+    <!-- Layer 2, E-commerce: bottom edge = layer 1's top line, top edge = combined cumulative -->
+    <polygon class="cf-area s3" opacity=".85" points="44,182.7 159.2,170.2 274.4,178.5 389.6,161.8 504.8,153.5 620,141 620,20.2 504.8,45.2 389.6,66 274.4,91 159.2,91 44,120.2"/>
+  </svg>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Card present</li>
+    <li><i style="background:var(--sapphire)"></i>E-commerce</li>
+  </ul>
+</div>
+
+
+<!-- ========== COMBO CHART (bars + line, dual axis) ========== -->
+<!-- Left axis (bars) and right axis (line) are DIFFERENT scales sharing the
+     same 0-266..16 pixel range — label both axes so the reader never assumes
+     one scale. Bar slot width = 576/n; bar width narrower than the slot,
+     centered: bar_x = slot_start + (slot_width - bar_width)/2. -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Volume (bars, left axis) and decline rate (line, right axis)">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/><line x1="44" y1="182.7" x2="620" y2="182.7"/>
+      <line x1="44" y1="99.3" x2="620" y2="99.3"/><line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="38" y="270" text-anchor="end">0</text><text x="38" y="103" text-anchor="end">400</text><text x="38" y="20" text-anchor="end">600</text>
+      <text x="626" y="270" text-anchor="start">0%</text><text x="626" y="103" text-anchor="start">2%</text><text x="626" y="20" text-anchor="start">3%</text>
+      <text x="92" y="284" text-anchor="middle">Jan</text><text x="188" y="284" text-anchor="middle">Feb</text>
+      <text x="284" y="284" text-anchor="middle">Mar</text><text x="380" y="284" text-anchor="middle">Apr</text>
+      <text x="476" y="284" text-anchor="middle">May</text><text x="572" y="284" text-anchor="middle">Jun</text>
+    </g>
+    <g class="cf-bar s1">
+      <rect x="72" y="132.7" width="40" height="133.3" rx="2"/>
+      <rect x="168" y="95.2" width="40" height="170.8" rx="2"/>
+      <rect x="264" y="107.7" width="40" height="158.3" rx="2"/>
+      <rect x="360" y="74.3" width="40" height="191.7" rx="2"/>
+      <rect x="456" y="53.5" width="40" height="212.5" rx="2"/>
+      <rect x="552" y="32.7" width="40" height="233.3" rx="2"/>
+    </g>
+    <path class="cf-line s3" d="M92,91 L188,116 L284,66 L380,132.7 L476,157.7 L572,174.3"/>
+    <g class="cf-dot s3">
+      <circle cx="92" cy="91" r="3.5"/><circle cx="188" cy="116" r="3.5"/><circle cx="284" cy="66" r="3.5"/>
+      <circle cx="380" cy="132.7" r="3.5"/><circle cx="476" cy="157.7" r="3.5"/><circle cx="572" cy="174.3" r="3.5"/>
+    </g>
+  </svg>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Volume (left axis)</li>
+    <li><i style="background:var(--sapphire)"></i>Decline rate (right axis)</li>
+  </ul>
+</div>
+
+
+<!-- ========== SCATTER PLOT ========== -->
+<!-- x_i = 44 + (x_value/x_max)*576; y_i = 266 - (y_value/y_max)*250 -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Risk score by transaction amount, by channel">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/><line x1="44" y1="203.5" x2="620" y2="203.5"/>
+      <line x1="44" y1="141" x2="620" y2="141"/><line x1="44" y1="78.5" x2="620" y2="78.5"/><line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="38" y="270" text-anchor="end">0</text><text x="38" y="145" text-anchor="end">50</text><text x="38" y="20" text-anchor="end">100</text>
+      <text x="44" y="284" text-anchor="middle">$0</text><text x="332" y="284" text-anchor="middle">$250</text><text x="620" y="284" text-anchor="middle">$500</text>
+    </g>
+    <g class="cf-pt s1"><circle cx="113.1" cy="216" r="5"/><circle cx="205.3" cy="178.5" r="5"/><circle cx="401.1" cy="128.5" r="5"/></g>
+    <g class="cf-pt s3"><circle cx="147.7" cy="153.5" r="5"/><circle cx="297.4" cy="91" r="5"/><circle cx="504.8" cy="61" r="5"/></g>
+    <g class="cf-pt s2"><circle cx="101.6" cy="241" r="5"/><circle cx="239.8" cy="191" r="5"/><circle cx="343.5" cy="146" r="5"/></g>
+    <g class="cf-pt s4"><circle cx="182.2" cy="116" r="5"/><circle cx="447.2" cy="78.5" r="5"/><circle cx="573.9" cy="41" r="5"/></g>
+  </svg>
+  <ul class="cf-legend">
+    <li><i class="dot" style="background:var(--aperia-blue)"></i>Card present</li>
+    <li><i class="dot" style="background:var(--sapphire)"></i>E-commerce</li>
+    <li><i class="dot" style="background:var(--dark-blue)"></i>Mobile wallet</li>
+    <li><i class="dot" style="background:var(--med-gray)"></i>ACH</li>
+  </ul>
+</div>
+
+
+<!-- ========== BUBBLE QUADRANT CHART ========== -->
+<!-- Same frame as scatter, plus a divider at the midpoint of each axis
+     (x=332, y=141) and a corner label per quadrant. Bubble radius encodes a
+     third value: r = 6 + sqrt(value)*k — sqrt, not linear, so AREA (not
+     radius) is proportional to the value, or larger bubbles read as more
+     than proportionally bigger. -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Flagged transactions by two detection systems, sized by volume">
+    <line class="cf-quadrant" x1="332" y1="16" x2="332" y2="266"/>
+    <line class="cf-quadrant" x1="44" y1="141" x2="620" y2="141"/>
+    <text class="cf-qlabel" x="48" y="30">VisionWeb Only</text>
+    <text class="cf-qlabel" x="616" y="30" text-anchor="end">Flagged By Both</text>
+    <text class="cf-qlabel" x="48" y="256">Not Flagged</text>
+    <text class="cf-qlabel" x="616" y="256" text-anchor="end">Mastercard Only</text>
+    <g class="cf-pt s3" opacity=".7"><circle cx="150" cy="70" r="12"/><circle cx="220" cy="100" r="16"/></g>
+    <g class="cf-pt s1" opacity=".7"><circle cx="450" cy="80" r="18"/><circle cx="520" cy="60" r="14"/></g>
+    <g class="cf-pt s4" opacity=".7"><circle cx="120" cy="200" r="20"/><circle cx="200" cy="230" r="10"/></g>
+    <g class="cf-pt s2" opacity=".7"><circle cx="480" cy="220" r="14"/><circle cx="400" cy="190" r="16"/></g>
+  </svg>
+  <ul class="cf-legend">
+    <li><i class="dot" style="background:var(--sapphire)"></i>VisionWeb only</li>
+    <li><i class="dot" style="background:var(--aperia-blue)"></i>Flagged by both</li>
+    <li><i class="dot" style="background:var(--med-gray)"></i>Not flagged</li>
+    <li><i class="dot" style="background:var(--dark-blue)"></i>Mastercard only</li>
+    <li>Bubble size = transaction volume</li>
+  </ul>
+</div>
+
+
+<!-- ========== GROUPED BAR CHART ========== -->
+<!-- height% on each .gbar-bar = value/axis_max*100. Axis max here is 480. -->
+<div class="gbar">
+  <div class="gbar-plot">
+    <div class="gbar-grp">
+      <div class="gbar-bar s1" style="height:66.7%" title="Card present, Q1: 320"></div>
+      <div class="gbar-bar s2" style="height:43.8%" title="E-commerce, Q1: 210"></div>
+      <div class="gbar-bar s3" style="height:18.8%" title="Mobile wallet, Q1: 90"></div>
+    </div>
+    <div class="gbar-grp">
+      <div class="gbar-bar s1" style="height:72.9%" title="Card present, Q2: 350"></div>
+      <div class="gbar-bar s2" style="height:54.2%" title="E-commerce, Q2: 260"></div>
+      <div class="gbar-bar s3" style="height:27.1%" title="Mobile wallet, Q2: 130"></div>
+    </div>
+    <div class="gbar-grp">
+      <div class="gbar-bar s1" style="height:62.5%" title="Card present, Q3: 300"></div>
+      <div class="gbar-bar s2" style="height:60.4%" title="E-commerce, Q3: 290"></div>
+      <div class="gbar-bar s3" style="height:37.5%" title="Mobile wallet, Q3: 180"></div>
+    </div>
+    <div class="gbar-grp">
+      <div class="gbar-bar s1" style="height:79.2%" title="Card present, Q4: 380"></div>
+      <div class="gbar-bar s2" style="height:70.8%" title="E-commerce, Q4: 340"></div>
+      <div class="gbar-bar s3" style="height:50%" title="Mobile wallet, Q4: 240"></div>
+    </div>
+  </div>
+  <div class="gbar-labels">
+    <div class="gbar-lbl">Q1</div><div class="gbar-lbl">Q2</div><div class="gbar-lbl">Q3</div><div class="gbar-lbl">Q4</div>
+  </div>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Card present</li>
+    <li><i style="background:var(--dark-blue)"></i>E-commerce</li>
+    <li><i style="background:var(--sapphire)"></i>Mobile wallet</li>
+  </ul>
+</div>
+
+
+<!-- ========== STACKED CATEGORY BAR CHART ========== -->
+<!-- Distinct from .stack (styles.css), which is one bar of shares of a
+     single whole. This is many bars — one per x-axis category — each
+     internally stacked. Segment height% = value/axis_max*100; axis max 240.
+     First child in DOM sits at the bottom (column-reverse). -->
+<div class="sbar">
+  <div class="sbar-plot">
+    <div class="sbar-grp">
+      <div class="sbar-seg s1" style="height:50%" title="On-us, Jan: 120"></div>
+      <div class="sbar-seg s2" style="height:33.3%" title="Off-us, Jan: 80"></div>
+    </div>
+    <div class="sbar-grp">
+      <div class="sbar-seg s1" style="height:41.7%" title="On-us, Feb: 100"></div>
+      <div class="sbar-seg s2" style="height:45.8%" title="Off-us, Feb: 110"></div>
+    </div>
+    <div class="sbar-grp">
+      <div class="sbar-seg s1" style="height:58.3%" title="On-us, Mar: 140"></div>
+      <div class="sbar-seg s2" style="height:29.2%" title="Off-us, Mar: 70"></div>
+    </div>
+    <div class="sbar-grp">
+      <div class="sbar-seg s1" style="height:37.5%" title="On-us, Apr: 90"></div>
+      <div class="sbar-seg s2" style="height:54.2%" title="Off-us, Apr: 130"></div>
+    </div>
+  </div>
+  <div class="sbar-labels">
+    <div class="sbar-lbl">Jan</div><div class="sbar-lbl">Feb</div><div class="sbar-lbl">Mar</div><div class="sbar-lbl">Apr</div>
+  </div>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>On-us</li>
+    <li><i style="background:var(--sapphire)"></i>Off-us</li>
+  </ul>
+</div>
+
+
+<!-- ========== RADIAL GAUGE ========== -->
+<!-- ONE value on a semicircular arc, never a categorical breakdown — that is
+     what makes this different from a pie/donut, which stay off-limits.
+     pathLength="100" on both arcs lets stroke-dasharray be read directly as
+     a percentage: dasharray="{value},100". Status color follows the same
+     three tokens the milestone timelines use (ahead/risk/done); pick the one
+     that matches what the number means, not just "high = red". -->
+<div class="gauge-card">
+  <svg viewBox="0 0 200 120" width="200" height="120" role="img" aria-label="Composite risk score, 72 out of 100">
+    <path class="gauge-track" pathLength="100" d="M20,100 A80,80 0 0 1 180,100"/>
+    <path class="gauge-fill risk" pathLength="100" stroke-dasharray="72,100" d="M20,100 A80,80 0 0 1 180,100"/>
+    <text class="gauge-val" x="100" y="92" text-anchor="middle">72</text>
+    <text class="gauge-end" x="14" y="112" text-anchor="start">0</text>
+    <text class="gauge-end" x="186" y="112" text-anchor="end">100</text>
+  </svg>
+  <div class="gauge-lbl">Composite Risk Score</div>
+  <div class="gauge-sub">Above the 65 review threshold</div>
+</div>
+
+
+<!-- ========== PIE CHART: at most ~5 slices, sorted descending ========== -->
+<!-- conic-gradient stops are cumulative %: "color START% END%", each END%
+     equal to the next slice's START%, last slice ending at 100%. No arc math.
+     3 slices here, none tiny — the case a pie is actually good at. -->
+<div class="pie-wrap">
+  <div class="piechart" style="background:conic-gradient(var(--aperia-blue) 0% 45%, var(--dark-blue) 45% 80%, var(--sapphire) 80% 100%)" role="img" aria-label="Chargeback reasons: card present 45%, e-commerce 35%, other 20%"></div>
+  <ul class="pie-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Card present<b>45%</b></li>
+    <li><i style="background:var(--dark-blue)"></i>E-commerce<b>35%</b></li>
+    <li><i style="background:var(--sapphire)"></i>Other<b>20%</b></li>
+  </ul>
+</div>
+
+
+<!-- ========== DONUT CHART: same rule, plus a center total ========== -->
+<!-- Same fraud-reason data as the treemap example, but capped at the 5-slice
+     budget: the treemap's 3 smallest categories (Expired Card, Invalid CVV,
+     Other) are grouped into one "Other" slice here. That's the move whenever
+     a part-to-whole set runs past what a pie/donut can hold — group the long
+     tail rather than adding a 6th sliver, or use treemap/stack-table instead
+     of forcing every category into the circle. -->
+<div class="pie-wrap">
+  <div class="donutchart" style="background:conic-gradient(var(--aperia-blue) 0% 36.8%, var(--dark-blue) 36.8% 59.5%, var(--sapphire) 59.5% 79%, var(--sky-blue) 79% 100%)" role="img" aria-label="Fraud case mix by reason, 925 total cases">
+    <div class="pie-center"><b>925</b><span>Total Cases</span></div>
+  </div>
+  <ul class="pie-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Suspected fraud<b>36.8%</b></li>
+    <li><i style="background:var(--dark-blue)"></i>Insufficient funds<b>22.7%</b></li>
+    <li><i style="background:var(--sapphire)"></i>Do not honor<b>19.5%</b></li>
+    <li><i style="background:var(--sky-blue)"></i>Other<b>21.0%</b></li>
+  </ul>
+</div>
+
+
+<!-- ========== TREEMAP ========== -->
+<!-- Row flex-grow = the row's value total; cell flex-grow = the cell's own
+     value. That alone makes every cell's rendered AREA proportional to its
+     value — no percentage math to get wrong. Row 1 here totals 550
+     (340+210), row 2 totals 375 (180+95+60+40), grand total 925. -->
+<div class="treemap">
+  <div class="tm-row" style="flex-grow:550">
+    <div class="tm-cell s1" style="flex-grow:340">
+      <div class="tm-name">Suspected Fraud</div><div class="tm-val">340 · 36.8%</div>
+    </div>
+    <div class="tm-cell s3" style="flex-grow:210">
+      <div class="tm-name">Insufficient Funds</div><div class="tm-val">210 · 22.7%</div>
+    </div>
+  </div>
+  <div class="tm-row" style="flex-grow:375">
+    <div class="tm-cell s2" style="flex-grow:180">
+      <div class="tm-name">Do Not Honor</div><div class="tm-val">180 · 19.5%</div>
+    </div>
+    <div class="tm-cell s4" style="flex-grow:95">
+      <div class="tm-name">Expired Card</div><div class="tm-val">95 · 10.3%</div>
+    </div>
+    <div class="tm-cell s5" style="flex-grow:60">
+      <div class="tm-name">Invalid CVV</div><div class="tm-val">60 · 6.5%</div>
+    </div>
+    <div class="tm-cell s6" style="flex-grow:40">
+      <div class="tm-name">Other</div><div class="tm-val">40 · 4.3%</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== RADAR CHART ========== -->
+<!-- 5 axes at 72° apart, starting at 12 o'clock. Concentric circles at
+     25/50/75/100% of the 115px max radius stand in for a polygonal grid.
+     Two profiles: a solid filled "current" polygon and a dashed unfilled
+     "baseline" polygon, matching the solid/dashed comparison convention
+     used in the line chart above. -->
+<div class="radar-card">
+  <svg viewBox="0 0 320 320" role="img" aria-label="Risk factor profile, current vs baseline">
+    <circle class="radar-ring" cx="160" cy="160" r="28.75"/>
+    <circle class="radar-ring" cx="160" cy="160" r="57.5"/>
+    <circle class="radar-ring" cx="160" cy="160" r="86.25"/>
+    <circle class="radar-ring" cx="160" cy="160" r="115"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="160" y2="45"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="269.4" y2="124.5"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="227.6" y2="253"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="92.4" y2="253"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="50.6" y2="124.5"/>
+    <polygon class="radar-poly compare" points="160,96.75 214.7,142.2 200.6,215.8 129.6,201.9 105.3,142.2"/>
+    <polygon class="radar-poly s1" points="160,68 231.1,136.9 220.8,243.7 122.8,211.2 83.4,135.1"/>
+    <text class="radar-lbl" x="160" y="25" text-anchor="middle">Velocity</text>
+    <text class="radar-lbl" x="288.4" y="118.3" text-anchor="start">Amount</text>
+    <text class="radar-lbl" x="239.4" y="269.2" text-anchor="start">Geography</text>
+    <text class="radar-lbl" x="80.6" y="269.2" text-anchor="end">Device</text>
+    <text class="radar-lbl" x="31.6" y="118.3" text-anchor="end">History</text>
+  </svg>
+  <ul class="cf-legend">
+    <li><i style="background:var(--sapphire)"></i>Current</li>
+    <li><i class="dashed" style="color:var(--med-gray)"></i>Baseline</li>
+  </ul>
+</div>
+
+
+<!-- ========== FUNNEL ========== -->
+<!-- Width% is relative to the FIRST stage (always 100%), never to a shared
+     axis max — a funnel has no axis, only a sequence of ratios. Colors
+     follow the series ramp in order so stage identity reads at a glance. -->
+<div class="funnel">
+  <div class="fn-row" style="width:100%;background:var(--aperia-blue)">
+    <span class="fn-name">Applications Started</span><span class="fn-val">1,000</span>
+  </div>
+  <div class="fn-drop">↓ 28% drop-off</div>
+  <div class="fn-row" style="width:72%;background:var(--dark-blue)">
+    <span class="fn-name">Identity Verified</span><span class="fn-val">720</span>
+  </div>
+  <div class="fn-drop">↓ 33% drop-off</div>
+  <div class="fn-row" style="width:48%;background:var(--sapphire)">
+    <span class="fn-name">Approved</span><span class="fn-val">480</span>
+  </div>
+  <div class="fn-drop">↓ 27% drop-off</div>
+  <div class="fn-row" style="width:35%;background:var(--dark-gray)">
+    <span class="fn-name">Funded</span><span class="fn-val">350</span>
+  </div>
+</div>
+
+
+<!-- ========== SPARKLINE ========== -->
+<!-- viewBox is 0 0 120 32; x_i = i*(120/(n-1)), y = 28 - ((v-min)/(max-min))*24.
+     Pair with a .spark-delta badge stating the direction in words, since
+     color alone (up/down) is not the message on its own. -->
+<div class="spark-card">
+  <div class="spark-main">
+    <div class="spark-val">1,284</div>
+    <div class="spark-lbl">Transactions today</div>
+    <span class="spark-delta up">↑ 12% vs. 7-day avg</span>
+  </div>
+  <svg class="spark-svg" viewBox="0 0 120 32" preserveAspectRatio="none" role="img" aria-label="8-day transaction count trend, rising">
+    <path d="M0,28 L17.1,22.47 L34.3,16.95 L51.4,20.11 L68.6,14.58 L85.7,10.63 L102.9,7.47 L120,4 L120,32 L0,32 Z" fill="var(--sapphire)" opacity=".12"/>
+    <path d="M0,28 L17.1,22.47 L34.3,16.95 L51.4,20.11 L68.6,14.58 L85.7,10.63 L102.9,7.47 L120,4" fill="none" stroke="var(--sapphire)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="120" cy="4" r="2.5" fill="var(--sapphire)"/>
+  </svg>
+</div>
+
+
+<!-- ========== HEATMAP ========== -->
+<!-- Two categorical axes (here: time bucket x day of week), one value per
+     cell. Cell background is a single hue at varying opacity (never a
+     rainbow scale — that isn't in the palette), so pair it with the legend
+     bar AND a <title> per cell: color alone is not accessible or printable. -->
+<div class="heatmap" style="--hm-cols:7">
+  <div class="hm-grid">
+    <div class="hm-corner"></div>
+    <div class="hm-colhead">Mon</div><div class="hm-colhead">Tue</div><div class="hm-colhead">Wed</div>
+    <div class="hm-colhead">Thu</div><div class="hm-colhead">Fri</div><div class="hm-colhead">Sat</div><div class="hm-colhead">Sun</div>
+
+    <div class="hm-rowhead">00–04</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.12)" title="Mon 00-04: 8 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.10)" title="Tue 00-04: 6 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.14)" title="Wed 00-04: 9 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.18)" title="Thu 00-04: 12 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.28)" title="Fri 00-04: 22 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.55)" title="Sat 00-04: 48 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.62)" title="Sun 00-04: 54 attempts"></div>
+
+    <div class="hm-rowhead">04–08</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.08)" title="Mon 04-08: 5 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.06)" title="Tue 04-08: 4 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.08)" title="Wed 04-08: 5 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.10)" title="Thu 04-08: 6 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.14)" title="Fri 04-08: 9 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.30)" title="Sat 04-08: 24 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.34)" title="Sun 04-08: 27 attempts"></div>
+
+    <div class="hm-rowhead">08–12</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.30)" title="Mon 08-12: 24 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.32)" title="Tue 08-12: 25 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.34)" title="Wed 08-12: 27 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.36)" title="Thu 08-12: 29 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.40)" title="Fri 08-12: 33 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.44)" title="Sat 08-12: 38 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.38)" title="Sun 08-12: 31 attempts"></div>
+
+    <div class="hm-rowhead">12–16</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.42)" title="Mon 12-16: 36 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.44)" title="Tue 12-16: 38 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.46)" title="Wed 12-16: 40 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.48)" title="Thu 12-16: 42 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.52)" title="Fri 12-16: 46 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.58)" title="Sat 12-16: 51 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.50)" title="Sun 12-16: 44 attempts"></div>
+
+    <div class="hm-rowhead">16–20</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.36)" title="Mon 16-20: 29 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.38)" title="Tue 16-20: 31 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.40)" title="Wed 16-20: 33 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.44)" title="Thu 16-20: 38 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.60)" title="Fri 16-20: 53 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.72)" title="Sat 16-20: 66 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.68)" title="Sun 16-20: 61 attempts"></div>
+
+    <div class="hm-rowhead">20–24</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.20)" title="Mon 20-24: 15 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.22)" title="Tue 20-24: 17 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.24)" title="Wed 20-24: 18 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.30)" title="Thu 20-24: 24 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.50)" title="Fri 20-24: 44 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.80)" title="Sat 20-24: 75 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.76)" title="Sun 20-24: 70 attempts"></div>
+  </div>
+  <div class="hm-legend"><span>Fewer attempts</span><span class="hm-legend-bar"></span><span>More attempts</span></div>
+</div>

@@ -1,0 +1,578 @@
+/* ===== APERIA UI COMPONENTS =====
+   Paste this entire block inside a <style> tag, AFTER the :root block from
+   ../../brand/tokens.css (this theme redefines --radius and the --text-*
+   steps identically, and adds the rest; order matters, see SKILL.md).
+   Load fonts first, 600 required:
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+   This is the create-report component library with the page chrome
+   (nav/hero/footer) and the data-driven grouped Gantt (sgantt) removed, so it
+   drops into any page. If you need those, use the create-report skill instead. */
+
+:root {
+  /* Aperia core palette */
+  --aperia-blue:#002F67; --dark-blue:#004785; --sapphire:#0072BC;
+  --sky-blue:#7ED3F7; --light-blue:#C8EAF5;
+  /* neutral palette */
+  --black:#000000; --white:#FFFFFF; --dark-gray:#58595B; --med-gray:#A7A9AC; --light-gray:#F1F2F2;
+  /* mapped roles */
+  --bg:#ffffff; --fg:#1c1f24; --muted:#F1F2F2; --muted-fg:#58595B;
+  --border:#e3e6ea; --card:#ffffff; --primary:var(--aperia-blue);
+  --success:#16a34a; --warning:#d97706; --danger:#dc2626;
+  --sans:'Inter', Arial, sans-serif; --label:var(--sans); /* no mono typeface: BRAND.md sanctions Inter only */
+  --radius:8px; --radius-pill:100px; --shadow:0 1px 3px rgba(0,47,103,.08),0 1px 2px rgba(0,47,103,.05);
+
+  /* --- Type scale (Aperia Figma design system) -----------------------------
+     Ten steps, size-semantic names, never role names, never tied to an h1..h6 tag.
+     No raw px font-size anywhere, no new step; the ramp is in BRAND.md only.
+     Figma also holds 10/12 and 11/16, both below the 12px on-screen floor, so
+     the web ramp starts at xs. */
+  --text-xs:12px;   --leading-xs:16px;
+  --text-sm:14px;   --leading-sm:20px;
+  --text-base:16px; --leading-base:24px;
+  --text-md:18px;   --leading-md:28px;
+  --text-lg:20px;   --leading-lg:32px;
+  --text-xl:24px;   --leading-xl:36px;
+  --text-2xl:28px;  --leading-2xl:40px;
+  --text-3xl:32px;  --leading-3xl:48px;
+  --text-4xl:36px;  --leading-4xl:52px;
+  --text-5xl:40px;  --leading-5xl:56px;
+
+  /* --- Delivery/status ramp -------------------------------------------------
+     Four states: done / in progress / planned / at risk. Reuses the semantic
+     red-amber-green set already sanctioned in BRAND.md (see DEVIATIONS.md
+     section 7), plus Sapphire Blue and Medium Gray. No new hex values. */
+  --st-done:#15803d;  --st-done-bar:#16a34a; --st-done-bg:#f0fdf4; --st-done-line:#bbf7d0;
+  --st-prog:var(--sapphire); --st-prog-bar:var(--sapphire); --st-prog-bg:#eaf3fb; --st-prog-line:#bfdcf0;
+  --st-plan:var(--muted-fg); --st-plan-bar:var(--med-gray); --st-plan-bg:var(--muted); --st-plan-line:var(--border);
+  --st-risk:#b45309;  --st-risk-bar:#d97706; --st-risk-bg:#fffbeb; --st-risk-line:#fde68a;
+
+  /* --- Environment chain ---------------------------------------------------
+     DEV to PROD, darkening through the three core blues, then the two
+     sanctioned semantic colors: amber for the staging window, green for live.
+     No new hex values. See DEVIATIONS.md section 7. */
+  --env-dev:var(--sapphire); --env-qa:var(--dark-blue); --env-uat:var(--aperia-blue);
+  --env-stag:#b45309; --env-prod:#15803d;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+
+/* Size utilities, one per ramp step. Apply at the use site: <h2 class="text-2xl">.
+   Never a bare h1..h6 font-size rule; size comes from a utility or a component
+   rule that references a token. The two display steps are responsive clamps
+   between ramp steps so they never land off-scale. */
+.text-xs { font-size:var(--text-xs); line-height:var(--leading-xs) }
+.text-sm { font-size:var(--text-sm); line-height:var(--leading-sm) }
+.text-base { font-size:var(--text-base); line-height:var(--leading-base) }
+.text-md { font-size:var(--text-md); line-height:var(--leading-md) }
+.text-lg { font-size:var(--text-lg); line-height:var(--leading-lg) }
+.text-xl { font-size:var(--text-xl); line-height:var(--leading-xl) }
+.text-3xl { font-size:var(--text-3xl); line-height:var(--leading-3xl) }
+.text-4xl { font-size:var(--text-4xl); line-height:var(--leading-4xl) }
+.text-2xl { font-size:clamp(var(--text-lg),3vw,var(--text-2xl)); line-height:clamp(var(--leading-lg),4.8vw,var(--leading-2xl)) }
+.text-5xl { font-size:clamp(var(--text-2xl),4.4vw,var(--text-5xl)); line-height:clamp(var(--leading-2xl),6.6vw,var(--leading-5xl)) }
+body { font-family:var(--sans); font-weight:400; background:var(--bg); color:var(--fg); font-size:var(--text-base); line-height:1.65; -webkit-font-smoothing:antialiased }
+/* Content container. Cap at 920px by default; components that cannot fit their
+   named columns in 848px usable space get .wrap.full (full viewport width,
+   same side padding) instead — decide by arithmetic, not by feel. */
+.wrap { max-width:920px; margin:0 auto; padding:0 36px }
+.wrap.full { max-width:none }
+h2 { font-weight:600; line-height:1.2; letter-spacing:-.015em; margin-bottom:10px }
+h3 { font-weight:600 }
+
+/* Section / part labeling helpers (optional, useful even outside a full report) */
+.sec-label { font-family:var(--label); font-size:var(--text-xs); font-weight:500; color:var(--sapphire); letter-spacing:.08em; text-transform:uppercase; margin-bottom:12px }
+.sec-intro { font-size:var(--text-base); color:var(--muted-fg); max-width:600px; margin-bottom:36px; line-height:1.7; font-weight:400 }
+.part-head { display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding-top:4px; margin-bottom:14px }
+.part-n { font-family:var(--label); font-size:var(--text-xs); line-height:var(--leading-xs); letter-spacing:.12em; text-transform:uppercase; color:#fff; background:var(--aperia-blue); border-radius:var(--radius-pill); padding:4px 12px; flex-shrink:0 }
+.part-head h2 { margin:0; line-height:1.2 }
+.sub-h { font-family:var(--label); font-size:var(--text-xs); letter-spacing:.1em; text-transform:uppercase; color:var(--muted-fg); margin:40px 0 12px; font-weight:500 }
+.sub-h:first-of-type { margin-top:28px }
+.sub-note { font-size:var(--text-sm); color:var(--muted-fg); line-height:1.65; margin:-4px 0 16px; max-width:720px }
+
+/* grids */
+.g2 { display:grid; grid-template-columns:repeat(2,1fr); gap:14px }
+.g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px }
+.g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px }
+
+/* card */
+.card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px 22px; box-shadow:var(--shadow) }
+.card h3 { font-size:var(--text-base); font-weight:600; margin-bottom:6px }
+.card p { font-size:var(--text-sm); color:var(--muted-fg); line-height:1.65 }
+.mb-3 { margin-bottom:10px }
+
+/* badges */
+.badge { display:inline-flex; align-items:center; font-size:var(--text-xs); font-family:var(--label); font-weight:500; padding:4px 10px; border-radius:var(--radius-pill); letter-spacing:.02em }
+.b-red { background:#fef2f2; color:#dc2626; border:1px solid #fecaca }
+.b-green { background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0 }
+.b-blue { background:#eaf3fb; color:var(--dark-blue); border:1px solid #bfdcf0 }
+.b-amber { background:#fffbeb; color:#b45309; border:1px solid #fde68a }
+.b-gray { background:var(--muted); color:var(--muted-fg); border:1px solid var(--border) }
+.b-sky { background:#eafaff; color:var(--sapphire); border:1px solid var(--sky-blue) }
+
+/* stat cards: 2 to 4 standalone key numbers, never a bar chart */
+.stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:28px 0 }
+.stat-card { border:1px solid var(--border); border-radius:var(--radius); padding:20px 22px; background:var(--card); box-shadow:var(--shadow) }
+.stat-val { font-size:var(--text-5xl); font-weight:700; line-height:1; margin-bottom:6px; color:var(--aperia-blue) }
+.stat-lbl { font-size:var(--text-xs); color:var(--muted-fg); line-height:1.5 }
+
+/* callout */
+.callout { border-left:3px solid var(--primary); padding:13px 16px; background:#f4f8fc; border-radius:0 var(--radius) var(--radius) 0; font-size:var(--text-sm); line-height:1.7; margin:20px 0; color:var(--muted-fg) }
+.callout strong { color:var(--primary) }
+.callout.green { border-left-color:var(--success); background:#f0fdf4 }
+.callout.green strong { color:var(--success) }
+.callout.amber { border-left-color:var(--warning); background:#fffbeb }
+.callout.amber strong { color:var(--warning) }
+.callout.red { border-left-color:var(--danger); background:#fef2f2 }
+.callout.red strong { color:var(--danger) }
+/* Tagged variant: a labelled chip beside the text instead of the plain border */
+.callout.tagged { display:flex; align-items:flex-start; gap:14px; border-left:none; border:1px solid var(--border); background:var(--st-risk-bg); border-radius:var(--radius); padding:16px 18px }
+.callout.tagged.soft { background:var(--muted) }
+.callout-tag { display:inline-block; flex:none; padding:4px 10px; border-radius:var(--radius-pill); background:var(--card); border:1px solid var(--st-risk-line); font-family:var(--label); font-size:var(--text-xs); line-height:1.4; letter-spacing:.1em; text-transform:uppercase; color:var(--st-risk); white-space:nowrap }
+.callout.tagged.soft .callout-tag { border-color:var(--border); color:var(--muted-fg) }
+.callout.tagged p { margin:0; font-size:var(--text-sm); line-height:1.7 }
+
+/* color swatches: a small set of named colors with hex, e.g. a palette strip */
+.swatch-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:28px 0 }
+.swatch { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow) }
+.swatch-chip { height:84px }
+.swatch-body { padding:12px 14px }
+.swatch-name { font-size:var(--text-sm); font-weight:600; margin-bottom:6px }
+.swatch-hex { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); display:block; line-height:1.7 }
+
+/* comparison table: recommended column gets .hl */
+.cmp-table { width:100%; border-collapse:collapse; font-size:var(--text-sm); margin:26px 0 }
+.cmp-table th { text-align:left; padding:10px 14px; font-weight:600; font-size:var(--text-xs); letter-spacing:.05em; text-transform:uppercase; background:var(--muted); border:1px solid var(--border); color:var(--muted-fg) }
+.cmp-table th.hl { background:#eaf3fb; color:var(--dark-blue); border-color:#bfdcf0 }
+.cmp-table td { padding:11px 14px; border:1px solid var(--border); vertical-align:top; line-height:1.5 }
+.cmp-table td.hl { background:#f6fafe }
+.cmp-table tr:hover td { background:var(--muted) }
+.cmp-table tr:hover td.hl { background:#eef5fc }
+.ic-ok { color:#16a34a; font-weight:700 }
+.ic-no { color:#dc2626; font-weight:700 }
+.ic-mid { color:#b45309; font-weight:700 }
+
+/* stack table: categorical rows with role/type/focus badges, no invented numbers */
+.stack-table { width:100%; border-collapse:collapse; font-size:var(--text-sm); margin:26px 0 }
+.stack-table th { text-align:left; padding:10px 14px; font-weight:600; font-size:var(--text-xs); letter-spacing:.05em; text-transform:uppercase; background:var(--muted); border:1px solid var(--border); color:var(--muted-fg) }
+.stack-table td { padding:14px 16px; border:1px solid var(--border); vertical-align:top; line-height:1.55 }
+.stack-table tr:hover td { background:var(--muted) }
+.layer-name { font-weight:600; font-size:var(--text-sm); margin-bottom:3px }
+.layer-tool { font-size:var(--text-xs); color:var(--muted-fg); font-family:var(--label) }
+
+/* outcome grid: role-based before/after, ↓/↑ */
+.outcome-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:28px 0 }
+.outcome-card { border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; background:var(--card); box-shadow:var(--shadow) }
+.outcome-role { font-size:var(--text-xs); font-family:var(--label); font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted-fg); margin-bottom:8px }
+.outcome-from { font-size:var(--text-xs); color:var(--danger); display:flex; gap:7px; margin-bottom:4px; align-items:flex-start }
+.outcome-to { font-size:var(--text-xs); color:var(--success); display:flex; gap:7px; align-items:flex-start }
+
+/* concerns accordion */
+.concerns { display:flex; flex-direction:column; gap:10px; margin:24px 0 }
+.concern { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden }
+.c-hdr { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; cursor:pointer; background:var(--card); transition:background .15s }
+.c-hdr:hover { background:var(--muted) }
+.c-left { display:flex; align-items:center; gap:10px }
+.c-icon { width:28px; height:28px; border-radius:6px; background:#eaf3fb; color:var(--dark-blue); display:flex; align-items:center; justify-content:center; font-size:var(--text-xs); flex-shrink:0; font-family:var(--label); font-weight:500 }
+.c-title { font-size:var(--text-sm); font-weight:500 }
+.chevron { font-size:var(--text-xs); color:var(--muted-fg); transition:transform .2s; flex-shrink:0; margin-left:8px }
+.concern.open .chevron { transform:rotate(180deg) }
+.c-body { display:none; padding:12px 16px 16px; border-top:1px solid var(--border); background:#ffffff; font-size:var(--text-sm); color:var(--muted-fg); line-height:1.7 }
+.concern.open .c-body { display:block }
+
+/* principles grid: parallel, unordered items. For a sequence, use .flow instead */
+.principles { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:24px 0 }
+.principle { display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card) }
+.principle .num { font-family:var(--label); font-size:var(--text-xs); color:var(--sapphire); font-weight:500; flex-shrink:0; margin-top:1px }
+.principle .ptext { font-size:var(--text-sm); font-weight:500 }
+.principle .pdesc { font-size:var(--text-xs); color:var(--muted-fg); margin-top:2px; font-weight:400 }
+
+/* dark panel (Aperia Blue), for a recommendation or summary block */
+.dark-panel { background:var(--aperia-blue); border-radius:12px; padding:30px; margin:24px 0; position:relative; overflow:hidden }
+.dark-panel h3 { font-size:var(--text-base); font-weight:600; color:#fff; margin-bottom:8px; position:relative; z-index:1 }
+.dark-panel > p { font-size:var(--text-sm); color:#b9cde2; line-height:1.7; position:relative; z-index:1; max-width:600px }
+.dp-cols { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; position:relative; z-index:1 }
+.dp-col { border:1px solid rgba(255,255,255,.18); border-radius:8px; padding:14px }
+.dp-label { font-size:var(--text-xs); font-family:var(--label); color:var(--sky-blue); margin-bottom:5px; letter-spacing:.07em; text-transform:uppercase }
+.dp-col p { font-size:var(--text-sm); color:#dce8f3 }
+.dp-shape { position:absolute; top:0; right:0; height:100%; width:auto; z-index:0; opacity:1 }
+
+/* cta box (Aperia Blue), for the ask */
+.cta-box { background:var(--aperia-blue); border-radius:12px; padding:40px; margin:24px 0; text-align:left; position:relative; overflow:hidden }
+.cta-box h2 { font-size:clamp(var(--text-lg),3vw,var(--text-2xl)); font-weight:600; color:#fff; margin-bottom:10px; position:relative; z-index:1; max-width:520px }
+.cta-box p { font-size:var(--text-base); color:#b9cde2; max-width:500px; margin:0 0 24px; line-height:1.7; position:relative; z-index:1 }
+.cta-btns { display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:1 }
+.btn-w { padding:10px 26px; border-radius:var(--radius-pill); font-size:var(--text-sm); font-weight:600; background:#fff; color:var(--aperia-blue); cursor:pointer; border:none; font-family:var(--sans) }
+.btn-o { padding:10px 26px; border-radius:var(--radius-pill); font-size:var(--text-sm); font-weight:500; background:transparent; color:#dce8f3; border:1px solid rgba(255,255,255,.4); cursor:pointer; font-family:var(--sans) }
+.cta-shape { position:absolute; top:0; right:0; height:100%; width:auto; z-index:0; opacity:1 }
+
+/* =====================================================
+   DATA VISUALIZATION COMPONENTS
+   ===================================================== */
+
+/* --- PERT Range (3-column + gradient bar) --- */
+.pert-card { border:1px solid var(--border); border-radius:var(--radius); padding:28px; background:var(--card); box-shadow:var(--shadow); margin:28px 0 }
+.pert-title { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); text-transform:uppercase; letter-spacing:.06em; margin-bottom:24px }
+.pert-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; margin-bottom:16px }
+.pert-col { padding:16px 14px; border:1px solid var(--border); border-radius:4px; background:var(--muted); text-align:center }
+.pert-col.center-col { background:var(--aperia-blue); border-color:var(--aperia-blue); border-radius:6px; transform:scale(1.04); z-index:1; position:relative }
+.pert-col-label { font-family:var(--label); font-size:var(--text-xs); text-transform:uppercase; letter-spacing:.07em; color:var(--muted-fg); margin-bottom:6px }
+.pert-col.center-col .pert-col-label { color:var(--sky-blue) }
+.pert-col-hr { font-size:var(--text-2xl); font-weight:700; color:var(--fg); line-height:1 }
+.pert-col.center-col .pert-col-hr { color:#fff; font-size:var(--text-4xl) }
+.pert-col-day { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); margin-top:4px }
+.pert-col.center-col .pert-col-day { color:#b9cde2 }
+.pert-bar-wrap { margin-top:20px }
+.pert-bar-label { display:flex; justify-content:space-between; font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px }
+.pert-bar-track { height:8px; background:var(--muted); border-radius:4px; position:relative; border:1px solid var(--border); overflow:hidden }
+.pert-bar-fill { position:absolute; top:0; bottom:0; left:0; background:linear-gradient(90deg,var(--sky-blue) 0%,var(--sapphire) 45%,var(--dark-blue) 100%); border-radius:4px; opacity:.7 }
+.pert-bar-foot { font-size:var(--text-xs); color:var(--muted-fg); margin-top:10px; line-height:1.6 }
+.pert-bar-foot strong { color:var(--aperia-blue) }
+
+/* --- Horizontal Bar Chart --- */
+/* Flex rows only. No inline style= on .bval/.bname/.beff, no non-row content
+   inside .bchart, header and data rows share the same column divs, .bval holds
+   only a number. See SKILL.md "Bar chart consistency rules" for the full list. */
+.bchart { margin:28px 0; padding:22px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
+.brow { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); min-height:38px }
+.brow:last-of-type { border-bottom:none }
+.brow-head { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); text-transform:uppercase; letter-spacing:.06em; border-bottom:1px solid var(--border) !important; padding-bottom:10px !important; margin-bottom:4px; min-height:auto }
+.bname { flex:0 0 160px; font-size:var(--text-sm); font-weight:500; line-height:1.3; min-width:0; padding-right:4px }
+.bname small { display:block; font-size:var(--text-xs); color:var(--muted-fg); font-family:var(--label); font-weight:400 }
+.btrack-wrap { flex:1; min-width:0 }
+.btrack { height:16px; background:var(--muted); border-radius:4px; overflow:hidden; border:1px solid var(--border) }
+.bfill { height:100%; border-radius:3px }
+.bfill.t1 { background:var(--aperia-blue) }
+.bfill.t2 { background:var(--dark-blue) }
+.bfill.t3 { background:var(--sapphire) }
+.bval { flex:0 0 54px; font-family:var(--label); font-size:var(--text-xs); font-weight:600; color:var(--aperia-blue); text-align:right }
+.beff { flex:0 0 52px; font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); text-align:right }
+.bchart-foot { display:flex; gap:14px; flex-wrap:wrap; font-size:var(--text-xs); color:var(--muted-fg); margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-family:var(--label) }
+.bchart-foot span { display:flex; align-items:center; gap:6px }
+.bchart-foot span::before { content:''; width:10px; height:10px; border-radius:2px; flex-shrink:0 }
+.bchart-foot .lg-t1::before { background:var(--aperia-blue) }
+.bchart-foot .lg-t2::before { background:var(--dark-blue) }
+.bchart-foot .lg-t3::before { background:var(--sapphire) }
+
+/* --- Stacked Proportional Bar --- */
+.stack-wrap { margin:24px 0 }
+.stack-title { display:flex; justify-content:space-between; font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px }
+.stack { display:flex; height:44px; border-radius:6px; overflow:hidden; border:1px solid var(--border) }
+.seg { display:flex; align-items:center; justify-content:center; font-size:var(--text-xs); font-family:var(--label); color:#fff; font-weight:600; overflow:hidden; border-right:1px solid rgba(255,255,255,.15) }
+.seg:last-child { border-right:none }
+.seg.hide-label span { display:none }
+.stack-legend { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; font-size:var(--text-xs); color:var(--muted-fg); font-family:var(--label); list-style:none }
+.stack-legend li { display:flex; align-items:center; gap:6px }
+.stack-legend li i { width:10px; height:10px; border-radius:2px; flex-shrink:0; font-style:normal }
+
+/* --- Scenario / What-If Chart --- */
+.scn-wrap { margin:24px 0; padding:22px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
+.scn-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px dashed var(--border) }
+.scn-row:last-of-type { border-bottom:none }
+.scn-row-head { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); text-transform:uppercase; letter-spacing:.06em; padding-bottom:8px; border-bottom:1px solid var(--border) !important }
+.scn-name { flex:0 0 200px; font-size:var(--text-sm); font-weight:500; line-height:1.3; min-width:0; padding-right:6px }
+.scn-name small { display:block; font-size:var(--text-xs); color:var(--muted-fg); font-weight:400; margin-top:1px }
+.scn-bar-wrap { flex:1; min-width:0 }
+.scn-bar-track { height:26px; background:var(--muted); border-radius:4px; display:flex; overflow:hidden; border:1px solid var(--border) }
+.scn-seg-base { background:var(--aperia-blue); flex-shrink:0; border-radius:3px 0 0 3px }
+.scn-seg-add { background:repeating-linear-gradient(45deg,var(--sapphire),var(--sapphire) 5px,var(--dark-blue) 5px,var(--dark-blue) 10px); flex-shrink:0 }
+.scn-val { flex:0 0 88px; text-align:right }
+.scn-val-hr { font-family:var(--label); font-size:var(--text-sm); font-weight:600; color:var(--fg); display:block }
+.scn-val-delta { font-family:var(--label); font-size:var(--text-xs); display:block; margin-top:2px }
+.scn-val-delta.pos { color:var(--sapphire) }
+.scn-val-delta.warn { color:var(--warning) }
+.scn-val-delta.danger { color:var(--danger) }
+.scn-val-delta.out { color:var(--muted-fg) }
+.scn-striped { background:repeating-linear-gradient(45deg,var(--muted),var(--muted) 6px,#e3e6ea 6px,#e3e6ea 12px) }
+.scn-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-size:var(--text-xs); color:var(--muted-fg); font-family:var(--label); list-style:none }
+.scn-legend li { display:flex; align-items:center; gap:6px }
+.scn-legend li::before { content:''; width:14px; height:10px; border-radius:2px; flex-shrink:0 }
+.scn-legend .lg-base::before { background:var(--aperia-blue) }
+.scn-legend .lg-add::before { background:repeating-linear-gradient(45deg,var(--sapphire),var(--sapphire) 3px,var(--dark-blue) 3px,var(--dark-blue) 6px) }
+
+/* --- Complexity Tier Cards --- */
+.tier-wrap { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:24px 0 }
+.tier-card { padding:20px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
+.tier-label { font-family:var(--label); font-size:var(--text-xs); text-transform:uppercase; letter-spacing:.07em; color:var(--muted-fg); margin-bottom:6px }
+.tier-count { font-size:var(--text-4xl); font-weight:700; color:var(--aperia-blue); line-height:1; margin-bottom:2px }
+.tier-of { font-size:var(--text-xs); color:var(--muted-fg); font-family:var(--label); margin-bottom:12px }
+.tier-list { font-size:var(--text-xs); color:var(--muted-fg); line-height:1.75 }
+.tier-list strong { color:var(--fg); font-weight:500 }
+
+/* --- Proportional Timeline: EFFORT DISTRIBUTION, not a schedule --- */
+/* flex:N per bar, N = phase duration. Bars sit flush in one row. For a
+   sequence over time (phases that start where the last ends), use .gantt or
+   a timeline component below instead: flush bars read as one segmented bar. */
+.tline { margin:24px 0; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); padding:22px 24px; box-shadow:var(--shadow) }
+.tline-bars { display:flex; gap:3px; margin-bottom:6px }
+.tline-bar { display:flex; align-items:center; justify-content:center; padding:0 6px; color:#fff; font-size:var(--text-xs); font-family:var(--label); font-weight:600; border-radius:4px; min-height:40px; overflow:hidden }
+.tline-bar .tl-inner { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100% }
+.tline-bar.b1 { background:var(--aperia-blue) }
+.tline-bar.b2 { background:var(--dark-blue) }
+.tline-bar.b3 { background:var(--sapphire) }
+.tline-bar.b4 { background:var(--sky-blue); color:var(--aperia-blue) }
+.tline-axis { display:flex; justify-content:space-between; font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); padding:6px 2px 0; border-top:1px solid var(--border); margin-bottom:16px }
+.tline-detail { display:grid; grid-template-columns:1fr 1fr; gap:10px }
+.tline-item { padding:12px 14px; border:1px solid var(--border); border-radius:6px; background:var(--muted) }
+.tline-phase-name { font-size:var(--text-xs); font-weight:600; margin-bottom:2px; display:flex; justify-content:space-between; align-items:baseline; gap:8px }
+.tline-phase-name span { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); font-weight:500; white-space:nowrap }
+.tline-item-desc { font-size:var(--text-xs); color:var(--muted-fg); line-height:1.55 }
+
+/* --- Gantt Timeline: few phases, staggered rows on a shared time axis --- */
+/* USE FOR sequence-over-time. bar left% = (start/T)*100, width% = (duration/T)*100.
+   Write axis ticks with no space ("60d"), keep white-space:nowrap; first/last
+   ticks align to the axis edges (see .gtick:first-child/:last-child below). */
+.gantt { margin:24px 0; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); padding:24px 26px; box-shadow:var(--shadow) }
+.gantt-axis { position:relative; height:18px; margin-left:150px; margin-bottom:10px; border-bottom:1px solid var(--border) }
+.gantt-axis .gtick { position:absolute; top:0; transform:translateX(-50%); font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); white-space:nowrap }
+.gantt-axis .gtick:first-child { transform:none }
+.gantt-axis .gtick:last-child { transform:translateX(-100%) }
+.gantt-axis .gtick::after { content:''; position:absolute; left:50%; top:16px; width:1px; height:6px; background:var(--border) }
+.gantt-axis .gtick:first-child::after { left:0 }
+.gantt-axis .gtick:last-child::after { left:auto; right:0 }
+.gantt-row { display:flex; align-items:center; gap:0; min-height:46px; position:relative }
+.gantt-row + .gantt-row { border-top:1px dashed var(--border) }
+.gantt-label { flex:0 0 150px; min-width:0; padding-right:14px }
+.gantt-label .gl-name { font-size:var(--text-sm); font-weight:600; line-height:1.25; display:flex; align-items:center; gap:7px }
+.gantt-label .gl-dot { width:22px; height:22px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--label); font-size:var(--text-xs); font-weight:600; color:#fff }
+.gantt-label .gl-sub { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); margin-top:2px; padding-left:29px }
+.gantt-track { flex:1; position:relative; height:46px; min-width:0 }
+.gantt-bar { position:absolute; top:50%; transform:translateY(-50%); height:24px; border-radius:5px; display:flex; align-items:center; padding:0 10px; color:#fff; font-family:var(--label); font-size:var(--text-xs); font-weight:600; white-space:nowrap; box-shadow:0 1px 2px rgba(0,47,103,.18) }
+.gantt-bar.b1 { background:var(--aperia-blue) }
+.gantt-bar.b2 { background:var(--dark-blue) }
+.gantt-bar.b3 { background:var(--sapphire) }
+.gantt-bar.b4 { background:var(--sky-blue); color:var(--aperia-blue) }
+.gantt-detail { margin-top:18px; padding-top:16px; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr 1fr; gap:10px }
+.gantt-item { padding:12px 14px; border:1px solid var(--border); border-radius:6px; background:var(--muted) }
+.gantt-item-name { font-size:var(--text-xs); font-weight:600; margin-bottom:2px; display:flex; justify-content:space-between; align-items:baseline; gap:8px }
+.gantt-item-name span { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); font-weight:500; white-space:nowrap }
+.gantt-item-desc { font-size:var(--text-xs); color:var(--muted-fg); line-height:1.55 }
+
+/* --- Step Flow: sequential process pipeline --- */
+/* Each stage feeds the next. Do not use .principles for this: a grid implies
+   parallel/unordered items. Node colors auto-cycle for the first 4 steps. */
+.flow { margin:24px 0; display:flex; flex-direction:column; gap:0 }
+.flow-step { display:flex; gap:16px; position:relative }
+.flow-step:not(:last-child) { padding-bottom:22px }
+.flow-rail { flex:0 0 40px; display:flex; flex-direction:column; align-items:center }
+.flow-node { width:40px; height:40px; border-radius:10px; background:var(--aperia-blue); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--label); font-size:var(--text-base); font-weight:700; flex-shrink:0; box-shadow:0 2px 6px rgba(0,47,103,.2) }
+.flow-step:nth-child(2) .flow-node { background:var(--dark-blue) }
+.flow-step:nth-child(3) .flow-node { background:var(--sapphire) }
+.flow-step:nth-child(4) .flow-node { background:var(--sky-blue); color:var(--aperia-blue) }
+.flow-line { width:2px; flex:1; background:var(--border); margin:4px 0; min-height:14px }
+.flow-step:last-child .flow-line { display:none }
+.flow-body { flex:1; padding-top:7px; min-width:0 }
+.flow-title { font-size:var(--text-base); font-weight:600; margin-bottom:3px; display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+.flow-formula { font-family:var(--label); font-size:var(--text-xs); color:var(--sapphire); background:#eafaff; border:1px solid var(--sky-blue); padding:2px 8px; border-radius:5px; font-weight:500 }
+.flow-desc { font-size:var(--text-sm); color:var(--muted-fg); line-height:1.6 }
+
+/* animations */
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
+.fu { animation:fadeUp 0.5s ease both }
+.fu:nth-child(1) { animation-delay:.05s }
+.fu:nth-child(2) { animation-delay:.15s }
+.fu:nth-child(3) { animation-delay:.25s }
+.fu:nth-child(4) { animation-delay:.35s }
+@keyframes growBar { from { width:0!important } to {} }
+.bfill,.scn-seg-base,.scn-seg-add { animation:growBar .7s cubic-bezier(.4,0,.2,1) both }
+.scn-seg-add { animation-delay:.15s }
+
+/* =====================================================
+   MILESTONE / STATUS TIMELINES
+   All four components below (mstone-row, vtimeline, htimeline, envchain)
+   render the SAME four-field entry shape: lead / chip / title / note / cls.
+   See SKILL.md, "The entry contract", before hand-authoring markup for any
+   of them so the fields land in the same slots everywhere.
+   ===================================================== */
+
+/* --- Milestone cards: date-led, status on a marker, ≤4 entries --- */
+/* No colored border edge, per BRAND.md. Status rides a three-state marker:
+   blue for anything ahead, amber for risk or an estimated date, green for
+   done or the final live milestone. `est` also hollows the marker. */
+.mstone-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; align-items:start; margin:16px 0 }
+.mstone { position:relative; padding:16px 18px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); --dot:var(--st-prog-bar) }
+.mstone.done, .mstone.e-prod { --dot:var(--st-done-bar) }
+.mstone.risk, .mstone.est { --dot:var(--st-risk-bar) }
+.mstone .m-date { font-family:var(--label); font-size:var(--text-md); font-weight:600; letter-spacing:-.01em; color:var(--aperia-blue); line-height:1.1 }
+.mstone .m-date::before { content:''; display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--dot); margin-right:9px; vertical-align:middle }
+.mstone.est .m-date::before { background:var(--card); border:3px solid var(--dot) }
+.mstone .m-title { font-size:var(--text-sm); font-weight:600; margin-top:7px; line-height:1.35 }
+.mstone .m-note { font-size:var(--text-xs); color:var(--muted-fg); margin-top:4px; line-height:1.5 }
+.mstone .m-flag { display:inline-block; margin-top:10px; font-family:var(--label); font-size:var(--text-xs); letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:var(--radius-pill); color:var(--st-risk); background:var(--st-risk-bg); border:1px solid var(--st-risk-line) }
+
+/* --- Vertical timeline: the >4 (or "more text than fits a card") form --- */
+/* Three decodable marker states, so no legend is needed: blue ahead, amber for
+   risk/estimate, green for done/live. Status rides --dot, identity (for an
+   environment entry) rides the chip, never the marker or a card edge. */
+.vtimeline { margin:16px 0; display:flex; flex-direction:column }
+.vt-item { display:flex; gap:18px; --dot:var(--st-prog-bar) }
+.vt-item.done, .vt-item.e-prod { --dot:var(--st-done-bar) }
+.vt-item.risk, .vt-item.est { --dot:var(--st-risk-bar) }
+.vt-rail { flex:0 0 14px; display:flex; flex-direction:column; align-items:center }
+.vt-dot { width:14px; height:14px; border-radius:50%; background:var(--dot); flex-shrink:0; margin-top:4px }
+.vt-item.est .vt-dot { background:var(--card); border:3px solid var(--dot) }
+.vt-line { width:2px; flex:1; background:var(--border); margin:6px 0; min-height:12px }
+.vt-item.est .vt-line { width:0; border-left:2px dashed var(--border); background:none }
+.vt-item:last-child .vt-line { display:none }
+.vt-body { flex:1; min-width:0; padding-bottom:26px }
+.vt-item:last-child .vt-body { padding-bottom:0 }
+.vt-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+.vt-lead { font-family:var(--label); font-size:var(--text-md); font-weight:600; letter-spacing:-.01em; color:var(--aperia-blue); line-height:1.2 }
+.vt-chip { display:inline-block; font-family:var(--label); font-size:var(--text-xs); line-height:1.4; letter-spacing:.06em; text-transform:uppercase; padding:2px 9px; border-radius:var(--radius-pill); color:var(--st-risk); background:var(--st-risk-bg); border:1px solid var(--st-risk-line) }
+.vt-item.envc .vt-chip { color:var(--env); border-color:var(--env); background:var(--card) }
+.vt-title { font-size:var(--text-sm); font-weight:600; margin-top:5px; line-height:1.35 }
+.vt-note { font-size:var(--text-xs); color:var(--muted-fg); margin-top:4px; line-height:1.55; max-width:640px }
+
+/* --- Horizontal timeline: the sideways form of the same entry shape --- */
+/* Reuses the vtimeline marker vocabulary (--dot, done/risk/est, envc chip)
+   rotated onto a single row. Use for up to about 6 entries that read well
+   left-to-right (a short roadmap, a compact process). For more entries, more
+   body text per entry, or a narrow container, use .vtimeline instead — see
+   SKILL.md, "Choosing a timeline form". At <=700px this collapses to the same
+   vertical layout as .vtimeline, so the rail never has to squeeze sideways. */
+.htimeline { display:flex; align-items:flex-start; margin:20px 0 }
+.ht-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; text-align:center; --dot:var(--st-prog-bar) }
+.ht-item.done, .ht-item.e-prod { --dot:var(--st-done-bar) }
+.ht-item.risk, .ht-item.est { --dot:var(--st-risk-bar) }
+.ht-rail { display:flex; align-items:center; width:100% }
+.ht-line { flex:1; height:2px; background:var(--border) }
+.ht-item:first-child .ht-line:first-child { visibility:hidden }
+.ht-item:last-child .ht-line:last-child { visibility:hidden }
+.ht-dot { width:14px; height:14px; border-radius:50%; background:var(--dot); flex-shrink:0 }
+.ht-item.est .ht-dot { background:var(--card); border:3px solid var(--dot) }
+.ht-item.est .ht-line { background:none; border-top:2px dashed var(--border); height:0 }
+.ht-body { padding-top:14px; max-width:190px }
+.ht-head { display:flex; flex-direction:column; align-items:center; gap:4px }
+.ht-lead { font-family:var(--label); font-size:var(--text-sm); font-weight:600; letter-spacing:-.01em; color:var(--aperia-blue); line-height:1.2 }
+.ht-chip { display:inline-block; font-family:var(--label); font-size:var(--text-xs); line-height:1.4; letter-spacing:.06em; text-transform:uppercase; padding:2px 9px; border-radius:var(--radius-pill); color:var(--st-risk); background:var(--st-risk-bg); border:1px solid var(--st-risk-line) }
+.ht-item.envc .ht-chip { color:var(--env); border-color:var(--env); background:var(--card) }
+.ht-title { font-size:var(--text-sm); font-weight:600; margin-top:5px; line-height:1.35 }
+.ht-note { font-size:var(--text-xs); color:var(--muted-fg); margin-top:4px; line-height:1.5 }
+
+/* --- Environment chain: DEV -> QA -> UAT -> STAG -> PROD, ≤4 --- */
+.envchain { display:flex; align-items:stretch; flex-wrap:wrap; gap:8px; margin:16px 0 }
+.envcard { flex:1; min-width:150px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow) }
+.e-dev { --env:var(--env-dev) } .e-qa { --env:var(--env-qa) } .e-uat { --env:var(--env-uat) }
+.e-stag { --env:var(--env-stag) } .e-prod { --env:var(--env-prod) }
+.envcard .e-step { font-family:var(--label); font-size:var(--text-xs); letter-spacing:.12em; color:var(--muted-fg) }
+.envcard h3 { font-size:var(--text-base); color:var(--env); margin:5px 0 6px }
+.envcard .e-note { font-size:var(--text-xs); color:var(--muted-fg); line-height:1.5; margin-top:8px }
+.envcard .e-client { margin-top:10px; font-family:var(--label); font-size:var(--text-xs); letter-spacing:.08em; text-transform:uppercase; color:var(--env) }
+.env-badge { display:inline-block; font-family:var(--label); font-size:var(--text-xs); font-weight:500; letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:var(--radius-pill); color:var(--env); border:1px solid currentColor; background:var(--card) }
+.env-arrow { display:grid; place-items:center; color:var(--med-gray); font-size:var(--text-base); flex:0 0 auto }
+/* 5+ environments do not get a vertical variant of this card. They render as
+   .vtimeline with envc e-* entries instead. See SKILL.md. */
+
+/* --- Assumptions / Risks / Dependencies: three columns --- */
+.ard { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; align-items:start; margin:16px 0 }
+.ard-col { padding:18px 20px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
+.ard-col h3 { font-size:var(--text-base); margin:0 0 12px; display:flex; align-items:center; gap:10px }
+.ard-col .ard-cnt { font-family:var(--label); font-size:var(--text-xs); font-weight:500; color:var(--muted-fg); border:1px solid var(--border); border-radius:var(--radius-pill); padding:2px 9px }
+.ard-tag { display:block; font-family:var(--label); font-size:var(--text-xs); letter-spacing:.05em; text-transform:uppercase; color:var(--muted-fg); margin-bottom:6px; opacity:.85 }
+.ard-col.A .ard-tag { color:var(--sapphire) }
+.ard-col.R .ard-tag { color:var(--st-risk) }
+.ard-col.D .ard-tag { color:var(--aperia-blue) }
+.ard-item { padding:11px 0; border-bottom:1px solid var(--border); font-size:var(--text-sm); color:var(--muted-fg); line-height:1.6 }
+.ard-item:last-child { border-bottom:none; padding-bottom:0 }
+.ard-meta { display:flex; gap:10px; flex-wrap:wrap; margin-top:7px; font-family:var(--label); font-size:var(--text-xs); letter-spacing:.06em; text-transform:uppercase; color:var(--muted-fg) }
+.ard-sev { display:inline-block; font-family:var(--label); font-size:var(--text-xs); letter-spacing:.05em; text-transform:uppercase; padding:2px 9px; border-radius:var(--radius-pill); white-space:nowrap }
+.ard-sev.high { background:#fef2f2; color:#dc2626 }
+.ard-sev.med { background:var(--st-risk-bg); color:var(--st-risk) }
+
+/* =====================================================
+   ACCESSIBILITY HYGIENE
+   ===================================================== */
+:focus-visible { outline:3px solid var(--sapphire); outline-offset:2px; border-radius:4px }
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation-duration:.001ms!important; animation-iteration-count:1!important;
+    transition-duration:.001ms!important; scroll-behavior:auto!important }
+}
+
+/* =====================================================
+   RESPONSIVE: ≤700px
+   ===================================================== */
+@media(max-width:700px) {
+  .wrap { padding:0 16px }
+
+  /* Grids stack to single column */
+  .g2,.g3,.g4,.stat-row,.principles,.outcome-grid,.dp-cols,.tier-wrap,.tline-detail { grid-template-columns:1fr }
+
+  /* PERT cols stack; center-col loses scale */
+  .pert-cols { grid-template-columns:1fr }
+  .pert-col.center-col { transform:none; order:-1 }
+
+  /* Bar chart: narrow name, hide hr/page col */
+  .bname { flex:0 0 120px; font-size:var(--text-xs) }
+  .beff { display:none }
+  .bval { flex:0 0 48px; font-size:var(--text-xs) }
+
+  /* Scenario chart: hide bars on mobile, show numbers only */
+  .scn-bar-wrap { display:none }
+  .scn-name { flex:1 }
+  .scn-val { flex:0 0 80px }
+
+  /* Proportional timeline: vertical stack */
+  .tline-bars { flex-direction:column; gap:4px }
+  .tline-bar { width:100% !important; justify-content:flex-start; padding:0 12px }
+  .tline-axis { display:none }
+
+  /* Gantt: drop axis, stack label above the bar track, reset bars to
+     left-anchored fills. Set per-bar widths to (duration/longest*100)%,
+     !important, scaled to the report's own phases — the values below are the
+     shipped example (5/17/23/15 d, longest 23d) and MUST be recomputed. */
+  .gantt-axis { display:none }
+  .gantt-row { flex-direction:column; align-items:stretch; gap:7px; padding:14px 0 }
+  .gantt-label { flex:none; padding-right:0 }
+  .gantt-track { height:26px }
+  .gantt-bar { position:static; transform:none; height:26px; left:auto !important; min-width:max-content }
+  .gantt-bar.b1 { width:22% !important }
+  .gantt-bar.b2 { width:74% !important }
+  .gantt-bar.b3 { width:100% !important }
+  .gantt-bar.b4 { width:65% !important }
+  .gantt-detail { grid-template-columns:1fr }
+
+  /* Dark / CTA panels */
+  .cta-box { padding:28px 20px }
+  .dark-panel { padding:24px 20px }
+  .dp-cols { grid-template-columns:1fr }
+
+  /* Milestone / status timelines */
+  .ard { grid-template-columns:1fr }
+  .mstone-row { grid-template-columns:repeat(2,1fr) }
+  .envchain { flex-direction:column }
+  .env-arrow { display:none }
+  /* .vtimeline is single-column by construction, so it needs no override */
+  .callout.tagged { flex-direction:column; gap:10px }
+
+  /* Horizontal timeline collapses onto the same vertical layout as .vtimeline */
+  .htimeline { flex-direction:column }
+  .ht-item { flex-direction:row; align-items:flex-start; text-align:left; gap:16px }
+  .ht-rail { flex-direction:column; width:14px; align-self:stretch }
+  .ht-line { width:2px; height:auto; min-height:12px }
+  .ht-item.est .ht-line { border-top:none; border-left:2px dashed var(--border); width:0 }
+  .ht-body { padding-top:0; max-width:none; padding-bottom:22px; text-align:left }
+  .ht-item:last-child .ht-body { padding-bottom:0 }
+  .ht-head { align-items:flex-start }
+}
+
+/* =====================================================
+   PRINT
+   ===================================================== */
+@media print {
+  .card,.mstone,.envcard,.ard-col,.stat-card { box-shadow:none }
+  .dark-panel, .cta-box {
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    background:var(--aperia-blue) !important; color:#fff !important;
+  }
+  .dark-panel > p, .cta-box p { color:#fff !important }
+  .part-n, .badge, .env-badge, .vt-chip, .ht-chip, .m-flag, .callout-tag,
+  .vt-dot, .ht-dot, .seg, .bfill, .tline-bar, .gantt-bar, .flow-node {
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .card, .mstone, .vt-item, .ht-item, .ard-col, .ard-item, .callout, .envcard,
+  .stat-card, .tier-card, .concern, .flow-step, .tline-item, .gantt-item,
+  .pert-card, .bchart, .scn-wrap {
+    break-inside:avoid; page-break-inside:avoid;
+  }
+  tr, .brow, .scn-row { break-inside:avoid; page-break-inside:avoid }
+  h2, h3, .sub-h, .part-head { break-after:avoid; page-break-after:avoid }
+}

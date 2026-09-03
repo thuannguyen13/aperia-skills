@@ -27,6 +27,21 @@ in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
 Brand assets are at `../../brand/assets/`. The rules below cover what is
 specific to slides; everything about the identity itself lives in `BRAND.md`.
 
+**Design language follows `apply-ui-components`.** That sibling skill is the
+canonical source for how a component *means* something, independent of the
+canvas-unit vs. screen-px difference: which color a badge or callout carries
+for which sentiment, that status rides text/chip color rather than a colored
+card edge, the fixed `s1→s5` chart-series order (aperia-blue, dark-blue,
+sapphire, sky-blue, light-blue), and the chart-selection logic (a bar chart
+needs a real quantitative axis, a part-to-whole story stays within a slice
+budget, never invent a percentage to force a chart). `slides.css` already
+implements all of this in canvas units — the badge and callout palettes below
+are the same hex values apply-ui-components uses on screen, not a
+reinterpretation. When the two skills' rules differ (this deck caps a donut
+at 3 segments where apply-ui-components allows 5, since a slide is read from
+across a room in a few seconds), that is a deliberate, more conservative
+choice for the presentation context, not a gap to close.
+
 No PowerPoint template, no build step, no dependency beyond Google Fonts.
 
 What the output does:
@@ -324,7 +339,10 @@ file. Pick the form that matches the data.
   gets the same single `.insight` line, saying which of the numbers is the
   argument. `qa.py` does not check this one, so it is on you.
 - **No pie charts.** A pie is only legible with 2 to 3 near-equal slices; use the
-  donut for that case and the stacked bar for everything else.
+  donut for that case and the stacked bar for everything else. (`apply-ui-components`
+  allows a plain pie too, capped at 5 slices, for freeform pages read up close;
+  a slide is read from across a room, so this deck stays with the donut-only,
+  3-segment ceiling `qa.py` enforces — narrower, not a different rule.)
 - **Never invent numbers to make a chart work.** If you had to manufacture the
   percentages, the data is categorical, use a table or cards.
 - **A table from the source is a decision, not a default.** Ask first (step 3),

@@ -1,7 +1,7 @@
 /* ===== APERIA UI COMPONENTS =====
    Paste this entire block inside a <style> tag, AFTER the :root block from
-   ../../brand/tokens.css (this theme redefines --radius and the --text-*
-   steps identically, and adds the rest; order matters, see SKILL.md).
+   ../brand/tokens.css (this theme redefines --radius and the --text-*
+   steps identically, and adds the rest; order matters, see COMPONENTS.md).
    Load fonts first, 600 required:
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -231,7 +231,7 @@ h3 { font-weight:600 }
 /* --- Horizontal Bar Chart --- */
 /* Flex rows only. No inline style= on .bval/.bname/.beff, no non-row content
    inside .bchart, header and data rows share the same column divs, .bval holds
-   only a number. See SKILL.md "Bar chart consistency rules" for the full list. */
+   only a number. See COMPONENTS.md "Bar chart consistency rules" for the full list. */
 .bchart { margin:28px 0; padding:22px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
 .brow { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); min-height:38px }
 .brow:last-of-type { border-bottom:none }
@@ -380,7 +380,7 @@ h3 { font-weight:600 }
    MILESTONE / STATUS TIMELINES
    All four components below (mstone-row, vtimeline, htimeline, envchain)
    render the SAME four-field entry shape: lead / chip / title / note / cls.
-   See SKILL.md, "The entry contract", before hand-authoring markup for any
+   See COMPONENTS.md, "The entry contract", before hand-authoring markup for any
    of them so the fields land in the same slots everywhere.
    ===================================================== */
 
@@ -427,7 +427,7 @@ h3 { font-weight:600 }
    rotated onto a single row. Use for up to about 6 entries that read well
    left-to-right (a short roadmap, a compact process). For more entries, more
    body text per entry, or a narrow container, use .vtimeline instead — see
-   SKILL.md, "Choosing a timeline form". At <=700px this collapses to the same
+   COMPONENTS.md, "Choosing a timeline form". At <=700px this collapses to the same
    vertical layout as .vtimeline, so the rail never has to squeeze sideways. */
 .htimeline { display:flex; align-items:flex-start; margin:20px 0 }
 .ht-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; text-align:center; --dot:var(--st-prog-bar) }
@@ -460,7 +460,7 @@ h3 { font-weight:600 }
 .env-badge { display:inline-block; font-family:var(--label); font-size:var(--text-xs); font-weight:500; letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:var(--radius-pill); color:var(--env); border:1px solid currentColor; background:var(--card) }
 .env-arrow { display:grid; place-items:center; color:var(--med-gray); font-size:var(--text-base); flex:0 0 auto }
 /* 5+ environments do not get a vertical variant of this card. They render as
-   .vtimeline with envc e-* entries instead. See SKILL.md. */
+   .vtimeline with envc e-* entries instead. See COMPONENTS.md. */
 
 /* --- Assumptions / Risks / Dependencies: three columns --- */
 .ard { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; align-items:start; margin:16px 0 }

@@ -1,6 +1,6 @@
 /* ===== APERIA ANALYTICAL CHARTS =====
-   The extended chart family: paste this AFTER references/styles.css (which
-   must already be pasted after tokens.css :root — see SKILL.md). These
+   The extended chart family: paste this AFTER styles.css (which
+   must already be pasted after tokens.css :root — see COMPONENTS.md). These
    components share styles.css's tokens (--aperia-blue, --text-*, --radius,
    --shadow, --st-*) and add none of their own hex values.
 
@@ -84,7 +84,7 @@
 
 /* --- Radial gauge: ONE value on a semicircular arc, not a part-to-whole --- */
 /* This is deliberately not a pie or donut (both stay off-limits per
-   SKILL.md / create-report). A gauge shows a single metric against its own
+   COMPONENTS.md / create-report). A gauge shows a single metric against its own
    min-max range, the same job stat-card does with a number alone; reach for
    this when the position on the range carries meaning a bare number does not. */
 .gauge-card { display:inline-flex; flex-direction:column; align-items:center; padding:18px 22px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow); margin:12px 12px 12px 0 }
@@ -99,7 +99,7 @@
 .gauge-sub { font-size:var(--text-xs); color:var(--muted-fg); text-align:center; margin-top:2px }
 
 /* --- Pie / donut: a part-to-whole story, at most ~5 slices --- */
-/* Sanctioned, but constrained — see SKILL.md's "Chart rules": at most 5
+/* Sanctioned, but constrained — see COMPONENTS.md's "Chart rules": at most 5
    slices, sorted descending starting at 12 o'clock going clockwise, every
    slice labeled with its % in the legend (never color/angle alone). Built
    with conic-gradient, so slice boundaries are plain cumulative percentages

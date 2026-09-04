@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.3.0
+
+- **Removed the `apply-branding` and `apply-ui-components` skills.** The
+  plugin now ships two skills, `create-report` and `create-slides`.
+- **`apply-ui-components`'s component library moved out of `skills/` into a
+  new top-level reference folder, `plugins/aperia/ui-components/`** —
+  `styles.css`, `snippets.html`, `charts.css`/`charts.html`,
+  `icons.css`/`icons.html`, and a new `COMPONENTS.md` documenting all of it
+  (the same role `brand/BRAND.md` plays for the brand layer). It is a
+  sibling of `brand/`, not a skill: no frontmatter, nothing auto-invokes it.
+  `create-report` reads it the same way it already read `brand/`
+  (`../../ui-components/...`); `create-slides` keeps its own canvas-unit
+  implementation but follows the same design language, documented in its
+  own `SKILL.md`.
+- There is currently no skill for a freeform branding request that fits
+  neither `create-report` nor `create-slides` — that was `apply-branding`'s
+  job. See `MAINTAINING.md`, "Ad-hoc branding", if that need comes back.
+
 ## 0.2.0
 
 - New skill: `apply-ui-components`. A paste-in library of the presentational

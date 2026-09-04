@@ -1,14 +1,14 @@
 /* ===== APERIA REPORT THEME (chrome + sgantt + phases only) =====
    This file no longer carries the base component library — cards, badges,
    callouts, tables, timelines, charts, and everything else a report shares
-   with any other Aperia UI surface now lives once, in apply-ui-components'
+   with any other Aperia UI surface now lives once, in ../../ui-components/
    references/styles.css (plus charts.css and icons.css where used). Paste
    order in the report's <head>, all inside one <style> tag:
 
      1. ../../brand/tokens.css        (:root block only)
-     2. apply-ui-components' references/styles.css   (verbatim)
-     3. apply-ui-components' references/charts.css    (verbatim, only if the report uses the extended chart family)
-     4. apply-ui-components' references/icons.css      (verbatim, only if the report uses icons)
+     2. ../../ui-components/styles.css   (verbatim)
+     3. ../../ui-components/charts.css    (verbatim, only if the report uses the extended chart family)
+     4. ../../ui-components/icons.css      (verbatim, only if the report uses icons)
      5. THIS FILE                     (verbatim, always — it supplies the nav/hero/footer
                                         chrome, the sgantt subsystem, and the phases
                                         timeline, none of which exist anywhere else)
@@ -31,7 +31,7 @@
 
 /* Chrome-only page mechanics: smooth in-page scrolling for nav-link jumps,
    and the section rhythm every report section shares. Neither exists in the
-   base layer, since apply-ui-components makes no assumption about a full
+   base layer, since ../../ui-components/ makes no assumption about a full
    scrolling document of <section> elements. */
 html { scroll-behavior:smooth }
 section { padding:72px 0; position:relative }
@@ -81,7 +81,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 
 /* =====================================================
    PHASED ROADMAP (dot-and-line rail): the one component here with no
-   equivalent in apply-ui-components. Distinct from that library's
+   equivalent in ../../ui-components/. Distinct from that library's
    milestone/status timelines (mstone-row/vtimeline/htimeline): those plot
    dated checkpoints with a three-state status marker, this one narrates
    sequential PHASES of work, each with a duration pill and a bulleted list
@@ -107,7 +107,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 /* =====================================================
    GROUPED GANTT (sgantt): sprint + phase columns, merged status bars
    =====================================================
-   A different component from apply-ui-components' `gantt`. Use that one
+   A different component from the shared `gantt`. Use that one
    when phases sit on a continuous time axis. Use sgantt when the schedule
    is a fixed set of named columns (sprints, then release stages) and many
    rows span several of them. Rendered from a DATA object, never
@@ -271,7 +271,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 
 /* =====================================================
    ACCESSIBILITY: the skip link, chrome-only (:focus-visible and the
-   reduced-motion query are already in apply-ui-components' base layer)
+   reduced-motion query are already in the shared base layer)
    ===================================================== */
 .skip-link { position:absolute; left:-999px; background:var(--aperia-blue); color:#fff; padding:10px 14px; border-radius:var(--radius); z-index:200; font-size:var(--text-sm) }
 .skip-link:focus { left:14px; top:14px }
@@ -279,7 +279,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 /* =====================================================
    RESPONSIVE: ≤700px — chrome, sgantt and phases only. Every component the
    base layer already owns collapses via its own responsive block in
-   apply-ui-components' styles.css/charts.css; nothing here repeats that.
+   ../../ui-components/styles.css/charts.css; nothing here repeats that.
    ===================================================== */
 @media(max-width:700px) {
   .nav-inner { padding:0 16px }
@@ -321,8 +321,9 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
      print-color-adjust is honoured by current Chrome, Safari and Firefox. The
      real fragility is gradients, which engines drop far more often than flat
      fills, so every dark surface is repainted as a solid Aperia Blue here.
-     dark-panel/cta-box get the same treatment from apply-ui-components'
-     print block already; hero and footer are chrome, so they get it here. */
+     dark-panel/cta-box get the same treatment from the shared layer's print
+     block already (../../ui-components/styles.css); hero and footer are
+     chrome, so they get it here. */
   .hero, footer {
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
     background:var(--aperia-blue) !important; color:#fff !important;

@@ -1,0 +1,47 @@
+<!-- ============================================================
+     APERIA ICONS: LUCIDE, ON DEMAND
+     Source: Lucide (MIT license, https://lucide.dev) — free to use and
+     redistribute, attribution appreciated but not required. Not a fixed
+     37-icon catalog: assets/lucide-icons.json bundles 2000+ icons, and
+     scripts/icon.py emits inline SVG for any of them by name.
+
+         python3 scripts/icon.py shield-check
+         python3 scripts/icon.py --search alert
+
+     Paste icons.css once per page, generate the <svg> for whatever icon you
+     need with the script above, and paste its output where you need it —
+     don't hand-write or guess at path data. Every icon fills with
+     stroke="currentColor" and fill="none", so it inherits the color of
+     whatever text or element wraps it — recolor with a CSS color, not by
+     editing the path or adding a fill.
+     ============================================================ -->
+
+
+<!-- ========== USAGE EXAMPLES ========== -->
+<!-- Inline with text: the icon inherits font-size (1em square) and color. -->
+<p><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg> Verified on file</p>
+
+<!-- Inside a badge: icon color follows the badge's text color automatically -->
+<span class="badge b-green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg> Approved</span>
+
+<!-- Explicit size + color, independent of surrounding text -->
+<svg class="icon icon-lg" style="color:var(--st-risk)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+
+<!-- Inside a callout, replacing the strong-text lead-in -->
+<div class="callout amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg> <strong>Note:</strong> icons never replace the badge/callout color system — they ride the same currentColor the surrounding text already sets.</div>
+
+
+<!-- ========== COMMONLY USEFUL SLUGS (a starting point, not the full set) ========== -->
+<!-- Run `python3 scripts/icon.py <slug>` to generate any of these, or
+     `--search <term>` to find one not listed here. -->
+<!--
+Status & feedback:    check, circle-check, shield-check, x, circle-x, triangle-alert,
+                       circle-alert, circle-help, info
+Navigation & actions:  search, zoom-in, zoom-out, upload, download, arrow-left,
+                       arrow-right, external-link, filter, menu, chevron-down
+Objects & time:       calendar, clock, bell, lock, settings, link, eye, eye-off,
+                       printer, flag
+People:               user, users
+Data & trend:         trending-up, trending-down, share-2, globe, chart-bar,
+                       chart-line, briefcase
+-->

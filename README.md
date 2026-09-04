@@ -2,19 +2,21 @@
 
 ## Overview
 
-A Claude plugin with three skills that produce on-brand Aperia output.
-Built from Aperia Brand Guidelines v1.0.
+A Claude plugin with two skills that produce on-brand Aperia output, built on
+two shared reference layers. Built from Aperia Brand Guidelines v1.0.
 
 | Skill | Invoke as | Output |
 |---|---|---|
 | Create report | `/aperia:create-report` | Self-contained HTML report, briefing, or proposal |
 | Create slides | `/aperia:create-slides` | Self-contained HTML deck that runs in the browser |
-| Apply branding | `/aperia:apply-branding` | Any other artifact in the Aperia brand |
-| Apply UI components | `/aperia:apply-ui-components` | One or a few Aperia-styled pieces — a card, a table, a chart, a timeline, an icon — dropped into a page, dashboard, or artifact |
 
-Each skill reads one shared brand layer before producing anything, so the
-palette, typography, logo rules, and parallelogram element come out right
-without you specifying them.
+Each skill reads two shared layers before producing anything:
+`brand/` (palette, typography, logo rules, the parallelogram element) and
+`ui-components/` (cards, badges, callouts, tables, a full chart toolkit, an
+icon set, and milestone/status timelines), so the same piece looks and
+behaves the same way whether it lands in a report or a deck. Neither layer
+is a skill on its own — they're reference folders every skill reads, the
+same way `brand/` always has been.
 
 ## How to install
 
@@ -39,8 +41,6 @@ Open Claude Desktop and following instruction:
 Invoke a skill by name, then describe what you want:
 - `/aperia:create-slides` build a readout from the Q3 findings
 - `/aperia:create-report` write this up as a strategic briefing
-- `/aperia:apply-branding` make this dashboard on-brand
-- `/aperia:apply-ui-components` add an Aperia-styled comparison table here
 
 
 ## Maintaining

@@ -2,7 +2,7 @@
      APERIA REPORT: READY-TO-PASTE HTML SNIPPETS (chrome + sgantt + phases)
      Everything a report shares with any other Aperia UI surface — cards,
      badges, callouts, tables, timelines, charts, icons — now lives once in
-     apply-ui-components' references/snippets.html (plus charts.html and
+     ../../ui-components/snippets.html (plus charts.html and
      icons.html where used). Copy component markup from there. This file
      keeps only what's unique to a full report: nav, hero, footer, the
      section-opening pattern, the phased-roadmap timeline, and the
@@ -80,7 +80,7 @@
 
 
 <!-- ========== SECTION WRAPPER ========== -->
-<!-- .sec-label and .sec-intro are defined in apply-ui-components' styles.css,
+<!-- .sec-label and .sec-intro are defined in ../../ui-components/styles.css,
      not here — this snippet is the report-specific pattern of opening a
      <section> with them, not a component in its own right. -->
 <section id="summary">
@@ -88,7 +88,7 @@
     <p class="sec-label">Section Name</p>
     <h2 class="text-2xl">Section Heading</h2>
     <p class="sec-intro">Brief intro, one or two sentences on what this section covers.</p>
-    <!-- component(s) go here — copy from apply-ui-components' snippets.html / charts.html / icons.html -->
+    <!-- component(s) go here — copy from ../../ui-components/snippets.html / charts.html / icons.html -->
   </div>
 </section>
 
@@ -98,12 +98,12 @@
 
 
 <!-- ========== PHASED ROADMAP (dot-and-line rail, duration + deliverables) ========== -->
-<!-- Distinct from apply-ui-components' milestone/status timelines: those plot
+<!-- Distinct from the shared layer's milestone/status timelines (../../ui-components/): those plot
      DATED checkpoints with a three-state status marker; this narrates
      SEQUENTIAL phases of work, each carrying a duration pill and a bulleted
      deliverables list. Node color cycles pd-blue → pd-sapphire → pd-dark →
      repeat for a 4th+ phase. If what you actually have is dated milestones or
-     a DEV→PROD chain, use vtimeline/htimeline/envchain from apply-ui-components
+     a DEV→PROD chain, use vtimeline/htimeline/envchain from ../../ui-components/
      instead — this component is for narrating the work itself, not dates. -->
 <div class="phases">
   <div class="p-item">
@@ -142,7 +142,7 @@
 
 <!-- ========== DELIVERY-PLAN MOUNT POINTS ==========
      Milestones (both the .mstone-row card form and the .vtimeline rail form,
-     both defined in apply-ui-components), the grouped Gantt, its toolbar, the
+     both defined in ../../ui-components/), the grouped Gantt, its toolbar, the
      hover tooltip, edit mode and the Assumptions / Risks / Dependencies block
      are all rendered from a DATA object. Markup and script are in
      references/interactive.html — the mount divs below are examples of what
@@ -174,7 +174,7 @@
 
 <!-- ========== SCRIPT (place just before </body>) ========== -->
 <!-- Only the mobile nav drawer toggle — chrome-unique. If the report also
-     uses apply-ui-components' `concerns` accordion, paste its toggle script
+     uses the shared `concerns` accordion, paste its toggle script
      from that skill's snippets.html too, but only once: do not paste an
      accordion script from both files, or the double-bound click handler
      will toggle a concern open and immediately closed on a single click. -->

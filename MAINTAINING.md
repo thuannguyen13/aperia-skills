@@ -37,11 +37,18 @@ Approval is structural: only hexes inside a fenced ```approved block count. Ment
 
 ## Conventions
 
-- `brand/` holds reference files only, with no frontmatter, so nothing there loads as a skill alongside the three real ones.
-- Skills reach it by relative path: `../../brand/BRAND.md`, and brand assets by `../../brand/assets/`. A skill never keeps its own copy of either.
-- Each `SKILL.md` opens with a gate requiring that read and closes with a checklist that includes the guideline's Application Checklist.
+- `brand/` and `ui-components/` hold reference files only, with no frontmatter, so neither loads as a skill alongside the two real ones. `brand/` is the visual identity (palette, type, logo, the graphic element); `ui-components/` is the component library built on top of it (cards, badges, callouts, tables, the chart toolkit, the icon set, milestone/status timelines) — see `ui-components/COMPONENTS.md`.
+- Skills reach both by relative path: `../../brand/BRAND.md` and `../../brand/assets/`, `../../ui-components/styles.css` and friends. A skill never keeps its own copy of either layer — if you're about to paste component CSS into a skill's own `references/`, it almost certainly belongs in `ui-components/` instead.
+- `create-slides` is the one exception: its canvas-unit coordinate system can't literally share `ui-components/styles.css` (screen px vs. a fixed 1920×1080 canvas), so it keeps its own `slides.css` implementation, translated to match the same design language (`ui-components/COMPONENTS.md`'s color/sentiment/chart rules) rather than sharing the file.
+- Each `SKILL.md` opens with a gate requiring the brand-layer read (and the component-layer read, for skills that build HTML) and closes with a checklist that includes the guideline's Application Checklist.
 - If a color or type value isn't in `BRAND.md` or `tokens.*`, it isn't an Aperia value.
 
 ## Ad-hoc branding
 
-A reference file doesn't auto-trigger the way a skill does, so the brand layer loads only through a skill. Requests that fit neither `create-report` nor `create-slides` are covered by `apply-branding`, whose only job is to load the brand layer and let the model build the requested format on top of it.
+There is currently no skill for a freeform request that fits neither
+`create-report` nor `create-slides` (a landing page, an email, a one-off
+graphic). If that need comes back, either add a thin skill whose only job is
+to load `brand/` (and `ui-components/`, if the output needs any of its
+pieces) and let the model build the requested format on top, or extend one
+of the two existing skills — don't duplicate the reference layers into a new
+copy either way.

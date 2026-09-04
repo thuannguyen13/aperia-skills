@@ -1,6 +1,6 @@
 ---
 name: create-slides
-description: Build on-brand Aperia slide decks as a single self-contained HTML file: client presentations, internal readouts, pitch decks, QBRs, workshop decks. The deck runs in the browser, navigates with arrow keys, carries presenter notes, and prints straight to a 16:9 PDF. Use whenever the user wants slides, a deck, or a presentation that should follow the Aperia brand guidelines, including phrasings like "Aperia deck", "make me slides for the client", "turn this into a presentation", "build a readout deck", "slides I can send as a link", "a deck I can host", or any request to present content in the Aperia look and feel. Also use when converting an existing document, report, or set of notes into slides. This plugin builds decks as HTML only and cannot produce a .pptx file. Use the create-report skill when the user wants a long-form scrolling document rather than slides.
+description: Build an on-brand Aperia slide deck as a single self-contained HTML file.
 ---
 
 # Aperia Deck
@@ -27,18 +27,19 @@ in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
 Brand assets are at `../../brand/assets/`. The rules below cover what is
 specific to slides; everything about the identity itself lives in `BRAND.md`.
 
-**Design language follows `apply-ui-components`.** That sibling skill is the
-canonical source for how a component *means* something, independent of the
-canvas-unit vs. screen-px difference: which color a badge or callout carries
-for which sentiment, that status rides text/chip color rather than a colored
-card edge, the fixed `s1→s5` chart-series order (aperia-blue, dark-blue,
-sapphire, sky-blue, light-blue), and the chart-selection logic (a bar chart
-needs a real quantitative axis, a part-to-whole story stays within a slice
-budget, never invent a percentage to force a chart). `slides.css` already
-implements all of this in canvas units — the badge and callout palettes below
-are the same hex values apply-ui-components uses on screen, not a
-reinterpretation. When the two skills' rules differ (this deck caps a donut
-at 3 segments where apply-ui-components allows 5, since a slide is read from
+**Design language follows `../../ui-components/COMPONENTS.md`.** That shared
+reference layer is the canonical source for how a component *means*
+something, independent of the canvas-unit vs. screen-px difference: which
+color a badge or callout carries for which sentiment, that status rides
+text/chip color rather than a colored card edge, the fixed `s1→s5`
+chart-series order (aperia-blue, dark-blue, sapphire, sky-blue, light-blue),
+and the chart-selection logic (a bar chart needs a real quantitative axis, a
+part-to-whole story stays within a slice budget, never invent a percentage
+to force a chart). `slides.css` already implements all of this in canvas
+units — the badge and callout palettes below are the same hex values
+`../../ui-components/styles.css` uses on screen, not a reinterpretation.
+When the two diverge (this deck caps a donut at 3 segments where
+`../../ui-components/COMPONENTS.md` allows 5, since a slide is read from
 across a room in a few seconds), that is a deliberate, more conservative
 choice for the presentation context, not a gap to close.
 
@@ -285,8 +286,10 @@ other way, never distort, rotate, or add effects.
 
 ## Icons
 
-Lucide line icons, the full set bundled offline in `assets/lucide-icons.json`.
-Browse at https://lucide.dev/icons/ and use the exact slug.
+Lucide line icons, the full set bundled offline in
+`../../ui-components/assets/lucide-icons.json` — shared with
+`../../ui-components/`, not a local copy. Browse at https://lucide.dev/icons/
+and use the exact slug.
 
 ```bash
 python3 <this skill dir>/scripts/icon.py shield-check users   # inline SVG
@@ -339,7 +342,7 @@ file. Pick the form that matches the data.
   gets the same single `.insight` line, saying which of the numbers is the
   argument. `qa.py` does not check this one, so it is on you.
 - **No pie charts.** A pie is only legible with 2 to 3 near-equal slices; use the
-  donut for that case and the stacked bar for everything else. (`apply-ui-components`
+  donut for that case and the stacked bar for everything else. (`../../ui-components/COMPONENTS.md`
   allows a plain pie too, capped at 5 slices, for freeform pages read up close;
   a slide is read from across a room, so this deck stays with the donut-only,
   3-segment ceiling `qa.py` enforces — narrower, not a different rule.)
@@ -422,7 +425,7 @@ a collision with the footer, or an icon crowding a heading. Check in particular:
   every chart, and the deck script. Read this second, copy from it.
 - `../../brand/assets/`: `aperia-logo.svg`, `pattern-single-portrait.svg`,
   `pattern-double.svg` if you need raw path data.
-- `assets/lucide-icons.json`: all 2,025 Lucide icons as path data.
+- `../../ui-components/assets/lucide-icons.json`: all 2,025 Lucide icons as path data, shared with `../../ui-components/`.
 - `scripts/icon.py`: emit inline icon markup.
 - `scripts/qa.py`: the required checker.
 

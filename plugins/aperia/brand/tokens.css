@@ -1,9 +1,9 @@
 /* Aperia brand tokens. Aperia Brand Guidelines v1.0
-   Source of truth: ../BRAND.md. Do not add values that are not in the guideline.
+   Source of truth: BRAND.md. Do not add values that are not in the guideline.
    This is the only token file. Anything that needs the values programmatically
    parses the custom properties below; rules and metadata that are not values
    (accessible pairings, logo clearspace, graphic-element placement, the 5pt
-   print minimum, Office body weight) live in ../BRAND.md prose. */
+   print minimum, Office body weight) live in BRAND.md prose. */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 

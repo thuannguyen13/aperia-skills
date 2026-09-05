@@ -279,7 +279,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 /* =====================================================
    RESPONSIVE: ≤700px — chrome, sgantt and phases only. Every component the
    base layer already owns collapses via its own responsive block in
-   ../../ui-components/styles.css/charts.css; nothing here repeats that.
+   ../../ui-components/styles.css and charts.css; nothing here repeats that.
    ===================================================== */
 @media(max-width:700px) {
   .nav-inner { padding:0 16px }

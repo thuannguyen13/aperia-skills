@@ -14,6 +14,8 @@
   (`../../ui-components/...`); `create-slides` keeps its own canvas-unit
   implementation but follows the same design language, documented in its
   own `SKILL.md`.
+- **New build step, `scripts/bundle-skills.py`.** Builds one standalone bundle per skill in `dist/`, inlining the layers that skill reads and rewriting its references, so a skill uploaded on its own to Claude Desktop carries the same files a plugin install would have given it. Without it `create-report` cannot render outside a plugin install, since its base components now live in `ui-components/`. CI builds the bundles on every push and pull request, so a broken layer reference fails there instead of at upload time.
+- Fixed two stale reference paths the bundle check surfaced: `brand/tokens.css` pointed at `../BRAND.md` for a file in its own directory, and `brand/DEVIATIONS.md` still named the component theme by its pre-refactor path.
 - There is currently no skill for a freeform branding request that fits
   neither `create-report` nor `create-slides` — that was `apply-branding`'s
   job. See `MAINTAINING.md`, "Ad-hoc branding", if that need comes back.

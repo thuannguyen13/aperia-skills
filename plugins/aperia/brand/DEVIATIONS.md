@@ -49,7 +49,7 @@ stays approved until the brand owner rules, and this section stays open.
 
 ## 2. Resolved: series 4 and 5 remapped to palette
 
-`references/styles.css` and `references/snippets.html` were inherited from the earlier
+`../ui-components/styles.css` and `../ui-components/snippets.html` were inherited from the earlier
 standalone report skill and carried two off-palette blues in the 4th and 5th chart
 series positions.
 

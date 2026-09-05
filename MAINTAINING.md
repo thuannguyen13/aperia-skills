@@ -35,12 +35,27 @@ Off-palette values are a decision, not an accident. Anything the check flags get
 
 Approval is structural: only hexes inside a fenced ```approved block count. Mentioning a value in prose, in a "was" column, or in a paragraph explaining why it was dropped does not approve it. Approval is plugin-wide rather than per file, so a value approved for one theme will pass in the other; scope it by narrative if that matters.
 
+## bundle-skills.py
+
+```bash
+python3 scripts/bundle-skills.py
+```
+
+Builds `dist/<skill>/` and `dist/<skill>.zip`, one standalone bundle per skill, for the Claude Desktop skill uploader. Neither is committed.
+
+The plugin install and the uploader lay files out differently. An install copies the whole of `plugins/aperia/`, so `brand/` and `ui-components/` sit beside `skills/` and `../../brand/BRAND.md` resolves. The uploader takes one folder per skill with nothing above it, so the same reference resolves to nothing. `create-slides` survives that because its theme is self-contained; `create-report` does not, because its base components live in `ui-components/` and its own `references/styles.css` defines one variable and reads 36 from elsewhere.
+
+So the script copies each layer a skill reads into a copy of that skill and rewrites the references to match. The repo still keeps one copy of each layer; the duplication happens at build time. It fails if a reference escapes a bundle or points at a file the bundle does not contain, which is the packaging break it exists to catch, and CI runs it on every push and pull request for that reason.
+
+Run it before uploading, and after moving anything between the layers and the skills.
+
 ## Conventions
 
 - `brand/` and `ui-components/` hold reference files only, with no frontmatter, so neither loads as a skill alongside the two real ones. `brand/` is the visual identity (palette, type, logo, the graphic element); `ui-components/` is the component library built on top of it (cards, badges, callouts, tables, the chart toolkit, the icon set, milestone/status timelines) — see `ui-components/COMPONENTS.md`.
 - Skills reach both by relative path: `../../brand/BRAND.md` and `../../brand/assets/`, `../../ui-components/styles.css` and friends. A skill never keeps its own copy of either layer — if you're about to paste component CSS into a skill's own `references/`, it almost certainly belongs in `ui-components/` instead.
 - `create-slides` is the one exception: its canvas-unit coordinate system can't literally share `ui-components/styles.css` (screen px vs. a fixed 1920×1080 canvas), so it keeps its own `slides.css` implementation, translated to match the same design language (`ui-components/COMPONENTS.md`'s color/sentiment/chart rules) rather than sharing the file.
 - Each `SKILL.md` opens with a gate requiring the brand-layer read (and the component-layer read, for skills that build HTML) and closes with a checklist that includes the guideline's Application Checklist.
+- Reference paths are written two ways, and `bundle-skills.py` depends on the difference. Prose and comments name a layer from the **skill root**, `../../brand/tokens.css`, whatever file they sit in, because the skill root is where a reader starts. Code under `scripts/` resolves against its own file instead, so it climbs the real number of levels. Keep new references in whichever form matches, or the bundles fail to build.
 - If a color or type value isn't in `BRAND.md` or `tokens.*`, it isn't an Aperia value.
 
 ## Ad-hoc branding

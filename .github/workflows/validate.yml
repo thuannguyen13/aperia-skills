@@ -16,6 +16,13 @@ jobs:
       - name: Validate manifests, skills, and palette
         run: python3 scripts/validate.py
 
+      # The plugin install keeps brand/ and ui-components/ as siblings of
+      # skills/, so a skill that reads them works there whatever the paths
+      # say. A standalone upload has no siblings, so a broken layer reference
+      # only shows up when the bundles are built.
+      - name: Build the standalone skill bundles
+        run: python3 scripts/bundle-skills.py
+
       # Schema-level checks the script above does not do. The two are
       # complementary: this one knows the manifest schema, ours knows the
       # brand palette and the skill-name rules.

@@ -16,6 +16,9 @@ Checks:
   6. The component layer does not redefine a token the brand layer already
      defines. One source per value; the two documented overrides are listed
      in OVERRIDES below, with the reason each is allowed.
+  7. Every color BRAND.md names in a palette table is defined under the
+     matching token name, with the same value. The guideline and the tokens
+     are two transcriptions of one palette, so they must not drift.
 
 Usage: python3 scripts/validate.py
 """
@@ -257,12 +260,42 @@ def check_single_source(plugin_name, plugin_dir):
                  f"the override.")
 
 
+# A palette row in BRAND.md: | Aperia Blue | `#002F67` | ... The name slugifies
+# to the token that must carry the same value.
+PALETTE_ROW = re.compile(r"^\|\s*([A-Za-z][A-Za-z ]+?)\s*\|\s*`#([0-9a-fA-F]{6})`", re.M)
+
+VALUE = re.compile(r"{}\s*:\s*([^;]+)")
+
+
+def check_guideline_matches_tokens(plugin_name, plugin_dir):
+    """Check 7."""
+    brand_md = plugin_dir / "brand" / "BRAND.md"
+    tokens, missing = brand_css(plugin_dir)
+    if tokens is None or not brand_md.exists():
+        return
+
+    defined = {}
+    for m in re.finditer(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})", tokens):
+        defined.setdefault(m.group(1), m.group(2).upper())
+
+    for m in PALETTE_ROW.finditer(brand_md.read_text()):
+        name, value = m.group(1).strip(), m.group(2).upper()
+        token = "--" + name.lower().replace(" ", "-")
+        if token not in defined:
+            fail(f"{plugin_name}: BRAND.md names '{name}' but no token '{token}' "
+                 f"defines it. The guideline and the tokens must agree.")
+        elif defined[token] != "#" + value:
+            fail(f"{plugin_name}: '{name}' is #{value} in BRAND.md and "
+                 f"{defined[token]} in '{token}'. One of them is wrong.")
+
+
 def main():
     plugins = check_manifests()
     for plugin_name, plugin_dir in plugins:
         check_skills(plugin_name, plugin_dir)
         check_palette(plugin_name, plugin_dir)
         check_single_source(plugin_name, plugin_dir)
+        check_guideline_matches_tokens(plugin_name, plugin_dir)
 
     for msg in NOTES:
         print(f"note: {msg}")

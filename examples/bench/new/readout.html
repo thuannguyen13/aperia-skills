@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Aperia Claude Toolkit 0.8.0 | Release Readout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toolkit 0.8.0 · Release Readout</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style data-aperia="report">
 /* Assembled by ui-components/assemble.py from the words in data-aperia.
@@ -1058,25 +1057,22 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
     </a>
     <ul class="nav-links">
       <li><a href="#summary">Summary</a></li>
-      <li><a href="#context">Context</a></li>
-      <li><a href="#impact">Impact</a></li>
-      <li><a href="#changes">Changes</a></li>
+      <li><a href="#changed">What Changed</a></li>
       <li><a href="#verification">Verification</a></li>
-      <li><a href="#next">Next</a></li>
+      <li><a href="#next">Next Steps</a></li>
     </ul>
     <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
+
 <div class="nav-drawer" id="drawer">
   <ul>
     <li><a href="#summary">Summary</a></li>
-    <li><a href="#context">Context</a></li>
-    <li><a href="#impact">Impact</a></li>
-    <li><a href="#changes">Changes</a></li>
+    <li><a href="#changed">What Changed</a></li>
     <li><a href="#verification">Verification</a></li>
-    <li><a href="#next">Next</a></li>
+    <li><a href="#next">Next Steps</a></li>
   </ul>
 </div>
 
@@ -1095,225 +1091,149 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
   </svg>
   <div class="wrap">
     <div class="hero-inner">
-      <p class="eyebrow">Release Readout · Aperia Claude Toolkit · 0.8.0</p>
-      <h1 class="text-5xl">Styles Are Copied, Not Typed<br><em>One Palette Source And A Stricter Build</em></h1>
-      <p class="hero-sub">Version 0.8.0 changes how a report or deck gets its stylesheet, closes the last two copies of the brand palette, and makes the validator enforce rules the shipped CSS was breaking. Nothing changes for the reader of a finished document.</p>
+      <p class="eyebrow">Release readout · Aperia skills toolkit · 0.8.0</p>
+      <h1 class="text-5xl">Toolkit 0.8.0<br><em>Release Readout</em></h1>
+      <p class="hero-sub">Styles now reach an output through one script instead of being pasted by hand, the palette has one source file again, and the shipped CSS passes the rules it asks documents to follow. This readout records what changed, how it is checked, and what is still open.</p>
       <div class="hero-meta">
         <div>Audience<strong>Toolkit Maintainers</strong></div>
-        <div>Scope<strong>Plugin 0.7.0 To 0.8.0</strong></div>
+        <div>Scope<strong>brand, ui-components, both skills</strong></div>
         <div>Date<strong>September 2026</strong></div>
       </div>
     </div>
   </div>
 </header>
 
-<div id="main">
+<main id="main">
 
 <section id="summary">
   <div class="wrap">
     <p class="sec-label">Summary</p>
-    <h2 class="text-2xl">What Changed In One Release</h2>
-    <p class="sec-intro">Seven findings from a review of the plugin, taken in order of cost. The first two are design changes; the rest are corrections the new validator now keeps in place.</p>
+    <h2 class="text-2xl">One Path For Styles, One Source For The Palette</h2>
+    <p class="sec-intro">0.8.0 is a consolidation release. It removes the two places where copies drifted from their source: hand-pasted stylesheets in every output, and palette values restated outside tokens.css. The checks that would catch a regression ship in the same release.</p>
 
     <div class="stat-row">
-      <div class="stat-card"><div class="stat-val">90 KB</div><div class="stat-lbl">CSS per report the model no longer re-types</div></div>
-      <div class="stat-card"><div class="stat-val">1</div><div class="stat-lbl">Source for the palette, down from 3</div></div>
-      <div class="stat-card"><div class="stat-val">9</div><div class="stat-lbl">Validator checks in CI, up from 7</div></div>
+      <div class="stat-card"><div class="stat-val">~90 KB</div><div class="stat-lbl">Hand-copied CSS removed from each output, now injected by assemble.py</div></div>
+      <div class="stat-card"><div class="stat-val">26</div><div class="stat-lbl">#fff literals in shipped CSS replaced with var(--white)</div></div>
+      <div class="stat-card"><div class="stat-val">6</div><div class="stat-lbl">Chart label sizes at 10px and 11px moved onto the --text-* ramp</div></div>
     </div>
 
     <div class="g2">
-      <div class="card"><div class="mb-3"><span class="badge b-blue">New</span></div><h3>Assemble Script</h3><p>A document carries one style marker. The shared script fills it with the layer files byte for byte and replaces its own block on every run.</p></div>
-      <div class="card"><div class="mb-3"><span class="badge b-blue">Changed</span></div><h3>Single Palette Source</h3><p>The deck theme reads the brand tokens instead of restating them, and the deck QA script reads the palette from the same files the repo validator does.</p></div>
-      <div class="card"><div class="mb-3"><span class="badge b-green">Fixed</span></div><h3>CSS Follows Its Rules</h3><p>Six label sizes below the 12px floor, a dozen literal radii, and a body weight the guideline never sanctioned are now on tokens and recorded.</p></div>
-      <div class="card"><div class="mb-3"><span class="badge b-gray">Housekeeping</span></div><h3>Stale Text And Dashes</h3><p>Version stamps, old skill names and wrong numbers are corrected. Every em dash is gone, and the validator fails on the next one.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-blue">Mechanism</span></div><h3>Styles Are Injected, Not Typed</h3><p>A document carries one style marker. The new assemble.py fills it with the layer files in order, byte for byte, and replaces its own block on re-run. Neither skill asks the model to read or paste a stylesheet any more.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-blue">Single Source</span></div><h3>The Palette Has One Source Again</h3><p>slides.css reads tokens.css instead of restating the ten hexes and the type ramp. qa.py and validate.py read the palette through the new brand/palette.py rather than a hardcoded set.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-green">Consistency</span></div><h3>Shipped CSS Follows Its Own Rules</h3><p>Off-ramp label sizes, literal small radii and white literals are gone. tokens.css now sets body in Regular, matching every theme, and the deviation is recorded in DEVIATIONS.md section 9.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-sky">Guardrails</span></div><h3>Validation Tightened</h3><p>validate.py gains four checks and a wider palette check. Check 6 in qa.py now covers skills/ too. The assemble script refuses a layer file that would end the style block early.</p></div>
     </div>
   </div>
 </section>
 
-<section id="context">
+<section id="changed">
   <div class="wrap">
-    <p class="sec-label">Context</p>
-    <h2 class="text-2xl">Why The Output Path Needed Work</h2>
-    <p class="sec-intro">The last five releases made the repo single-sourced. The delivery path undid that on every run.</p>
-
-    <div class="callout amber"><strong>The gap:</strong> every report asked the model to read about 190 KB of stylesheets and reference files, then type up to 92 KB of CSS into the output by hand. The repo guaranteed one copy of each value; the output was a fresh transcription each time, with no check on it.</div>
-
-    <div class="bchart">
-      <div class="brow brow-head">
-        <div class="bname">Per report</div>
-        <div class="btrack-wrap">KB the model reads before writing (max = 190)</div>
-        <div class="bval">KB</div>
-      </div>
-      <div class="brow">
-        <div class="bname">Before 0.8.0<small>eight files, including four stylesheets</small></div>
-        <div class="btrack-wrap"><div class="btrack"><div class="bfill t1" style="width:99%"></div></div></div>
-        <div class="bval">188</div>
-      </div>
-      <div class="brow">
-        <div class="bname">After 0.8.0<small>markdown and markup references only</small></div>
-        <div class="btrack-wrap"><div class="btrack"><div class="bfill t2" style="width:59%"></div></div></div>
-        <div class="bval">112</div>
-      </div>
-      <div class="bchart-foot">
-        <span class="lg-t1">Stylesheets counted</span>
-        <span class="lg-t2">Stylesheets injected by script</span>
-      </div>
-    </div>
-
-    <div class="outcome-grid">
-      <div class="outcome-card">
-        <div class="outcome-role">The Model</div>
-        <div class="outcome-from">↓ Reads four stylesheets, re-types them into every output</div>
-        <div class="outcome-to">↑ Writes content around a marker, runs one script</div>
-      </div>
-      <div class="outcome-card">
-        <div class="outcome-role">The Maintainer</div>
-        <div class="outcome-from">↓ Three palette copies to keep aligned by hand</div>
-        <div class="outcome-to">↑ One token file, two scripts read it</div>
-      </div>
-      <div class="outcome-card">
-        <div class="outcome-role">The Reviewer</div>
-        <div class="outcome-from">↓ Rule breaks in shipped CSS invisible to CI</div>
-        <div class="outcome-to">↑ Font sizes, radii, colors and dashes fail the build</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="impact">
-  <div class="wrap">
-    <p class="sec-label">Impact</p>
-    <h2 class="text-2xl">One Measured Run, Each Way</h2>
-    <p class="sec-intro">The same prompt and source document were run once through the 0.7.0 plugin and once through 0.8.0, in Claude Code, non-interactively. The meter is the JSON result Claude Code returns. Files are in the repo under examples/bench.</p>
-
-    <div class="stat-row">
-      <div class="stat-card"><div class="stat-val">105</div><div class="stat-lbl">Cost index, 0.7.0 = 100</div></div>
-      <div class="stat-card"><div class="stat-val">124</div><div class="stat-lbl">Time index, 0.7.0 = 100</div></div>
-      <div class="stat-card"><div class="stat-val">100%</div><div class="stat-lbl">CSS byte-exact in the 0.8.0 output</div></div>
-    </div>
+    <p class="sec-label">What Changed</p>
+    <h2 class="text-2xl">Before And After By Concern</h2>
+    <p class="sec-intro">Each row names something 0.7.0 handled in more than one place, or off the sanctioned scale, and where 0.8.0 puts it.</p>
 
     <table class="cmp-table">
-      <thead><tr><th>Per report, one run</th><th>0.7.0</th><th class="hl">0.8.0</th></tr></thead>
+      <thead><tr><th>Concern</th><th>0.7.0</th><th class="hl">0.8.0</th></tr></thead>
       <tbody>
-        <tr><td>Wall time</td><td>243 s</td><td class="hl">302 s</td></tr>
-        <tr><td>Agent turns</td><td>21</td><td class="hl">26</td></tr>
-        <tr><td>Input tokens, including cache reads</td><td>1,239,859</td><td class="hl">1,173,447</td></tr>
-        <tr><td>Input tokens, fresh</td><td>110,409</td><td class="hl">116,502</td></tr>
-        <tr><td>Output tokens</td><td>18,022</td><td class="hl">19,593</td></tr>
-        <tr><td>Cost</td><td>$3.39</td><td class="hl">$3.57</td></tr>
-        <tr><td>Output size</td><td>97 KB</td><td class="hl">97 KB</td></tr>
-        <tr><td>Stylesheet matches the repo</td><td>99.8%, four blank lines differ</td><td class="hl">100%, injected by the script</td></tr>
-        <tr><td>Off-palette colors</td><td>0</td><td class="hl">0</td></tr>
+        <tr><td>Stylesheets in an output</td><td><span class="ic-no">✗</span> Pasted by hand from the layer files, about 90 KB per output</td><td class="hl"><span class="ic-ok">✓</span> One marker, filled by assemble.py; document rules go in a second style block after it</td></tr>
+        <tr><td>Palette source</td><td><span class="ic-no">✗</span> slides.css restated the ten hexes and the type ramp; qa.py held its own set</td><td class="hl"><span class="ic-ok">✓</span> tokens.css only; slides.css reads it, qa.py and validate.py share brand/palette.py</td></tr>
+        <tr><td>Chart label sizes</td><td><span class="ic-no">✗</span> Six labels at 10px and 11px, below the 12px floor</td><td class="hl"><span class="ic-ok">✓</span> All on the --text-* ramp</td></tr>
+        <tr><td>Small radii</td><td><span class="ic-no">✗</span> Literal px values per component</td><td class="hl"><span class="ic-ok">✓</span> --radius-sm, 4px, 7.5 canvas units in decks</td></tr>
+        <tr><td>Body weight</td><td><span class="ic-mid">~</span> Themes set Regular; tokens.css did not say so</td><td class="hl"><span class="ic-ok">✓</span> tokens.css sets Regular; recorded as DEVIATIONS.md section 9</td></tr>
+        <tr><td>Inter loading</td><td><span class="ic-mid">~</span> An @import in tokens.css plus the link in head</td><td class="hl"><span class="ic-ok">✓</span> The link in head is the one place the font loads</td></tr>
+        <tr><td>White literals</td><td><span class="ic-no">✗</span> 26 occurrences of #fff</td><td class="hl"><span class="ic-ok">✓</span> var(--white)</td></tr>
+        <tr><td>Em dashes</td><td><span class="ic-no">✗</span> Present in docs, comments and snippets</td><td class="hl"><span class="ic-ok">✓</span> None, and validate.py fails any new one</td></tr>
       </tbody>
     </table>
 
-    <div class="callout amber"><strong>What the run showed.</strong> The estimate behind this release assumed the model typed 76 KB of CSS into every report. In Claude Code it did not: given a shell, the 0.7.0 flow concatenated the three stylesheets itself, and its output tokens show it. The 0.8.0 flow added five turns for the assemble step and the checks the skill now asks for. On this path the two versions cost the same within run-to-run noise, and the new one was a minute slower.</div>
-
-    <div class="callout"><strong>What still holds.</strong> The copy is now guaranteed rather than left to the model's judgement, and the output matched the repo to the byte. Where the model has no shell, which is the Claude Desktop skill upload, the old flow has to type the CSS. That path was not measured and is where the token saving would show, if it shows.</div>
-
-    <div class="callout tagged soft">
-      <span class="callout-tag">Method</span>
-      <p>One run per version is a sample of one. Both runs used the same model, prompt, source file and tool grants, in parallel. Cost is what Claude Code reported at list prices. A fair benchmark needs three runs and the median, and a run on the no-shell path; that is issue 7 on the project board.</p>
-    </div>
-  </div>
-</section>
-
-<section id="changes">
-  <div class="wrap">
-    <p class="sec-label">Changes</p>
-    <h2 class="text-2xl">The Seven Items</h2>
-    <p class="sec-intro">Each row is one finding from the review and what 0.8.0 does about it.</p>
-
+    <p class="sub-h">Everything Else In The Release</p>
+    <p class="sub-note">Smaller items, grouped by the area they touch.</p>
     <table class="stack-table">
       <thead>
         <tr>
-          <th style="width:200px">Item</th>
-          <th style="width:120px">Kind</th>
-          <th>What 0.8.0 does</th>
-          <th style="width:110px">Status</th>
+          <th style="width:220px">Item</th>
+          <th style="width:110px">Area</th>
+          <th>Change</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><div class="layer-name">Styles typed by hand</div><div class="layer-tool">ui-components/assemble.py</div></td>
-          <td><span class="badge b-blue">Design</span></td>
-          <td>A marker names a recipe, report or slides, plus optional charts and icons. The script concatenates the layers in order and writes them into the marker. Document-specific rules go in a second style block after it.</td>
-          <td><span class="badge b-green">Done</span></td>
+          <td><div class="layer-name">Palette check</div><div class="layer-tool">validate.py</div></td>
+          <td><span class="badge b-blue">Tooling</span></td>
+          <td>Now recognises three-digit hex and rgb() and rgba() forms, so a value written either way is checked against the palette.</td>
         </tr>
         <tr>
-          <td><div class="layer-name">Palette in three places</div><div class="layer-tool">brand/palette.py</div></td>
-          <td><span class="badge b-blue">Design</span></td>
-          <td>The deck theme reads the tokens. A shared palette module reads tokens.css and the approved blocks in DEVIATIONS.md; both the repo validator and the deck QA script import it. Check 6 now covers skills too.</td>
-          <td><span class="badge b-green">Done</span></td>
+          <td><div class="layer-name">Four new checks</div><div class="layer-tool">validate.py</div></td>
+          <td><span class="badge b-blue">Tooling</span></td>
+          <td>Fails a raw px font-size, an off-token border-radius, a skill description under 80 characters, and any em dash.</td>
         </tr>
         <tr>
-          <td><div class="layer-name">CSS breaking its own rules</div><div class="layer-tool">tokens.css, charts, base</div></td>
-          <td><span class="badge b-amber">Correction</span></td>
-          <td>Six chart labels at 10px and 11px move onto the ramp. A new small radius token replaces every literal. Body copy is Regular on screen, recorded as deviation 9. Two new checks keep it that way.</td>
-          <td><span class="badge b-green">Done</span></td>
+          <td><div class="layer-name">Check 6 scope</div><div class="layer-tool">qa.py</div></td>
+          <td><span class="badge b-blue">Tooling</span></td>
+          <td>Reads the palette through brand/palette.py and now scans skills/ as well as the brand and component folders.</td>
         </tr>
         <tr>
-          <td><div class="layer-name">Palette check too narrow</div><div class="layer-tool">scripts/validate.py</div></td>
-          <td><span class="badge b-amber">Correction</span></td>
-          <td>Three-digit hex and rgb() colors are now seen. The 26 short white literals became a token reference.</td>
-          <td><span class="badge b-green">Done</span></td>
+          <td><div class="layer-name">Closing style tag guard</div><div class="layer-tool">assemble.py</div></td>
+          <td><span class="badge b-blue">Tooling</span></td>
+          <td>Refuses a layer file containing a closing style tag, which the browser would treat as the end of the block even inside a comment.</td>
         </tr>
         <tr>
-          <td><div class="layer-name">Stale text</div><div class="layer-tool">BRAND.md, DEVIATIONS.md, SKILL.md</div></td>
+          <td><div class="layer-name">Stale text</div><div class="layer-tool">DEVIATIONS.md, BRAND.md, slides skill, MAINTAINING.md</div></td>
           <td><span class="badge b-gray">Docs</span></td>
-          <td>Version stamps from an older numbering, a token name that never existed, two old skill names, a wrong skill count and a wrong canvas height are corrected. The maintaining guide names the right edit order.</td>
-          <td><span class="badge b-green">Done</span></td>
+          <td>Version stamps and chartSeries in DEVIATIONS.md, the deck and report skill names in BRAND.md, "three skills" and "720px" in the slides skill, and the edit order in MAINTAINING.md, which 0.7.0 had inverted.</td>
         </tr>
         <tr>
-          <td><div class="layer-name">Thin skill descriptions</div><div class="layer-tool">SKILL.md frontmatter</div></td>
+          <td><div class="layer-name">Skill descriptions</div><div class="layer-tool">Both skills</div></td>
           <td><span class="badge b-gray">Docs</span></td>
-          <td>Both descriptions state the output and the use case in two or three sentences. The slides one says it does not produce PowerPoint. The validator fails under 80 characters.</td>
-          <td><span class="badge b-green">Done</span></td>
+          <td>Rewritten to two or three sentences that name the output. The slides description states that PowerPoint is not one.</td>
         </tr>
         <tr>
-          <td><div class="layer-name">Small fixes</div><div class="layer-tool">repo-wide</div></td>
-          <td><span class="badge b-gray">Docs</span></td>
-          <td>128 em dashes replaced and a check added. The Prettier config is committed. Inter loads once, from the link in the head. A dead condition in the QA script is removed.</td>
-          <td><span class="badge b-green">Done</span></td>
+          <td><div class="layer-name">Formatter config</div><div class="layer-tool">.prettierrc</div></td>
+          <td><span class="badge b-gray">Repo</span></td>
+          <td>Committed alongside the existing .prettierignore.</td>
+        </tr>
+        <tr>
+          <td><div class="layer-name">Release example</div><div class="layer-tool">examples/toolkit-0-8-0-release.html</div></td>
+          <td><span class="badge b-sky">Example</span></td>
+          <td>This release written up with create-report and assembled by the script from a bare marker.</td>
         </tr>
       </tbody>
     </table>
-
-    <div class="callout tagged">
-      <span class="callout-tag">Wider Than Planned</span>
-      <p>The radius rule rejects any literal, so 2, 3, 5, 10 and 12px corners were mapped as well as the 4 and 6px ones the review named. Dark panels and CTA boxes went from 12px corners to 8px. That is the one visible change in this release.</p>
-    </div>
   </div>
 </section>
 
 <section id="verification">
   <div class="wrap">
     <p class="sec-label">Verification</p>
-    <h2 class="text-2xl">What Was Checked</h2>
-    <p class="sec-intro">Three validators pass, and the new script was exercised from both layouts it has to support.</p>
+    <h2 class="text-2xl">What Checks The Release And What It Exercised</h2>
+    <p class="sec-intro">The release notes record the checks that now exist and one end-to-end exercise. They do not include a run log, so this section states what is checked, not a pass count.</p>
 
-    <table class="cmp-table">
-      <thead><tr><th>Check</th><th>0.7.0</th><th class="hl">0.8.0</th></tr></thead>
-      <tbody>
-        <tr><td>Manifests, skill frontmatter, palette, single source</td><td><span class="ic-ok">✓</span> Pass</td><td class="hl"><span class="ic-ok">✓</span> Pass</td></tr>
-        <tr><td>Three-digit hex and rgb() colors seen</td><td><span class="ic-no">✗</span> Not checked</td><td class="hl"><span class="ic-ok">✓</span> Pass</td></tr>
-        <tr><td>Raw px font sizes and literal radii</td><td><span class="ic-no">✗</span> Not checked</td><td class="hl"><span class="ic-ok">✓</span> Pass</td></tr>
-        <tr><td>Description length and em dashes</td><td><span class="ic-no">✗</span> Not checked</td><td class="hl"><span class="ic-ok">✓</span> Pass</td></tr>
-        <tr><td>Official plugin schema</td><td><span class="ic-ok">✓</span> Pass</td><td class="hl"><span class="ic-ok">✓</span> Pass</td></tr>
-        <tr><td>Standalone bundles build and resolve</td><td><span class="ic-ok">✓</span> Pass</td><td class="hl"><span class="ic-ok">✓</span> Pass</td></tr>
-        <tr><td>Assemble from plugin and from bundle, re-run safe</td><td><span class="ic-mid">~</span> No script</td><td class="hl"><span class="ic-ok">✓</span> Pass</td></tr>
-      </tbody>
-    </table>
+    <div class="g2">
+      <div class="card"><div class="mb-3"><span class="badge b-blue">Static</span></div><h3>validate.py</h3><p>Palette check across six-digit hex, three-digit hex, rgb() and rgba(). New failures for raw px font-size, off-token border-radius, a skill description under 80 characters, and any em dash. Reads the palette from brand/palette.py.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-blue">Static</span></div><h3>qa.py</h3><p>Shares brand/palette.py with validate.py, so both tools agree on what the palette is. Check 6 now covers skills/ in addition to the folders it scanned before.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-blue">Runtime</span></div><h3>assemble.py</h3><p>Rejects a layer file that contains a closing style tag before it writes anything. Re-running replaces its own block, so a second run is idempotent rather than additive.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-green">End To End</span></div><h3>Release Example</h3><p>examples/toolkit-0-8-0-release.html was produced by create-report from a bare marker and assembled by the script, which exercised the marker, the recipe and the layer order together.</p></div>
+    </div>
 
-    <div class="callout green"><strong>This page is the test.</strong> It was written with a bare style marker and assembled by the new script from the repo's own files. Nothing in its stylesheet was typed by hand.</div>
+    <div class="callout tagged soft">
+      <span class="callout-tag">Source</span>
+      <p>Counts in this readout (about 90 KB per output, 26 white literals, 6 label sizes, 4 new checks) come from the 0.8.0 release notes. Re-run validate.py and qa.py on the tagged commit before quoting them elsewhere.</p>
+    </div>
   </div>
 </section>
 
 <section id="next">
   <div class="wrap">
-    <p class="sec-label">Next</p>
-    <h2 class="text-2xl">What Remains</h2>
-    <p class="sec-intro">The release is committed on the working branch and not pushed. Two items are deliberately left for later.</p>
+    <p class="sec-label">Next Steps</p>
+    <h2 class="text-2xl">What The Release Leaves Open</h2>
+    <p class="sec-intro">The notes list no follow-up work. The items below are drawn from the shipped files themselves, where a comment or a deviation entry names a decision still pending, and are proposals for the maintainers to accept or drop.</p>
+
+    <div class="g2">
+      <div class="card"><div class="mb-3"><span class="badge b-amber">Proposed</span></div><h3>Reassemble Older Outputs</h3><p>Any report or deck authored before 0.8.0 still carries pasted CSS and will drift from the layer files. Add a marker and run assemble.py on each one that is still in use.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-amber">Proposed</span></div><h3>Confirm The Derived Leadings</h3><p>BRAND.md notes that the 36 and 40 line heights on the 4xl and 5xl steps are derived, not taken from Figma. They need the designer's confirmation before they count as final.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-amber">Proposed</span></div><h3>Close DEVIATIONS.md Section 9</h3><p>Body in Regular is now the token default and is recorded as a deviation from the guideline's Light. It stays a deviation until the brand owner accepts it or the themes move back.</p></div>
+      <div class="card"><div class="mb-3"><span class="badge b-amber">Proposed</span></div><h3>Decide The SYSTEM Tokens</h3><p>tokens.css reserves a SYSTEM section for spacing, elevation and motion and defines none of them yet. Components carry those values inline. Deciding whether to derive a scale is the next single-source question.</p></div>
+    </div>
 
     <div class="dark-panel">
       <svg class="dp-shape" viewBox="0 0 127.6 85.1" preserveAspectRatio="xMaxYMin meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
@@ -1325,11 +1245,11 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
         <path fill="url(#dpPat)" d="M93.6,85.1H25.5l25.5-63.7C56.2,8.5,68.7,0,82.6,0h45l-34,85.1Z"/>
       </svg>
       <h3>Recommendation</h3>
-      <p>Ship 0.8.0 as is. The two open items are small and independent of it.</p>
+      <p>Treat 0.8.0 as the baseline for the single-source rule. A value now has exactly one home, and the checks fail anything that gives it a second one.</p>
       <div class="dp-cols">
-        <div class="dp-col"><div class="dp-label">Duplicate Icon Script</div><p>The slides skill keeps a near-copy of the shared icon script. Fold it into the shared one in a later release.</p></div>
-        <div class="dp-col"><div class="dp-label">Comma Sweep</div><p>Every em dash became a comma. A few sentences would read better with a colon. Fix as they are noticed.</p></div>
-        <div class="dp-col"><div class="dp-label">Brand Owner Decisions</div><p>Deviations 1, 4 and 5 still wait on the brand owner. This release adds section 9, the body weight, to that list.</p></div>
+        <div class="dp-col"><div class="dp-label">For a document</div><p>Write the marker, never the CSS. Run assemble.py after the last edit. Document rules go in a second style block.</p></div>
+        <div class="dp-col"><div class="dp-label">For a stylesheet</div><p>Sizes from the --text-* ramp, radii from --radius, --radius-sm or --radius-pill, colors from tokens.css.</p></div>
+        <div class="dp-col"><div class="dp-label">For the docs</div><p>State a value once, in tokens.css or BRAND.md. Elsewhere, point at it. No em dashes anywhere.</p></div>
       </div>
     </div>
 
@@ -1342,17 +1262,13 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
         </defs>
         <path fill="url(#ctaPat)" d="M93.6,85.1H25.5l25.5-63.7C56.2,8.5,68.7,0,82.6,0h45l-34,85.1Z"/>
       </svg>
-      <h2 class="text-2xl">Push And Tag</h2>
-      <p>Push the branch, open the pull request, and tag the release so teammates pick it up on their next session.</p>
-      <div class="cta-btns">
-        <button class="btn-w">Push The Branch</button>
-        <button class="btn-o">Read The Changelog</button>
-      </div>
+      <h2 class="text-2xl">Run The Checks Before Your Next Edit</h2>
+      <p>Run validate.py and qa.py on the tagged 0.8.0 commit to confirm the counts above, then pick up or drop each of the four proposed items. Each is one decision, and none blocks the release.</p>
     </div>
   </div>
 </section>
 
-</div>
+</main>
 
 <footer>
   <div class="wrap">
@@ -1370,7 +1286,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
         <defs><clipPath id="clip0_ftr"><rect width="135" height="40" fill="white"/></clipPath></defs>
       </svg>
     </div>
-    <p>Aperia Claude Toolkit 0.8.0 · Release Readout · September 2026</p>
+    <p>Toolkit 0.8.0 · Release Readout · September 2026</p>
   </div>
 </footer>
 

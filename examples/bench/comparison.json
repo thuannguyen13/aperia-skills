@@ -1,0 +1,34 @@
+{
+  "old": {
+    "wall_s": 243,
+    "api_s": 221,
+    "turns": 21,
+    "input": 1239859,
+    "fresh_input": 110409,
+    "output": 18022,
+    "cost": 3.39,
+    "ok": true,
+    "html_kb": 97,
+    "style_blocks": 1,
+    "css_lines": 1023,
+    "css_match": 0.998,
+    "off_palette": [],
+    "injected": false
+  },
+  "new": {
+    "wall_s": 302,
+    "api_s": 282,
+    "turns": 26,
+    "input": 1173447,
+    "fresh_input": 116502,
+    "output": 19593,
+    "cost": 3.57,
+    "ok": true,
+    "html_kb": 97,
+    "style_blocks": 1,
+    "css_lines": 1028,
+    "css_match": 0.996,
+    "off_palette": [],
+    "injected": true
+  }
+}

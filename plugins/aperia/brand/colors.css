@@ -1,0 +1,45 @@
+/* Aperia brand colors. Aperia Brand Guidelines v1.0
+   Source of truth: BRAND.md > Color. Do not add values that are not in the
+   guideline; an off-palette value belongs in DEVIATIONS.md, approved, or
+   nowhere. One of three primitive files, all of which a consumer pastes:
+   colors.css, typography.css, shape.css. */
+
+:root {
+  /* --- Core palette ------------------------------------------------------ */
+  --aperia-blue:    #002F67;  /* primary: hero fills, dark panels, headings on light */
+  --dark-blue:      #004785;  /* secondary blue, gradient partner                     */
+  --sapphire-blue:  #0072BC;  /* accent: labels, links, highlights, chart series      */
+  --sky-blue:       #7ED3F7;  /* light accent, eyebrow text on dark                   */
+  --light-blue:     #C8EAF5;  /* tints, soft fills                                    */
+
+  /* --- Neutral palette --------------------------------------------------- */
+  --black:          #000000;
+  --dark-gray:      #58595B;  /* muted body copy, captions   */
+  --medium-gray:    #A7A9AC;  /* subtle UI, rules, disabled  */
+  --light-gray:     #F1F2F2;  /* muted backgrounds, cards    */
+  --white:          #FFFFFF;
+
+  /* --- Semantic aliases (map to palette only, never new hex) ------------- */
+  --bg:             var(--white);
+  --bg-muted:       var(--light-gray);
+  --fg:             var(--aperia-blue);
+  --fg-muted:       var(--dark-gray);
+  --rule:           var(--medium-gray);
+  --link:           var(--sapphire-blue);
+  --on-dark:        var(--white);
+  --eyebrow-on-dark: var(--sky-blue);
+
+  /* --- Approved gradients (palette colors only) -------------------------- */
+  --grad-hero:      linear-gradient(135deg, var(--aperia-blue), var(--dark-blue));
+  --grad-light:     linear-gradient(135deg, var(--white), var(--light-blue));
+
+  /* --- Chart series order -------------------------------------------------
+     The sanctioned ramp, in order: build every chart from series-1 outward. */
+  --series-1: var(--aperia-blue);
+  --series-2: var(--dark-blue);
+  --series-3: var(--sapphire-blue);
+  --series-4: var(--sky-blue);
+  --series-5: var(--light-blue);
+  --series-6: var(--dark-gray);
+  --series-7: var(--medium-gray);
+}

@@ -5,7 +5,7 @@
    references/styles.css (plus charts.css and icons.css where used). Paste
    order in the report's <head>, all inside one <style> tag:
 
-     1. ../../brand/tokens.css        (:root block only)
+     1. ../../brand/colors.css, typography.css, shape.css   (the brand primitives)
      2. ../../ui-components/base/styles.css   (verbatim)
      3. ../../ui-components/charts/styles.css    (verbatim, only if the report uses the extended chart family)
      4. ../../ui-components/icons/styles.css      (verbatim, only if the report uses icons)

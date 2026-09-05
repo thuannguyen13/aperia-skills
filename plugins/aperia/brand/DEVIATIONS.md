@@ -58,7 +58,7 @@ series positions.
 | `#3A8FD1` (`.tline-bar.b4`, `.gantt-bar.b4`, 4th `.flow-node`, gantt dot) | Sky Blue `#7ED3F7` | Text flipped from `#FFF` to Aperia Blue. White on Sky Blue is 1.67:1 and fails; Aperia Blue on Sky Blue is 7.83:1 and is a listed approved pair |
 | `#5FA9D8` (5th stacked segment) | Light Blue `#C8EAF5` | Same text flip, 10.32:1 |
 
-This now matches the `--series-1` to `--series-7` order in `tokens.css`.
+This now matches the `--series-1` to `--series-7` order in `colors.css`.
 
 **No `approved` block, deliberately.** Both values above are history. `#5FA9D8` is
 used nowhere and must stay that way. `#3A8FD1` is still in the deck theme and is
@@ -132,7 +132,7 @@ has a related and separate gap of its own, recorded in section 5.
 Added with the HTML `deck` skill in v2.0.0.
 
 On a light slide the chart series map cleanly onto `chartSeries` in
-`tokens.css`. On a dark navy slide, Aperia Blue and Dark Blue are invisible
+`colors.css`. On a dark navy slide, Aperia Blue and Dark Blue are invisible
 against the background, so `slides.css` shifts the whole ramp lighter. The
 palette offers only three light-enough blues (Sapphire, Sky, Light Blue) and the
 ramp needs five distinguishable steps, so two intermediates were invented:

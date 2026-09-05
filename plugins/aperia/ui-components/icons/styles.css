@@ -1,6 +1,6 @@
 /* ===== APERIA ICONS =====
    Paste this AFTER base/styles.css (which is itself pasted after
-   tokens.css :root — see COMPONENTS.md). Covers only the icon sizing/
+   the brand primitives — see COMPONENTS.md). Covers only the icon sizing/
    alignment rules; the icons themselves are Lucide (MIT), emitted on demand
    by icon.py from lucide-icons.json — there is no fixed
    catalog to paste from and no sprite/<symbol>/<use> to link.

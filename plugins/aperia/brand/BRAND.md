@@ -8,8 +8,10 @@
 > Graphic Elements, Applications).
 >
 > **Companion files** (same directory):
-> - `tokens.css`: the token file. Palette, type scale and weights as CSS custom
->   properties. Anything that needs the values programmatically parses these.
+> - `colors.css`, `typography.css`, `shape.css`: the token files, one per
+>   primitive. Palette and gradients; type scale, weights and the font stack;
+>   the two radii. Anything that needs the values programmatically parses
+>   these, and a consumer pastes all three, in that order.
 > - `assets/aperia-logo.svg`, `assets/pattern-single.svg`, `assets/pattern-double.svg`
 > - `DEVIATIONS.md`: audited gaps between this guideline and what ships here
 

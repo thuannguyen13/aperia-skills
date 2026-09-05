@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- **The brand layer is one file per primitive.** `tokens.css` is split into `colors.css` (palette, semantic aliases, gradients, the seven chart series steps), `typography.css` (font stack, weights, the ten size/leading steps, the guideline element defaults, the Inter `@import`) and `shape.css` (the two radii). A consumer pastes all three, in that order. All 57 tokens carry over with no value changed and nothing defined twice.
+- **The component layer stopped repeating brand values.** `base/styles.css` had redefined 32 of them, the palette, both type ramps and the radii, and `COMPONENTS.md` told you to paste it second so it would win. Those definitions are gone; it now reads the brand files. `--fg` is the one deliberate override left, near-black body ink over Aperia Blue, already recorded in `DEVIATIONS.md` section 4.
+- `validate.py` gains check 6: a token defined in both layers fails unless it is listed in `OVERRIDES` with a reason. Scoped to `ui-components`, since `create-slides` still keeps its own palette copy.
+- Added `.prettierignore` for `brand/`, `ui-components/` and the skills' `references/`. Those files are pasted verbatim into every output, so reformatting them quadruples what ships.
+
 ## 0.4.0
 
 - **`ui-components/` is grouped into one folder per toolkit.** `base/`, `charts/` and `icons/`, each holding a `styles.css` and an `index.html`, so a file no longer repeats the name of the folder it sits in. `icons/` is self-contained: `icon.py` and `lucide-icons.json` moved in beside the CSS, and the layer's top-level `scripts/` and `assets/` folders are gone. Every reference in both skills, `COMPONENTS.md` and `MAINTAINING.md` moved with them.

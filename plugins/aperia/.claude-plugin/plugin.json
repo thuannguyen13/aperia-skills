@@ -1,7 +1,7 @@
 {
   "name": "aperia",
   "displayName": "Aperia Claude Toolkit",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "On-brand Aperia reports and slide decks, built on two shared reference layers: brand identity and a reusable UI component library. Decks are self-contained HTML that runs in the browser and prints to a 16:9 PDF, not PowerPoint. All skills read the shared brand layer, built from Aperia Brand Guidelines v1.0.",
   "keywords": [
     "aperia",

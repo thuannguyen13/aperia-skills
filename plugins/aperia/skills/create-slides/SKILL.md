@@ -13,8 +13,9 @@ Before writing a line of HTML:
 
 1. Read **`../../brand/BRAND.md`** in full, especially Color, Typography, Logo,
    Graphic Element, and Format Notes.
-2. Read **`../../brand/tokens.css`** for the values, but **never paste it into
-   a deck**. `references/slides.css` is the only style block a deck carries: it
+2. Read the brand primitives **`../../brand/colors.css`**,
+   **`../../brand/typography.css`** and **`../../brand/shape.css`** for the
+   values, but **never paste them into a deck**. `references/slides.css` is the only style block a deck carries: it
    already mirrors the brand values in canvas space, so a second `:root` would
    override them with screen-px ones. `--radius` is the clearest case, 15 canvas
    units here against 8px there, and a paste flattens every card in the deck.
@@ -22,7 +23,7 @@ Before writing a line of HTML:
    **`references/snippets.html`** (the layouts and the deck script).
 
 **Do not work from memory of the palette or the type rules.** If a value is not
-in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
+in `BRAND.md` or a brand primitive, it is not an Aperia value. Do not invent it.
 
 Brand assets are at `../../brand/assets/`. The rules below cover what is
 specific to slides; everything about the identity itself lives in `BRAND.md`.
@@ -187,7 +188,7 @@ that is why they are separate.
 
 ### Palette: how the brand colors are used on a slide
 
-The values live in `../../brand/BRAND.md` and `tokens.css`. Take them from
+The values live in `../../brand/BRAND.md` and `colors.css`. Take them from
 there. What is specific to slides is the role each one plays:
 
 | Token | Role on a slide |
@@ -434,8 +435,8 @@ a collision with the footer, or an icon crowding a heading. Check in particular:
 `qa.py` covers density, notes, palette, duplicate ids, and Title Case. This
 covers what it cannot see.
 
-- [ ] `BRAND.md` and `tokens.css` were read before writing
-- [ ] Every color traces to `tokens.css`, or to a recorded entry in
+- [ ] `BRAND.md` and the brand primitives were read before writing
+- [ ] Every color traces to `colors.css`, or to a recorded entry in
       `brand/DEVIATIONS.md`
 - [ ] Inter with Arial fallback; nothing underlined; no justified text
 - [ ] Every `font-size` comes from a token in the `slides.css` Type scale

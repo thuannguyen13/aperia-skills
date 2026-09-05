@@ -4,7 +4,7 @@ For people editing this repo. To install and use the plugin, see [README.md](REA
 
 ## Change the brand
 
-1. Edit `plugins/aperia/brand/`: `BRAND.md` first, then `tokens.css`, and `assets/` to match. They must never drift from `BRAND.md`.
+1. Edit `plugins/aperia/brand/`: `BRAND.md` first, then the primitive it covers (`colors.css`, `typography.css` and `shape.css`), and `assets/` to match. They must never drift from `BRAND.md`.
 2. Bump `version` in `plugins/aperia/.claude-plugin/plugin.json`.
 3. Add a `CHANGELOG.md` entry.
 4. Run `python3 scripts/validate.py`, then `claude plugin validate .`.
@@ -28,8 +28,8 @@ No dependencies beyond Python 3. CI runs the same script on every push and pull 
 - Both manifests parse and carry their required keys.
 - Every plugin `source` in `marketplace.json` resolves, the two `name` values agree, and `version` is semver. A name mismatch would make the documented install id wrong.
 - Every skill has a `SKILL.md` with `name` and `description` frontmatter, and the name matches its directory, since the directory is what `/aperia:<name>` uses.
-- `tokens.css` defines the core and neutral palette and the seven chart series steps.
-- Every hex in the plugin is either in `tokens.css` or listed in a fenced ```approved block in `brand/DEVIATIONS.md`. The palette is read from `tokens.css` rather than hardcoded, so the check cannot drift from the tokens.
+- The brand primitives define the core and neutral palette and the seven chart series steps.
+- Every hex in the plugin is either in the brand primitives or listed in a fenced ```approved block in `brand/DEVIATIONS.md`. The palette is read from `colors.css` rather than hardcoded, so the check cannot drift from the tokens.
 
 Off-palette values are a decision, not an accident. Anything the check flags gets fixed or written into `plugins/aperia/brand/DEVIATIONS.md` with a reason. That file is both the audit trail and the allowlist. It currently covers the semantic status colors, the report theme's light tint ramp, the deck theme's dark chart ramp, the PowerPoint template accent alternates, and the `#004583` vs `#004785` mismatch between the supplied SVG assets and the guideline table.
 
@@ -55,8 +55,8 @@ Run it before uploading, and after moving anything between the layers and the sk
 - Skills reach both by relative path: `../../brand/BRAND.md` and `../../brand/assets/`, `../../ui-components/base/styles.css` and friends. A skill never keeps its own copy of either layer — if you're about to paste component CSS into a skill's own `references/`, it almost certainly belongs in `ui-components/` instead.
 - `create-slides` is the one exception: its canvas-unit coordinate system can't literally share `ui-components/base/styles.css` (screen px vs. a fixed 1920×1080 canvas), so it keeps its own `slides.css` implementation, translated to match the same design language (`ui-components/COMPONENTS.md`'s color/sentiment/chart rules) rather than sharing the file.
 - Each `SKILL.md` opens with a gate requiring the brand-layer read (and the component-layer read, for skills that build HTML) and closes with a checklist that includes the guideline's Application Checklist.
-- Reference paths are written two ways, and `bundle-skills.py` depends on the difference. Prose and comments name a layer from the **skill root**, `../../brand/tokens.css`, whatever file they sit in, because the skill root is where a reader starts. Code under `scripts/` resolves against its own file instead, so it climbs the real number of levels. Keep new references in whichever form matches, or the bundles fail to build.
-- If a color or type value isn't in `BRAND.md` or `tokens.*`, it isn't an Aperia value.
+- Reference paths are written two ways, and `bundle-skills.py` depends on the difference. Prose and comments name a layer from the **skill root**, `../../brand/colors.css`, whatever file they sit in, because the skill root is where a reader starts. Code under `scripts/` resolves against its own file instead, so it climbs the real number of levels. Keep new references in whichever form matches, or the bundles fail to build.
+- If a color or type value isn't in `BRAND.md` or one of the brand primitives, it isn't an Aperia value.
 
 ## Ad-hoc branding
 

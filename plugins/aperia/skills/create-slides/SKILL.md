@@ -37,7 +37,7 @@ and the chart-selection logic (a bar chart needs a real quantitative axis, a
 part-to-whole story stays within a slice budget, never invent a percentage
 to force a chart). `slides.css` already implements all of this in canvas
 units — the badge and callout palettes below are the same hex values
-`../../ui-components/styles.css` uses on screen, not a reinterpretation.
+`../../ui-components/base/styles.css` uses on screen, not a reinterpretation.
 When the two diverge (this deck caps a donut at 3 segments where
 `../../ui-components/COMPONENTS.md` allows 5, since a slide is read from
 across a room in a few seconds), that is a deliberate, more conservative
@@ -287,7 +287,7 @@ other way, never distort, rotate, or add effects.
 ## Icons
 
 Lucide line icons, the full set bundled offline in
-`../../ui-components/assets/lucide-icons.json` — shared with
+`../../ui-components/icons/lucide-icons.json` — shared with
 `../../ui-components/`, not a local copy. Browse at https://lucide.dev/icons/
 and use the exact slug.
 
@@ -425,7 +425,7 @@ a collision with the footer, or an icon crowding a heading. Check in particular:
   every chart, and the deck script. Read this second, copy from it.
 - `../../brand/assets/`: `aperia-logo.svg`, `pattern-single-portrait.svg`,
   `pattern-double.svg` if you need raw path data.
-- `../../ui-components/assets/lucide-icons.json`: all 2,025 Lucide icons as path data, shared with `../../ui-components/`.
+- `../../ui-components/icons/lucide-icons.json`: all 2,025 Lucide icons as path data, shared with `../../ui-components/`.
 - `scripts/icon.py`: emit inline icon markup.
 - `scripts/qa.py`: the required checker.
 

@@ -64,7 +64,7 @@ def fail(msg):
     FAILURES.append(msg)
 
 
-# `../../ui-components/styles.css` and friends, in prose, CSS comments and
+# `../../ui-components/base/styles.css` and friends, in prose, CSS comments and
 # markdown alike.
 SLASH_REF = re.compile(r"((?:\.\./)+)(" + "|".join(LAYERS) + r")\b")
 
@@ -76,6 +76,10 @@ JOIN_REF = re.compile(r'((?:"\.\.",\s*)+)(?="(?:' + "|".join(LAYERS) + r')")')
 CHECK_REF = re.compile(
     r"(?<![\w./-])((?:\.\./)+[\w./-]+|(?:" + "|".join(LAYERS) + r")/[\w./-]+)"
 )
+
+# A path built from os.path.join parts, which the pattern above cannot see.
+# Checked separately so a moved file breaks the build rather than the script.
+CHECK_JOIN = re.compile(r'os\.path\.join\(HERE,\s*((?:"[^"]+",?\s*)+)\)')
 
 
 def layers_used(skill_dir):
@@ -129,11 +133,16 @@ def verify(bundle):
     for path in sorted(bundle.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in TEXT:
             continue
-        for match in CHECK_REF.finditer(path.read_text(errors="ignore")):
-            ref = match.group(1).rstrip(".,;:)")
-            base = path.parent if ref.startswith("../") else bundle
+        text = path.read_text(errors="ignore")
+        rel = path.relative_to(OUT)
+
+        refs = [(m.group(1).rstrip(".,;:)"), False) for m in CHECK_REF.finditer(text)]
+        refs += [("/".join(re.findall(r'"([^"]+)"', m.group(1))), True)
+                 for m in CHECK_JOIN.finditer(text)]
+
+        for ref, from_file in refs:
+            base = path.parent if from_file or ref.startswith("../") else bundle
             target = (base / ref).resolve()
-            rel = path.relative_to(OUT)
             if not target.is_relative_to(bundle.resolve()):
                 fail(f"{rel}: '{ref}' points outside the bundle")
             elif not target.exists():

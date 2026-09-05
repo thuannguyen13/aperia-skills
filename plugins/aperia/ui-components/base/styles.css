@@ -1,6 +1,6 @@
 /* ===== APERIA UI COMPONENTS =====
    Paste this entire block inside a <style> tag, AFTER the :root block from
-   ../brand/tokens.css (this theme redefines --radius and the --text-*
+   ../../brand/tokens.css (this theme redefines --radius and the --text-*
    steps identically, and adds the rest; order matters, see COMPONENTS.md).
    Load fonts first, 600 required:
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- **`ui-components/` is grouped into one folder per toolkit.** `base/`, `charts/` and `icons/`, each holding a `styles.css` and an `index.html`, so a file no longer repeats the name of the folder it sits in. `icons/` is self-contained: `icon.py` and `lucide-icons.json` moved in beside the CSS, and the layer's top-level `scripts/` and `assets/` folders are gone. Every reference in both skills, `COMPONENTS.md` and `MAINTAINING.md` moved with them.
+- `bundle-skills.py` now resolves `os.path.join` paths too, not just slash-style ones. The icon script's path to the shared JSON is built that way, so moving the asset had broken it silently.
+
 ## 0.3.0
 
 - **Removed the `apply-branding` and `apply-ui-components` skills.** The

@@ -23,9 +23,9 @@ Before writing a single line of HTML:
 
 1. Read **`../../brand/BRAND.md`** in full.
 2. Read **`../../brand/tokens.css`** and paste its `:root` block into your `<style>`.
-3. Read **`../../ui-components/styles.css`** and **`../../ui-components/snippets.html`** — the base component library every report is built from — and **`../../ui-components/COMPONENTS.md`** for the full component toolkit, chart toolkit and the rules governing them (bar chart consistency, no invented percentages, pie/donut constraints, the timeline entry contract, etc.). This file does not repeat that guidance; `COMPONENTS.md` is the source of it.
-4. If the report needs the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), also read **`../../ui-components/charts.css`** and **`../../ui-components/charts.html`**.
-5. If the report needs an inline icon, also read **`../../ui-components/icons.css`** and **`../../ui-components/icons.html`** — icons are generated on demand with `../../ui-components/scripts/icon.py`, not copied from a fixed list.
+3. Read **`../../ui-components/base/styles.css`** and **`../../ui-components/base/index.html`** — the base component library every report is built from — and **`../../ui-components/COMPONENTS.md`** for the full component toolkit, chart toolkit and the rules governing them (bar chart consistency, no invented percentages, pie/donut constraints, the timeline entry contract, etc.). This file does not repeat that guidance; `COMPONENTS.md` is the source of it.
+4. If the report needs the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), also read **`../../ui-components/charts/styles.css`** and **`../../ui-components/charts/index.html`**.
+5. If the report needs an inline icon, also read **`../../ui-components/icons/styles.css`** and **`../../ui-components/icons/index.html`** — icons are generated on demand with `../../ui-components/icons/icon.py`, not copied from a fixed list.
 6. Read **`references/styles.css`** (this skill — chrome, sgantt, the phased-roadmap timeline) and **`references/snippets.html`** (this skill's own markup: nav, hero, footer, phases, delivery-plan mount points).
 7. If the report is a delivery, release or roadmap plan, also read **`references/interactive.html`** (the script-driven delivery-plan components and the DATA-object contract).
 
@@ -81,7 +81,7 @@ Use these when the report is a delivery, release or roadmap plan. Markup and the
 full render script are in `references/interactive.html`; styles are in this
 skill's `references/styles.css` (sgantt) — the milestone cards, vertical
 timeline, environment chain and A/R/D block it renders use the CSS classes
-defined in `../../ui-components/styles.css`, since a rendered plan is a
+defined in `../../ui-components/base/styles.css`, since a rendered plan is a
 DATA-driven instance of those same components, not a different visual design.
 
 ### The DATA-object pattern
@@ -266,9 +266,9 @@ Produce a single self-contained file with, in order:
 
 1. Google Fonts link (Inter only). Labels use the `--label` token, which maps to Inter: no mono typeface is sanctioned by the brand
 2. The full `<style>` block, in this order: the `:root` block from
-   `../../brand/tokens.css`, then **`../../ui-components/styles.css`
-   pasted verbatim**, then, only if used, `../../ui-components/charts.css`
-   and/or `../../ui-components/icons.css`, then **this skill's own
+   `../../brand/tokens.css`, then **`../../ui-components/base/styles.css`
+   pasted verbatim**, then, only if used, `../../ui-components/charts/styles.css`
+   and/or `../../ui-components/icons/styles.css`, then **this skill's own
    `references/styles.css` pasted verbatim, last**. Order matters throughout:
    each later block wins on any name it shares with an earlier one, which is
    what every component is written against. This skill's file supplies only
@@ -281,7 +281,7 @@ Produce a single self-contained file with, in order:
 7. A `dark-panel` and/or `cta-box` (both from `../../ui-components/`) for the recommendation and the ask, each with `pattern-single` top-right
 8. Footer on Aperia Blue with the white logo + `Report Title · Subtitle · Month Year`
 9. At the end of `<body>`, only the scripts the report actually needs: the
-   accordion script from `../../ui-components/snippets.html` **if** it carries
+   accordion script from `../../ui-components/base/index.html` **if** it carries
    a `concerns` accordion, the mobile nav drawer script from this skill's
    `snippets.html` **if** it carries the drawer (it always should — paste only
    one of these two, never both, since the shared script does not include the
@@ -387,7 +387,7 @@ hierarchy). Two more apply only to the sgantt subsystem, which exists only here:
 ### Responsive breakpoint (≤700px)
 
 Every component the shared layer owns collapses per its own responsive block
-(see `../../ui-components/COMPONENTS.md` and `../../ui-components/styles.css`/`charts.css`).
+(see `../../ui-components/COMPONENTS.md` and `../../ui-components/base/styles.css`/`charts.css`).
 This skill adds three of its own, plus the one documented exception:
 
 | Component | Mobile behaviour |
@@ -422,7 +422,7 @@ specifics:
 
 ### Reference files
 
-- **`../../ui-components/styles.css`, `snippets.html`, `charts.css`, `charts.html`, `icons.css`, `icons.html`, `COMPONENTS.md`**: the base component library, shared with every other Aperia skill. Read `COMPONENTS.md` for what each file covers.
+- **`../../ui-components/base/styles.css`, `snippets.html`, `charts.css`, `charts.html`, `icons.css`, `icons.html`, `COMPONENTS.md`**: the base component library, shared with every other Aperia skill. Read `COMPONENTS.md` for what each file covers.
 - **`references/styles.css`** (this skill): chrome, the `phases` timeline, and the sgantt subsystem. Paste inside `<style>`, after the base layer.
 - **`references/snippets.html`** (this skill): skip link, nav, drawer, hero, `phases`, delivery-plan mount points, footer, and the nav-drawer script.
 - **`references/interactive.html`**: the delivery-plan components. Mount-point markup for milestones, the environment chain, the Gantt and the A/R/D block, the toolbar and edit form, and the documented render script with the DATA-object contract.
@@ -439,7 +439,7 @@ Checklist in `../../brand/BRAND.md`.
 ### Chrome and page-level, always applies
 
 - [ ] `BRAND.md` and `tokens.css` were read before writing, with no palette values from memory
-- [ ] The `<style>` block order is `tokens.css` `:root`, then `../../ui-components/styles.css` (and `charts.css`/`icons.css` if used), then this skill's own `references/styles.css`, last, all verbatim
+- [ ] The `<style>` block order is `tokens.css` `:root`, then `../../ui-components/base/styles.css` (and `charts.css`/`icons.css` if used), then this skill's own `references/styles.css`, last, all verbatim
 - [ ] Inter loaded with weight 600 included; Arial fallback declared; body Light/Regular, never Bold
 - [ ] Logo inlined in nav (Aperia Blue) and footer (`#FFFFFF`), undistorted, ≥24px
 - [ ] Nav strip scrolls horizontally (`flex-wrap:nowrap; overflow-x:auto; min-width:0`); hamburger wired

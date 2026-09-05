@@ -1,7 +1,7 @@
 /* ===== APERIA ANALYTICAL CHARTS =====
-   The extended chart family: paste this AFTER styles.css (which
+   The extended chart family: paste this AFTER base/styles.css (which
    must already be pasted after tokens.css :root — see COMPONENTS.md). These
-   components share styles.css's tokens (--aperia-blue, --text-*, --radius,
+   components share base/styles.css's tokens (--aperia-blue, --text-*, --radius,
    --shadow, --st-*) and add none of their own hex values.
 
    Multi-series color order follows BRAND.md's sanctioned chart-series ramp:
@@ -21,7 +21,7 @@
      For a value v against axis max M: y = 266 - (v/M)*250
    These are plain <svg viewBox="0 0 640 300">, so they scale fluidly with
    their container width. No mobile override is needed for the SVG itself
-   (unlike the flex-based bar/gantt components in styles.css) — only the
+   (unlike the flex-based bar/gantt components in base/styles.css) — only the
    legend below the chart wraps at narrow widths, handled below. */
 
 .chart-card { margin:24px 0; padding:22px 24px 18px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
@@ -58,7 +58,7 @@
 
 /* --- Grouped bar chart: side-by-side series per category --- */
 /* USE FOR comparing 2-3 series across a handful of categories. For a single
-   series, ranked and sorted descending, use .bchart in styles.css instead
+   series, ranked and sorted descending, use .bchart in base/styles.css instead
    (it reads better for a ranked list than a category axis does). */
 .gbar { margin:24px 0; padding:22px 24px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
 .gbar-plot { display:flex; align-items:flex-end; gap:28px; height:200px; border-bottom:1px solid var(--border); padding-bottom:2px }
@@ -71,7 +71,7 @@
 .gbar-lbl { flex:1; text-align:center; font-size:var(--text-xs); color:var(--muted-fg); font-family:var(--label) }
 
 /* --- Stacked category bar chart: one bar per category, segments summed --- */
-/* Distinct from .stack in styles.css: .stack is ONE bar divided into
+/* Distinct from .stack in base/styles.css: .stack is ONE bar divided into
    categorical shares of a single whole. .sbar is MANY bars (one per x-axis
    category), each internally stacked, e.g. volume by channel over months. */
 .sbar { margin:24px 0; padding:22px 24px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }

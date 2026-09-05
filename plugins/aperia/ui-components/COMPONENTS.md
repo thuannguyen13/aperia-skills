@@ -6,15 +6,15 @@
 > HTML (`create-report` directly; `create-slides` in translated canvas
 > units). Do not duplicate a component's CSS into a skill, reference it here.
 >
-> **Companion files** (same directory):
-> - `styles.css`: the base component theme. Paste after `../brand/tokens.css`'s `:root` block.
-> - `snippets.html`: ready-to-paste markup for every component below.
-> - `charts.css` / `charts.html`: the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap) — load only if used.
-> - `icons.css` / `icons.html` / `scripts/icon.py` / `assets/lucide-icons.json`: Lucide icons (MIT), 2000+ available, generated on demand — see "Icon toolkit" below.
+> **Companion files** (one folder per toolkit, beside this file):
+> - `base/styles.css`: the base component theme. Paste after `../brand/tokens.css`'s `:root` block.
+> - `base/index.html`: ready-to-paste markup for every component below.
+> - `charts/styles.css` / `charts/index.html`: the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap) — load only if used.
+> - `icons/styles.css` / `icons/index.html` / `icons/icon.py` / `icons/lucide-icons.json`: Lucide icons (MIT), 2000+ available, generated on demand — see "Icon toolkit" below.
 
 Everything here is static, hand-authored markup plus CSS, with one
 exception: icons are generated on demand by a small script
-(`scripts/icon.py`) rather than pasted from a fixed list — see "Icon
+(`icons/icon.py`) rather than pasted from a fixed list — see "Icon
 toolkit" below. Nothing here is a DATA object or has anything to keep in
 sync. It carries no page chrome (nav, hero, footer) and no data-driven
 grouped-Gantt subsystem (sgantt) — those are `create-report`-specific and
@@ -23,13 +23,13 @@ documented in that skill's own files.
 ## How a skill consumes this layer
 
 1. Read **`../brand/BRAND.md`** in full, and paste **`../brand/tokens.css`**'s `:root` block into the output's `<style>`.
-2. Paste **`styles.css`** from this folder **after** it, verbatim. Order matters: the two blocks name a few things differently (`--sapphire-blue` in the brand layer vs `--sapphire` here) and redefine `--radius` and the `--text-*` steps identically; pasting the component theme second means it wins on any shared name, which is what the components are written against, while the brand block still supplies `--min-size`, `--font-sans`, the `--fw-*` weights and `--grad-hero`.
+2. Paste **`base/styles.css`** from this folder **after** it, verbatim. Order matters: the two blocks name a few things differently (`--sapphire-blue` in the brand layer vs `--sapphire` here) and redefine `--radius` and the `--text-*` steps identically; pasting the component theme second means it wins on any shared name, which is what the components are written against, while the brand block still supplies `--min-size`, `--font-sans`, the `--fw-*` weights and `--grad-hero`.
 3. Load Inter with weight 600 included (`https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap`); Arial fallback via the `--sans` token. Body text is Light/Regular, never Bold.
 4. Wrap components in `<div class="wrap">...</div>` unless they already sit inside a container with its own width constraint — `.wrap` caps content at 920px, which every component here is designed against.
-5. Copy the matching block(s) from **`snippets.html`**, fill in real content. Never ship an empty card or lorem ipsum.
-6. If you use the `concerns` accordion, ship its toggle script (in `snippets.html`, right after the accordion markup) once per page.
-7. If the chart you need is a line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, or heatmap (see the Chart toolkit below), also paste **`charts.css`** after `styles.css`, and copy markup from **`charts.html`**.
-8. If the content needs an inline icon, also paste **`icons.css`** and copy markup from **`icons.html`** — see the Icon toolkit below, including the licensing note, before using them.
+5. Copy the matching block(s) from **`base/index.html`**, fill in real content. Never ship an empty card or lorem ipsum.
+6. If you use the `concerns` accordion, ship its toggle script (in `base/index.html`, right after the accordion markup) once per page.
+7. If the chart you need is a line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, or heatmap (see the Chart toolkit below), also paste **`charts/styles.css`** after `base/styles.css`, and copy markup from **`charts/index.html`**.
+8. If the content needs an inline icon, also paste **`icons/styles.css`** and copy markup from **`icons/index.html`** — see the Icon toolkit below, including the licensing note, before using them.
 9. Run the checklist at the bottom of this file and the Application Checklist in `../brand/BRAND.md`.
 
 **Do not work from memory of the palette or the type rules.** If a value is not in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
@@ -61,27 +61,27 @@ documented in that skill's own files.
 | DEV to PROD promotion path, 5 or more | `vtimeline` or `htimeline` with `envc e-*` entries |
 | Assumptions, risks and dependencies | `ard`, three columns |
 
-## Icon toolkit (`icons.css` / `icons.html` / `scripts/icon.py`)
+## Icon toolkit (`icons/`)
 
 **[Lucide](https://lucide.dev)** (MIT license — free to use and redistribute,
 no restriction to work around), the same icon set `create-slides` uses. Not
-a fixed catalog: `assets/lucide-icons.json` bundles 2000+ icons, and
-`scripts/icon.py` emits inline SVG for any of them by name —
-`python3 scripts/icon.py shield-check`, or `--search alert` to find a slug.
+a fixed catalog: `icons/lucide-icons.json` bundles 2000+ icons, and
+`icons/icon.py` emits inline SVG for any of them by name —
+`python3 icons/icon.py shield-check`, or `--search alert` to find a slug.
 `create-slides/scripts/icon.py` points at this same JSON file rather than
 keeping its own copy, so both skills draw from one icon set.
 
 Every icon is stroke-based (`fill="none" stroke="currentColor"`) and sizes
 at `1em`, so it inherits color and size from wherever it sits (see the usage
-examples at the top of `icons.html`); recolor it the way you'd recolor text,
+examples at the top of `icons/index.html`); recolor it the way you'd recolor text,
 never by editing the path data or adding a fill.
 
-`icons.html` lists a short set of commonly useful slugs as a starting point
+`icons/index.html` lists a short set of commonly useful slugs as a starting point
 (status/feedback, navigation, objects, people, data/trend) — it is not the
 full set. Run the script's `--search` for anything not listed there before
 concluding Lucide doesn't have it; with 2000+ icons it almost always does.
 
-- **An icon is a supplement to a color/label, never a replacement for one.** Status still rides the badge/callout/marker color system already documented elsewhere in this file; an icon just adds a recognizable shape next to it (see the `callout amber` example in `icons.html`, which keeps `.amber`'s color and adds `triangle-alert` beside it, rather than the icon carrying the meaning alone).
+- **An icon is a supplement to a color/label, never a replacement for one.** Status still rides the badge/callout/marker color system already documented elsewhere in this file; an icon just adds a recognizable shape next to it (see the `callout amber` example in `icons/index.html`, which keeps `.amber`'s color and adds `triangle-alert` beside it, rather than the icon carrying the meaning alone).
 - **Don't hand-write or guess at path data.** Always generate the SVG from the script. A hand-drawn "close enough" icon won't match Lucide's grid or stroke weight.
 - Size with `.icon-sm`/`.icon-md`/`.icon-lg`/`.icon-xl` for a standalone icon, or leave the bare `.icon` class to inherit `1em` inline with text.
 
@@ -89,9 +89,9 @@ concluding Lucide doesn't have it; with 2000+ icons it almost always does.
 
 One category, whatever the underlying geometry — a bar, a curve, an arc and a
 grid square are all still just a chart. Everything through `bchart`/`stack`/
-`tier-wrap` lives in `styles.css` (already loaded in step 2 above).
-Everything from `linechart` down needs `charts.css` and `charts.html` too —
-load them per step 7 before using any row marked **(charts.css)**. That
+`tier-wrap` lives in `base/styles.css` (already loaded in step 2 above).
+Everything from `linechart` down needs `charts/styles.css` and `charts/index.html` too —
+load them per step 7 before using any row marked **(charts/)**. That
 split is a file-loading convenience only (no report needs a radar chart, so
 it isn't force-loaded into every one); it is not a second category, and
 nothing below treats it as one.
@@ -101,25 +101,25 @@ nothing below treats it as one.
 | Estimate with real uncertainty | `pert-cols` + `pert-bar-track` gradient |
 | Ranked quantities on a real common scale | `bchart`, sorted descending, never for categorical data |
 | Proportions of a whole, ≤6 categories, precise comparison matters | `stack` proportional bar + % in legend |
-| Proportions of a whole, ≤5 slices, a circle is the expected form (an exec "here's the mix" moment) | `piechart` **(charts.css)** |
-| Same, plus a meaningful running total to put in the center | `donutchart` **(charts.css)** |
+| Proportions of a whole, ≤5 slices, a circle is the expected form (an exec "here's the mix" moment) | `piechart` **(charts/)** |
+| Same, plus a meaningful running total to put in the center | `donutchart` **(charts/)** |
 | How scope/scenario choices shift a total | `scn-wrap` (base + hatched addition) |
 | Complexity tiers with item counts | `tier-wrap` 3-column cards |
-| One series over time | `linechart` **(charts.css)** |
-| Two or three series over time, one comparable to another | `linechart` with a `.compare` dashed line **(charts.css)**, or `gbar` if the x-axis is categorical rather than continuous |
-| Volume under a trend, single series | `areachart` **(charts.css)** |
-| Composition of a total changing over time | `areachart`, stacked — two cumulative polygons, never independently-filled series **(charts.css)** |
-| Two metrics on different scales over the same timeline | `combochart`, bars + line, dual axis **(charts.css)** |
-| Two to three series compared across a handful of categories | `gbar`, grouped bars **(charts.css)** |
-| Many categories, each with an internal composition, over time or sequence | `sbar`, stacked category bars — not `stack` above, which is one bar for one whole **(charts.css)** |
-| Correlation between two numeric variables | `scatterchart` **(charts.css)** |
-| Correlation between two variables plus a third magnitude, or a 4-quadrant classification | `bubblechart` **(charts.css)** |
-| One metric against its own min-max range | `gauge-card` — never a pie or donut for this **(charts.css)** |
-| Hierarchical or categorical proportions of a whole, more than ~6 categories | `treemap`, area-correct via `flex-grow`, not percentages **(charts.css)** |
-| A profile across 5-7 named dimensions, 1-2 subjects | `radar-card` **(charts.css)** |
-| A sequential process with drop-off at each stage | `funnel` **(charts.css)** |
-| A single number plus its recent trend | `spark-card` **(charts.css)** |
-| Intensity across two categorical axes (e.g., time × day) | `heatmap` **(charts.css)** |
+| One series over time | `linechart` **(charts/)** |
+| Two or three series over time, one comparable to another | `linechart` with a `.compare` dashed line **(charts/)**, or `gbar` if the x-axis is categorical rather than continuous |
+| Volume under a trend, single series | `areachart` **(charts/)** |
+| Composition of a total changing over time | `areachart`, stacked — two cumulative polygons, never independently-filled series **(charts/)** |
+| Two metrics on different scales over the same timeline | `combochart`, bars + line, dual axis **(charts/)** |
+| Two to three series compared across a handful of categories | `gbar`, grouped bars **(charts/)** |
+| Many categories, each with an internal composition, over time or sequence | `sbar`, stacked category bars — not `stack` above, which is one bar for one whole **(charts/)** |
+| Correlation between two numeric variables | `scatterchart` **(charts/)** |
+| Correlation between two variables plus a third magnitude, or a 4-quadrant classification | `bubblechart` **(charts/)** |
+| One metric against its own min-max range | `gauge-card` — never a pie or donut for this **(charts/)** |
+| Hierarchical or categorical proportions of a whole, more than ~6 categories | `treemap`, area-correct via `flex-grow`, not percentages **(charts/)** |
+| A profile across 5-7 named dimensions, 1-2 subjects | `radar-card` **(charts/)** |
+| A sequential process with drop-off at each stage | `funnel` **(charts/)** |
+| A single number plus its recent trend | `spark-card` **(charts/)** |
+| Intensity across two categorical axes (e.g., time × day) | `heatmap` **(charts/)** |
 
 **Pie and donut are sanctioned, but for a narrow job**: a part-to-whole story
 with at most 5 slices, where a circle is what the audience expects (an
@@ -127,7 +127,7 @@ exec-summary "here's the mix" moment), not a place precise comparison
 matters. Past 5 categories, or whenever two slices are close enough in size
 that the reader needs to compare them precisely, angles stop being legible —
 group the long tail into one "Other" slice (see the donut example in
-`charts.html`) or reach for `stack`/`bchart` instead, both of which compare
+`charts/index.html`) or reach for `stack`/`bchart` instead, both of which compare
 more precisely than a pie ever will. `gauge-card` is a different job
 entirely and is not a pie/donut substitute: it shows one value against its
 own min-max range, never a categorical breakdown.
@@ -141,7 +141,7 @@ permissive default, not a floor every consumer must offer.
 - **Bar chart consistency (`bchart`)**: no inline `style=` on `.bval`/`.bname`/`.beff`; no non-row content inside `.bchart`; header row uses the same column divs, count and order as data rows; never mix rows with different column counts; `.bval` holds only a number, never a badge or label.
 - **No manufactured percentages.** If you'd have to invent a number to make a `bchart` or `stack` work, the data is categorical — use `stack-table` instead.
 - **No absolute-positioned floating labels** over a bar track — they overlap on narrow viewports. **No z-index stacking inside bar tracks** — use `display:flex; overflow:hidden` so segments sit side by side.
-- **One shared coordinate frame for the SVG family.** `linechart`, `areachart`, `combochart`, `scatterchart`, and `bubblechart` all use the same 640×300 `viewBox` and plot geometry (documented in `charts.css`'s header comment) so they read consistently if more than one appears on a page. Recompute point positions with that comment's formulas for your own data — never eyeball pixel values, and never change the viewBox for one chart without changing the formulas to match.
+- **One shared coordinate frame for the SVG family.** `linechart`, `areachart`, `combochart`, `scatterchart`, and `bubblechart` all use the same 640×300 `viewBox` and plot geometry (documented in `charts/styles.css`'s header comment) so they read consistently if more than one appears on a page. Recompute point positions with that comment's formulas for your own data — never eyeball pixel values, and never change the viewBox for one chart without changing the formulas to match.
 - **Series color order is fixed**: `s1` aperia-blue, `s2` dark-blue, `s3` sapphire, `s4` sky-blue (light — pair with dark text where it fills an area), `s5` light-blue, `s6` dark-gray, `s7` a neutral (med-gray/`--muted`) for a long tail or "other" bucket. Assign series to `s1` outward in the order they matter most; never skip ahead to a later token for a series that isn't literally last in importance.
 - **Comparison, not a second focal series, is dashed.** A prior period, a baseline, or a benchmark uses `.compare` (line/combo) or `.radar-poly.compare` (radar) — solid stroke stays reserved for the thing the chart is actually about.
 - **A dual-axis combo chart labels both axes, visibly, every time.** Never let the reader assume the bars and the line share a scale.
@@ -196,7 +196,7 @@ of the row, so more than about 6 entries or entries carrying real body text
 crowd each other under `.wrap`'s 920px cap. When in doubt, prefer
 `vtimeline` — it degrades gracefully at any length, `htimeline` does not.
 `htimeline` needs no separate mobile markup: at ≤700px it collapses onto the
-same vertical rail `vtimeline` uses, handled entirely by `styles.css`.
+same vertical rail `vtimeline` uses, handled entirely by `base/styles.css`.
 
 ## Timeline / process rules (not charts, but the same "never fake it" spirit)
 
@@ -208,7 +208,7 @@ same vertical rail `vtimeline` uses, handled entirely by `styles.css`.
 ## Checklist before delivering
 
 - [ ] `BRAND.md` and `tokens.css` read this session, no palette or size values from memory
-- [ ] `<style>` block is the `tokens.css` `:root` first, then `styles.css` verbatim
+- [ ] `<style>` block is the `tokens.css` `:root` first, then `base/styles.css` verbatim
 - [ ] Inter loaded with weight 600; Arial fallback declared; body text Light/Regular, never Bold
 - [ ] Every size is a `--text-*` token; no raw px, no new step, nothing below `--text-xs`, no bare `h1`..`h6` rule setting `font-size`
 - [ ] Shape from `--radius` / `--radius-pill`; no literal `border-radius:100px`
@@ -218,7 +218,7 @@ same vertical rail `vtimeline` uses, handled entirely by `styles.css`.
 - [ ] Badge/callout colors signal sentiment (red=problem, amber=caution, blue=direction, green=positive)
 - [ ] No empty cards, no lorem ipsum
 - [ ] Content wrapped in `.wrap` (or an equivalent width-capped container)
-- [ ] Every component present collapses correctly at ≤700px (check the table in `styles.css`'s responsive block for the ones you used)
+- [ ] Every component present collapses correctly at ≤700px (check the table in `base/styles.css`'s responsive block for the ones you used)
 - [ ] `concerns` accordion, if used, ships its toggle script once
 - [ ] Milestone sets of more than 4 use `vtimeline`, not a wrapped `mstone-row`; environment chains of 5+ use `vtimeline`/`htimeline`, not a wrapped or vertical `envchain`
 - [ ] `htimeline` used only for ≤~6 short entries; longer or text-heavy sets use `vtimeline` instead
@@ -226,8 +226,8 @@ same vertical rail `vtimeline` uses, handled entirely by `styles.css`.
 
 ### Icons, only if used
 
-- [ ] `icons.css` pasted after `styles.css`, in the same `<style>` block
-- [ ] Every icon was generated by `scripts/icon.py`, not hand-written — `fill="none" stroke="currentColor"`, unedited, not recolored by touching the path
+- [ ] `icons/styles.css` pasted after `base/styles.css`, in the same `<style>` block
+- [ ] Every icon was generated by `icons/icon.py`, not hand-written — `fill="none" stroke="currentColor"`, unedited, not recolored by touching the path
 - [ ] An icon sits beside a badge/callout/color that already carries the status meaning, never as the only signal
 
 ### Charts, only if used (either file)
@@ -236,7 +236,7 @@ same vertical rail `vtimeline` uses, handled entirely by `styles.css`.
 - [ ] Every pie/donut slice has a `.pie-legend` entry with its %; conic-gradient stops are cumulative and the last one ends at 100%
 - [ ] `bchart` rows use the flex model, not fixed-px grids; `.bval` holds a number only
 - [ ] `scn-wrap` bars use `display:flex; overflow:hidden`, no z-index stacking
-- [ ] If any row uses `charts.css`: it's pasted after `styles.css`, in the same `<style>` block
+- [ ] If any row uses `charts/styles.css`: it's pasted after `base/styles.css`, in the same `<style>` block
 - [ ] `linechart`/`areachart`/`combochart`/`scatterchart`/`bubblechart` all share the one 640×300 frame and its formulas — point positions computed, not eyeballed
 - [ ] Series colored `s1` outward in order of importance, `s6`/neutral reserved for "other"/long tail
 - [ ] A comparison series (prior period, baseline, benchmark) is dashed (`.compare`), never a second solid focal line

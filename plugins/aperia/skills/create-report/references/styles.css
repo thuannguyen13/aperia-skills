@@ -6,9 +6,9 @@
    order in the report's <head>, all inside one <style> tag:
 
      1. ../../brand/tokens.css        (:root block only)
-     2. ../../ui-components/styles.css   (verbatim)
-     3. ../../ui-components/charts.css    (verbatim, only if the report uses the extended chart family)
-     4. ../../ui-components/icons.css      (verbatim, only if the report uses icons)
+     2. ../../ui-components/base/styles.css   (verbatim)
+     3. ../../ui-components/charts/styles.css    (verbatim, only if the report uses the extended chart family)
+     4. ../../ui-components/icons/styles.css      (verbatim, only if the report uses icons)
      5. THIS FILE                     (verbatim, always — it supplies the nav/hero/footer
                                         chrome, the sgantt subsystem, and the phases
                                         timeline, none of which exist anywhere else)
@@ -279,7 +279,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 /* =====================================================
    RESPONSIVE: ≤700px — chrome, sgantt and phases only. Every component the
    base layer already owns collapses via its own responsive block in
-   ../../ui-components/styles.css and charts.css; nothing here repeats that.
+   ../../ui-components/base/styles.css and charts.css; nothing here repeats that.
    ===================================================== */
 @media(max-width:700px) {
   .nav-inner { padding:0 16px }
@@ -322,7 +322,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
      real fragility is gradients, which engines drop far more often than flat
      fills, so every dark surface is repainted as a solid Aperia Blue here.
      dark-panel/cta-box get the same treatment from the shared layer's print
-     block already (../../ui-components/styles.css); hero and footer are
+     block already (../../ui-components/base/styles.css); hero and footer are
      chrome, so they get it here. */
   .hero, footer {
     -webkit-print-color-adjust:exact; print-color-adjust:exact;

@@ -13,6 +13,9 @@ Checks:
      block in DEVIATIONS.md. Off-palette values must be a decision, not an
      accident, and mentioning one in prose is not a decision.
   5. tokens.css defines the core and neutral palette and the chart series ramp.
+  6. The component layer does not redefine a token the brand layer already
+     defines. One source per value; the two documented overrides are listed
+     in OVERRIDES below, with the reason each is allowed.
 
 Usage: python3 scripts/validate.py
 """
@@ -205,11 +208,49 @@ def check_palette(plugin_name, plugin_dir):
              f"with a reason")
 
 
+# The component layer reads brand/tokens.css rather than repeating it, so a
+# token defined in both is a second source for one value. These two are
+# deliberate and recorded; anything else is drift.
+OVERRIDES = {
+    "--fg": "near-black body ink over the brand's Aperia Blue, DEVIATIONS.md section 4",
+}
+
+DECL = re.compile(r"(--[\w-]+)\s*:")
+
+
+def root_tokens(path):
+    """Token names defined in any :root block of a stylesheet."""
+    if not path.exists():
+        return set()
+    text = re.sub(r"/\*.*?\*/", "", path.read_text(), flags=re.S)
+    return {m.group(1) for block in re.findall(r":root\s*\{(.*?)\n\}", text, re.S)
+            for m in DECL.finditer(block)}
+
+
+def check_single_source(plugin_name, plugin_dir):
+    """Check 6.
+
+    Scoped to ui-components for now. create-slides still carries its own copy
+    of the palette in references/slides.css, so widening this to skills/ is the
+    acceptance test for folding those components back into the shared layer.
+    """
+    brand = root_tokens(plugin_dir / "brand" / "tokens.css")
+    if not brand:
+        return
+    for sheet in sorted((plugin_dir / "ui-components").rglob("*.css")):
+        for name in sorted(root_tokens(sheet) & brand):
+            if name in OVERRIDES:
+                continue
+            fail(f"{sheet.relative_to(ROOT)}: redefines '{name}', which brand/tokens.css "
+                 f"already defines. Read it with var() instead, or record the override.")
+
+
 def main():
     plugins = check_manifests()
     for plugin_name, plugin_dir in plugins:
         check_skills(plugin_name, plugin_dir)
         check_palette(plugin_name, plugin_dir)
+        check_single_source(plugin_name, plugin_dir)
 
     for msg in NOTES:
         print(f"note: {msg}")

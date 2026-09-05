@@ -1,7 +1,8 @@
 /* ===== APERIA UI COMPONENTS =====
    Paste this entire block inside a <style> tag, AFTER the :root block from
-   ../../brand/tokens.css (this theme redefines --radius and the --text-*
-   steps identically, and adds the rest; order matters, see COMPONENTS.md).
+   ../../brand/tokens.css. It reads that block rather than repeating it: the
+   palette, the type ramp, the radii and the font stack are defined there and
+   only there. See COMPONENTS.md.
    Load fonts first, 600 required:
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -10,33 +11,25 @@
    drops into any page. If you need those, use the create-report skill instead. */
 
 :root {
-  /* Aperia core palette */
-  --aperia-blue:#002F67; --dark-blue:#004785; --sapphire:#0072BC;
-  --sky-blue:#7ED3F7; --light-blue:#C8EAF5;
-  /* neutral palette */
-  --black:#000000; --white:#FFFFFF; --dark-gray:#58595B; --med-gray:#A7A9AC; --light-gray:#F1F2F2;
-  /* mapped roles */
-  --bg:#ffffff; --fg:#1c1f24; --muted:#F1F2F2; --muted-fg:#58595B;
-  --border:#e3e6ea; --card:#ffffff; --primary:var(--aperia-blue);
-  --success:#16a34a; --warning:#d97706; --danger:#dc2626;
-  --sans:'Inter', Arial, sans-serif; --label:var(--sans); /* no mono typeface: BRAND.md sanctions Inter only */
-  --radius:8px; --radius-pill:100px; --shadow:0 1px 3px rgba(0,47,103,.08),0 1px 2px rgba(0,47,103,.05);
+  /* The palette, the type ramp, the radii and the font stack come from
+     ../../brand/tokens.css and are NOT repeated here. This block holds only
+     what the component layer adds on top, plus two aliases for names the
+     brand layer spells differently. Paste tokens.css first; nothing below
+     overrides it except --fg, which says so. */
+  --sapphire:var(--sapphire-blue);
+  --med-gray:var(--medium-gray);
+  --sans:var(--font-sans); --label:var(--sans); /* no mono typeface: BRAND.md sanctions Inter only */
 
-  /* --- Type scale (Aperia Figma design system) -----------------------------
-     Ten steps, size-semantic names, never role names, never tied to an h1..h6 tag.
-     No raw px font-size anywhere, no new step; the ramp is in BRAND.md only.
-     Figma also holds 10/12 and 11/16, both below the 12px on-screen floor, so
-     the web ramp starts at xs. */
-  --text-xs:12px;   --leading-xs:16px;
-  --text-sm:14px;   --leading-sm:20px;
-  --text-base:16px; --leading-base:24px;
-  --text-md:18px;   --leading-md:28px;
-  --text-lg:20px;   --leading-lg:32px;
-  --text-xl:24px;   --leading-xl:36px;
-  --text-2xl:28px;  --leading-2xl:40px;
-  --text-3xl:32px;  --leading-3xl:48px;
-  --text-4xl:36px;  --leading-4xl:52px;
-  --text-5xl:40px;  --leading-5xl:56px;
+  /* The one deliberate override of the brand layer: tokens.css maps --fg to
+     Aperia Blue, the components set near-black body ink. Open question for the
+     brand owner, recorded in DEVIATIONS.md section 4. */
+  --fg:#1c1f24;
+
+  /* --- Surface roles ------------------------------------------------------ */
+  --muted:var(--light-gray); --muted-fg:var(--dark-gray);
+  --border:#e3e6ea; --card:var(--white); --primary:var(--aperia-blue);
+  --success:#16a34a; --warning:#d97706; --danger:#dc2626;
+  --shadow:0 1px 3px rgba(0,47,103,.08),0 1px 2px rgba(0,47,103,.05);
 
   /* --- Delivery/status ramp -------------------------------------------------
      Four states: done / in progress / planned / at risk. Reuses the semantic

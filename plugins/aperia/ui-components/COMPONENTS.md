@@ -7,7 +7,7 @@
 > units). Do not duplicate a component's CSS into a skill, reference it here.
 >
 > **Companion files** (one folder per toolkit, beside this file):
-> - `base/styles.css`: the base component theme. Paste after `../brand/tokens.css`'s `:root` block.
+> - `base/styles.css`: the base component theme. Paste after `../brand/tokens.css`'s `:root` block, which it reads for every palette, type and radius value.
 > - `base/index.html`: ready-to-paste markup for every component below.
 > - `charts/styles.css` / `charts/index.html`: the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap) — load only if used.
 > - `icons/styles.css` / `icons/index.html` / `icons/icon.py` / `icons/lucide-icons.json`: Lucide icons (MIT), 2000+ available, generated on demand — see "Icon toolkit" below.
@@ -23,7 +23,7 @@ documented in that skill's own files.
 ## How a skill consumes this layer
 
 1. Read **`../brand/BRAND.md`** in full, and paste **`../brand/tokens.css`**'s `:root` block into the output's `<style>`.
-2. Paste **`base/styles.css`** from this folder **after** it, verbatim. Order matters: the two blocks name a few things differently (`--sapphire-blue` in the brand layer vs `--sapphire` here) and redefine `--radius` and the `--text-*` steps identically; pasting the component theme second means it wins on any shared name, which is what the components are written against, while the brand block still supplies `--min-size`, `--font-sans`, the `--fw-*` weights and `--grad-hero`.
+2. Paste **`base/styles.css`** from this folder **after** it, verbatim. It reads the brand block rather than repeating it: the palette, the type ramp, the radii and the font stack are defined in `tokens.css` and only there. This file adds the surface roles, the status ramp and the environment colors, and aliases the two names the brand layer spells differently (`--sapphire` for `--sapphire-blue`, `--med-gray` for `--medium-gray`). One token, `--fg`, deliberately overrides the brand value; it says so in place and is recorded in `../brand/DEVIATIONS.md` section 4. Order still matters, because the aliases resolve against the brand block.
 3. Load Inter with weight 600 included (`https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap`); Arial fallback via the `--sans` token. Body text is Light/Regular, never Bold.
 4. Wrap components in `<div class="wrap">...</div>` unless they already sit inside a container with its own width constraint — `.wrap` caps content at 920px, which every component here is designed against.
 5. Copy the matching block(s) from **`base/index.html`**, fill in real content. Never ship an empty card or lorem ipsum.

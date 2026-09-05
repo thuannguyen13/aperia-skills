@@ -1059,6 +1059,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
     <ul class="nav-links">
       <li><a href="#summary">Summary</a></li>
       <li><a href="#context">Context</a></li>
+      <li><a href="#impact">Impact</a></li>
       <li><a href="#changes">Changes</a></li>
       <li><a href="#verification">Verification</a></li>
       <li><a href="#next">Next</a></li>
@@ -1072,6 +1073,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
   <ul>
     <li><a href="#summary">Summary</a></li>
     <li><a href="#context">Context</a></li>
+    <li><a href="#impact">Impact</a></li>
     <li><a href="#changes">Changes</a></li>
     <li><a href="#verification">Verification</a></li>
     <li><a href="#next">Next</a></li>
@@ -1174,6 +1176,71 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
         <div class="outcome-from">↓ Rule breaks in shipped CSS invisible to CI</div>
         <div class="outcome-to">↑ Font sizes, radii, colors and dashes fail the build</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="wrap">
+    <p class="sec-label">Impact</p>
+    <h2 class="text-2xl">Tokens, Cost And Time Per Report</h2>
+    <p class="sec-intro">What one report costs to produce before and after the change, indexed to the old flow at 100. Content tokens are the same in both cases and are left out; this is the stylesheet overhead alone.</p>
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-val">36</div><div class="stat-lbl">Token index, from 100</div></div>
+      <div class="stat-card"><div class="stat-val">16</div><div class="stat-lbl">Cost index, from 100</div></div>
+      <div class="stat-card"><div class="stat-val">0</div><div class="stat-lbl">Time index for the stylesheet, from 100</div></div>
+    </div>
+
+    <table class="cmp-table">
+      <thead><tr><th>Per report</th><th>Before 0.8.0</th><th class="hl">After 0.8.0</th><th>Change</th></tr></thead>
+      <tbody>
+        <tr><td>Files the model reads first</td><td>8</td><td class="hl">5</td><td>3 fewer</td></tr>
+        <tr><td>Input read, KB</td><td>188</td><td class="hl">112</td><td>40% less</td></tr>
+        <tr><td>Input tokens, estimated</td><td>53,000</td><td class="hl">28,000</td><td>47% less</td></tr>
+        <tr><td>Stylesheet typed as output, KB</td><td>76</td><td class="hl">0</td><td>Gone</td></tr>
+        <tr><td>Stylesheet output tokens, estimated</td><td>25,000</td><td class="hl">0</td><td>Gone</td></tr>
+        <tr><td>Time streaming the stylesheet</td><td>About 7 minutes</td><td class="hl">Under 1 second</td><td>Script copies files</td></tr>
+        <tr><td>Stylesheet cost at Opus 5 rates</td><td>$0.89</td><td class="hl">$0.14</td><td>84% less</td></tr>
+        <tr><td>Transcription errors possible</td><td>Yes, unchecked</td><td class="hl">None</td><td>Byte copy</td></tr>
+      </tbody>
+    </table>
+
+    <div class="bchart">
+      <div class="brow brow-head">
+        <div class="bname">Tokens per report</div>
+        <div class="btrack-wrap">Thousands of tokens (max = 53)</div>
+        <div class="bval">k</div>
+      </div>
+      <div class="brow">
+        <div class="bname">Input, before<small>eight files read in full</small></div>
+        <div class="btrack-wrap"><div class="btrack"><div class="bfill t1" style="width:100%"></div></div></div>
+        <div class="bval">53</div>
+      </div>
+      <div class="brow">
+        <div class="bname">Input, after<small>markdown and markup only</small></div>
+        <div class="btrack-wrap"><div class="btrack"><div class="bfill t2" style="width:53%"></div></div></div>
+        <div class="bval">28</div>
+      </div>
+      <div class="brow">
+        <div class="bname">Stylesheet output, before<small>typed by the model</small></div>
+        <div class="btrack-wrap"><div class="btrack"><div class="bfill t1" style="width:47%"></div></div></div>
+        <div class="bval">25</div>
+      </div>
+      <div class="brow">
+        <div class="bname">Stylesheet output, after<small>copied by the script</small></div>
+        <div class="btrack-wrap"><div class="btrack"><div class="bfill t2" style="width:0%"></div></div></div>
+        <div class="bval">0</div>
+      </div>
+      <div class="bchart-foot">
+        <span class="lg-t1">Before 0.8.0</span>
+        <span class="lg-t2">After 0.8.0</span>
+      </div>
+    </div>
+
+    <div class="callout tagged soft">
+      <span class="callout-tag">Assumptions</span>
+      <p>File sizes are measured from the repo. Tokens are estimated at 4 characters per token for markdown and markup and 3 for CSS. Streaming time assumes 60 output tokens per second. Cost uses Claude Opus 5 list prices, $5 per million input tokens and $25 per million output tokens, with no prompt caching. A deck with the extended chart family adds about 16 KB to the old flow's typed output and nothing to the new one.</p>
     </div>
   </div>
 </section>

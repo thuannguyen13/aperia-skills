@@ -1,8 +1,8 @@
 <!-- ============================================================
      APERIA REPORT: READY-TO-PASTE HTML SNIPPETS (chrome + sgantt + phases)
-     Everything a report shares with any other Aperia UI surface — cards,
-     badges, callouts, tables, timelines, charts, icons — now lives once in
-     ../../ui-components/snippets.html (plus charts.html and
+     Everything a report shares with any other Aperia UI surface, cards,
+     badges, callouts, tables, timelines, charts, icons, now lives once in
+     ../../ui-components/base/index.html (plus charts.html and
      icons.html where used). Copy component markup from there. This file
      keeps only what's unique to a full report: nav, hero, footer, the
      section-opening pattern, the phased-roadmap timeline, and the
@@ -80,15 +80,15 @@
 
 
 <!-- ========== SECTION WRAPPER ========== -->
-<!-- .sec-label and .sec-intro are defined in ../../ui-components/styles.css,
-     not here — this snippet is the report-specific pattern of opening a
+<!-- .sec-label and .sec-intro are defined in ../../ui-components/base/styles.css,
+     not here, this snippet is the report-specific pattern of opening a
      <section> with them, not a component in its own right. -->
 <section id="summary">
   <div class="wrap">
     <p class="sec-label">Section Name</p>
     <h2 class="text-2xl">Section Heading</h2>
     <p class="sec-intro">Brief intro, one or two sentences on what this section covers.</p>
-    <!-- component(s) go here — copy from ../../ui-components/snippets.html / charts.html / icons.html -->
+    <!-- component(s) go here, copy from ../../ui-components/base/index.html / charts.html / icons.html -->
   </div>
 </section>
 
@@ -104,7 +104,7 @@
      deliverables list. Node color cycles pd-blue → pd-sapphire → pd-dark →
      repeat for a 4th+ phase. If what you actually have is dated milestones or
      a DEV→PROD chain, use vtimeline/htimeline/envchain from ../../ui-components/
-     instead — this component is for narrating the work itself, not dates. -->
+     instead, this component is for narrating the work itself, not dates. -->
 <div class="phases">
   <div class="p-item">
     <div class="p-ind"><div class="p-dot pd-blue">1</div><div class="p-line"></div></div>
@@ -145,7 +145,7 @@
      both defined in ../../ui-components/), the grouped Gantt, its toolbar, the
      hover tooltip, edit mode and the Assumptions / Risks / Dependencies block
      are all rendered from a DATA object. Markup and script are in
-     references/interactive.html — the mount divs below are examples of what
+     references/interactive.html, the mount divs below are examples of what
      it fills; do not hand-write their contents. -->
 <div id="env-mvp"></div>
 
@@ -173,7 +173,7 @@
 
 
 <!-- ========== SCRIPT (place just before </body>) ========== -->
-<!-- Only the mobile nav drawer toggle — chrome-unique. If the report also
+<!-- Only the mobile nav drawer toggle, chrome-unique. If the report also
      uses the shared `concerns` accordion, paste its toggle script
      from that skill's snippets.html too, but only once: do not paste an
      accordion script from both files, or the double-bound click handler

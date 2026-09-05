@@ -1,12 +1,12 @@
 <!-- ============================================================
      APERIA ANALYTICAL CHARTS: READY-TO-PASTE HTML SNIPPETS
-     Paste charts.css AFTER styles.css (which is
-     itself pasted after tokens.css :root). Every SVG example below uses the
+     Add the word `charts` to the assemble marker so charts/styles.css is
+     injected after base/styles.css. Every SVG example below uses the
      shared 640x300 chart frame documented at the top of charts.css:
        plot origin (44,16), plot size 576x250, baseline y=266, right edge x=620
        gridline y-values: 266, 203.5, 141, 78.5, 16  (0/25/50/75/100% of axis max)
      Recompute point positions for your own data with the formulas in that
-     file's header comment — never eyeball pixel values.
+     file's header comment, never eyeball pixel values.
      ============================================================ -->
 
 
@@ -55,7 +55,7 @@
      stroke drawn separately for a crisp top edge.
      Stacked: TWO layers, each a filled polygon whose bottom edge is the
      cumulative total below it and whose top edge is the cumulative total
-     including it — never fill each series independently, which would hide
+     including it, never fill each series independently, which would hide
      the lower layer. -->
 <div class="chart-card">
   <svg viewBox="0 0 640 300" role="img" aria-label="Volume, area chart">
@@ -99,7 +99,7 @@
 
 <!-- ========== COMBO CHART (bars + line, dual axis) ========== -->
 <!-- Left axis (bars) and right axis (line) are DIFFERENT scales sharing the
-     same 0-266..16 pixel range — label both axes so the reader never assumes
+     same 0-266..16 pixel range, label both axes so the reader never assumes
      one scale. Bar slot width = 576/n; bar width narrower than the slot,
      centered: bar_x = slot_start + (slot_width - bar_width)/2. -->
 <div class="chart-card">
@@ -165,7 +165,7 @@
 <!-- ========== BUBBLE QUADRANT CHART ========== -->
 <!-- Same frame as scatter, plus a divider at the midpoint of each axis
      (x=332, y=141) and a corner label per quadrant. Bubble radius encodes a
-     third value: r = 6 + sqrt(value)*k — sqrt, not linear, so AREA (not
+     third value: r = 6 + sqrt(value)*k, sqrt, not linear, so AREA (not
      radius) is proportional to the value, or larger bubbles read as more
      than proportionally bigger. -->
 <div class="chart-card">
@@ -229,7 +229,7 @@
 
 <!-- ========== STACKED CATEGORY BAR CHART ========== -->
 <!-- Distinct from .stack (styles.css), which is one bar of shares of a
-     single whole. This is many bars — one per x-axis category — each
+     single whole. This is many bars, one per x-axis category, each
      internally stacked. Segment height% = value/axis_max*100; axis max 240.
      First child in DOM sits at the bottom (column-reverse). -->
 <div class="sbar">
@@ -262,7 +262,7 @@
 
 
 <!-- ========== RADIAL GAUGE ========== -->
-<!-- ONE value on a semicircular arc, never a categorical breakdown — that is
+<!-- ONE value on a semicircular arc, never a categorical breakdown, that is
      what makes this different from a pie/donut, which stay off-limits.
      pathLength="100" on both arcs lets stroke-dasharray be read directly as
      a percentage: dasharray="{value},100". Status color follows the same
@@ -284,7 +284,7 @@
 <!-- ========== PIE CHART: at most ~5 slices, sorted descending ========== -->
 <!-- conic-gradient stops are cumulative %: "color START% END%", each END%
      equal to the next slice's START%, last slice ending at 100%. No arc math.
-     3 slices here, none tiny — the case a pie is actually good at. -->
+     3 slices here, none tiny, the case a pie is actually good at. -->
 <div class="pie-wrap">
   <div class="piechart" style="background:conic-gradient(var(--aperia-blue) 0% 45%, var(--dark-blue) 45% 80%, var(--sapphire) 80% 100%)" role="img" aria-label="Chargeback reasons: card present 45%, e-commerce 35%, other 20%"></div>
   <ul class="pie-legend">
@@ -299,7 +299,7 @@
 <!-- Same fraud-reason data as the treemap example, but capped at the 5-slice
      budget: the treemap's 3 smallest categories (Expired Card, Invalid CVV,
      Other) are grouped into one "Other" slice here. That's the move whenever
-     a part-to-whole set runs past what a pie/donut can hold — group the long
+     a part-to-whole set runs past what a pie/donut can hold, group the long
      tail rather than adding a 6th sliver, or use treemap/stack-table instead
      of forcing every category into the circle. -->
 <div class="pie-wrap">
@@ -318,7 +318,7 @@
 <!-- ========== TREEMAP ========== -->
 <!-- Row flex-grow = the row's value total; cell flex-grow = the cell's own
      value. That alone makes every cell's rendered AREA proportional to its
-     value — no percentage math to get wrong. Row 1 here totals 550
+     value, no percentage math to get wrong. Row 1 here totals 550
      (340+210), row 2 totals 375 (180+95+60+40), grand total 925. -->
 <div class="treemap">
   <div class="tm-row" style="flex-grow:550">
@@ -380,7 +380,7 @@
 
 <!-- ========== FUNNEL ========== -->
 <!-- Width% is relative to the FIRST stage (always 100%), never to a shared
-     axis max — a funnel has no axis, only a sequence of ratios. Colors
+     axis max, a funnel has no axis, only a sequence of ratios. Colors
      follow the series ramp in order so stage identity reads at a glance. -->
 <div class="funnel">
   <div class="fn-row" style="width:100%;background:var(--aperia-blue)">
@@ -422,7 +422,7 @@
 <!-- ========== HEATMAP ========== -->
 <!-- Two categorical axes (here: time bucket x day of week), one value per
      cell. Cell background is a single hue at varying opacity (never a
-     rainbow scale — that isn't in the palette), so pair it with the legend
+     rainbow scale, that isn't in the palette), so pair it with the legend
      bar AND a <title> per cell: color alone is not accessible or printable. -->
 <div class="heatmap" style="--hm-cols:7">
   <div class="hm-grid">

@@ -1,20 +1,20 @@
 ---
 name: create-report
-description: Generate an on-brand Aperia strategic report, briefing, or proposal as a single self-contained HTML file.
+description: Build an on-brand Aperia report, briefing, review, or proposal as one self-contained HTML file with navigation, charts, tables, and roadmap timelines. Use for any long-form document the reader scrolls through.
 ---
 
 # Aperia Report
 
 Produces a single self-contained HTML strategic report in the Aperia brand
 identity. A report is built in two layers: the **base component library**
-(cards, badges, callouts, tables, charts, timelines — everything a report
+(cards, badges, callouts, tables, charts, timelines, everything a report
 shares with any other Aperia UI surface) lives once, in the shared
 **`../../ui-components/`** folder alongside `../../brand/`, and is not
 duplicated here. This skill adds only what a full report needs on top of it:
 the page chrome (nav, hero, footer), the phased-roadmap timeline, and the
 data-driven delivery-plan subsystem (sgantt). If you find yourself about to
 invent markup or CSS for a card, a chart, or a timeline that isn't documented
-in this file, it almost certainly belongs in `../../ui-components/` already —
+in this file, it almost certainly belongs in `../../ui-components/` already,
 check there before improvising.
 
 ## Step 0: Read the brand and component layers first (required)
@@ -22,12 +22,13 @@ check there before improvising.
 Before writing a single line of HTML:
 
 1. Read **`../../brand/BRAND.md`** in full.
-2. Read **`../../brand/tokens.css`** and paste its `:root` block into your `<style>`.
-3. Read **`../../ui-components/styles.css`** and **`../../ui-components/snippets.html`** — the base component library every report is built from — and **`../../ui-components/COMPONENTS.md`** for the full component toolkit, chart toolkit and the rules governing them (bar chart consistency, no invented percentages, pie/donut constraints, the timeline entry contract, etc.). This file does not repeat that guidance; `COMPONENTS.md` is the source of it.
-4. If the report needs the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), also read **`../../ui-components/charts.css`** and **`../../ui-components/charts.html`**.
-5. If the report needs an inline icon, also read **`../../ui-components/icons.css`** and **`../../ui-components/icons.html`** — icons are generated on demand with `../../ui-components/scripts/icon.py`, not copied from a fixed list.
-6. Read **`references/styles.css`** (this skill — chrome, sgantt, the phased-roadmap timeline) and **`references/snippets.html`** (this skill's own markup: nav, hero, footer, phases, delivery-plan mount points).
-7. If the report is a delivery, release or roadmap plan, also read **`references/interactive.html`** (the script-driven delivery-plan components and the DATA-object contract).
+2. Read **`../../ui-components/COMPONENTS.md`** for the full component toolkit, chart toolkit and the rules governing them (bar chart consistency, no invented percentages, pie/donut constraints, the timeline entry contract, etc.), and **`../../ui-components/base/index.html`** for the markup of every base component. This file does not repeat that guidance; `COMPONENTS.md` is the source of it.
+3. If the report needs the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), also read **`../../ui-components/charts/index.html`**.
+4. If the report needs an inline icon, also read **`../../ui-components/icons/index.html`**; icons are generated on demand with `../../ui-components/icons/icon.py`, not copied from a fixed list.
+5. Read **`references/snippets.html`** (this skill's own markup: the style marker, nav, hero, footer, phases, delivery-plan mount points).
+6. If the report is a delivery, release or roadmap plan, also read **`references/interactive.html`** (the script-driven delivery-plan components and the DATA-object contract).
+
+**Do not read or paste any stylesheet.** The report carries one marker, `<style>/* @aperia report */</style>`, with the word `charts` and/or `icons` added when those toolkits are used, and `../../ui-components/assemble.py` fills it with `../../brand/tokens.css`, `../../ui-components/base/styles.css`, the optional toolkits and this skill's `references/styles.css`, in that order, byte for byte. Class names come from the `index.html` files and `COMPONENTS.md`; skim a stylesheet only when a class's behaviour is unclear.
 
 **Do not work from memory of the palette, the type rules, or the graphic-element rules.** They live in `BRAND.md` and only there. If a value you want is not in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
 
@@ -38,9 +39,9 @@ Brand assets are at `../../brand/assets/`. Inline the SVGs, never link them.
 ## Workflow
 
 1. **Read the user's content.** Identify the title, subtitle, audience, core sections, and the one message the reader should walk away with.
-2. **Choose visualizations strategically.** See `../../ui-components/COMPONENTS.md` — "Chart toolkit" and "Chart rules" — for the canonical decision guide (numbers become range bars or bar charts, not stat cards alone; proportions become stacked bars or a capped pie/donut; a schedule becomes `gantt` or, for many grouped rows, `sgantt`, decided under "Choosing between `gantt` and `sgantt`" below).
+2. **Choose visualizations strategically.** See `../../ui-components/COMPONENTS.md`, "Chart toolkit" and "Chart rules", for the canonical decision guide (numbers become range bars or bar charts, not stat cards alone; proportions become stacked bars or a capped pie/donut; a schedule becomes `gantt` or, for many grouped rows, `sgantt`, decided under "Choosing between `gantt` and `sgantt`" below).
 3. **Map each section to a component** from `../../ui-components/COMPONENTS.md`'s component/chart/icon toolkits, or from this file's phases/sgantt additions when the content calls for those specifically.
-4. **Build one self-contained HTML file**: Google Fonts link, the pasted theme (both layers), skip link, nav, hero, sections, dark panel / CTA, footer, scripts.
+4. **Build one self-contained HTML file**: Google Fonts link, the style marker, skip link, nav, hero, sections, dark panel / CTA, footer, scripts. Then run `python3 <plugin dir>/ui-components/assemble.py <file>` to fill the marker. Re-run it after any later edit; it replaces its own block. Report-specific rules, if any, go in a second `<style>` after the marker, never inside the injected block.
 5. **Apply brand assets** per `BRAND.md`: logo in nav (Aperia Blue) and footer (recolored `#FFFFFF`); `pattern-double` in the hero; `pattern-single` in dark panels and CTA boxes.
 6. **Run the checklist** at the bottom of this file, `../../ui-components/COMPONENTS.md`'s own checklist, *and* the Application Checklist in `BRAND.md`.
 7. **Save and deliver** the file, then tell the user it opens in any browser, prints to PDF, and is shareable as-is.
@@ -52,19 +53,19 @@ If the user gives minimal content, scaffold intelligently and flag what to repla
 ## Visualization thinking specific to reports
 
 Component selection, chart-type selection, bar-chart consistency, and the
-full anti-pattern list live in `../../ui-components/COMPONENTS.md` — read
+full anti-pattern list live in `../../ui-components/COMPONENTS.md`, read
 that first. Two decisions exist only in the context of a full report,
 because they involve components that only this skill has:
 
-- **A schedule of a few phases on a continuous axis** is the shared `gantt` component. **A schedule of many work items over named sprints or stages, grouped and searchable** is `sgantt`, which exists only here — decided under "Choosing between `gantt` and `sgantt`" below, never from a generic chart-selection table.
-- **A sequential, multi-week phase of work with a duration and a deliverables list** (not a dated checkpoint, not a chart) is the `phases` component below — distinct from the shared `flow` (a short conceptual pipeline) and from the shared milestone timelines (dated checkpoints, not durations).
+- **A schedule of a few phases on a continuous axis** is the shared `gantt` component. **A schedule of many work items over named sprints or stages, grouped and searchable** is `sgantt`, which exists only here, decided under "Choosing between `gantt` and `sgantt`" below, never from a generic chart-selection table.
+- **A sequential, multi-week phase of work with a duration and a deliverables list** (not a dated checkpoint, not a chart) is the `phases` component below, distinct from the shared `flow` (a short conceptual pipeline) and from the shared milestone timelines (dated checkpoints, not durations).
 
-**No pie charts, full stop, in this skill** — a stricter rule than `../../ui-components/COMPONENTS.md`'s constrained ≤5-slice allowance. A report's proportions use `stack` or, for more categories, `treemap`. This is a deliberate report-specific choice, not an oversight; do not loosen it to match the shared layer without the user asking for that here specifically.
+**No pie charts, full stop, in this skill**, a stricter rule than `../../ui-components/COMPONENTS.md`'s constrained ≤5-slice allowance. A report's proportions use `stack` or, for more categories, `treemap`. This is a deliberate report-specific choice, not an oversight; do not loosen it to match the shared layer without the user asking for that here specifically.
 
 ### The phased roadmap (`phases`)
 
 A dot-and-line rail narrating **sequential phases of work**, each with a
-duration pill and a bulleted deliverables list — see
+duration pill and a bulleted deliverables list, see
 `references/snippets.html` for the markup and `references/styles.css` for
 `.phases`/`.p-item`/`.p-dot`/`.pd-*`/`.p-line`/`.p-duration`/`.delivs`/`.dlv`.
 Use it when the content is the *work itself* (what happens in each phase and
@@ -79,9 +80,9 @@ repeating for a 4th-plus phase.
 
 Use these when the report is a delivery, release or roadmap plan. Markup and the
 full render script are in `references/interactive.html`; styles are in this
-skill's `references/styles.css` (sgantt) — the milestone cards, vertical
+skill's `references/styles.css` (sgantt), the milestone cards, vertical
 timeline, environment chain and A/R/D block it renders use the CSS classes
-defined in `../../ui-components/styles.css`, since a rendered plan is a
+defined in `../../ui-components/base/styles.css`, since a rendered plan is a
 DATA-driven instance of those same components, not a different visual design.
 
 ### The DATA-object pattern
@@ -131,7 +132,7 @@ with `groups-<key>` for the datalist and `err-<key>` for the error line.
 both, and the script sets the container class from this key, so the DATA always
 wins over whatever class the markup carries. The entries themselves do not change.
 The cards-or-timeline threshold is the same one `../../ui-components/COMPONENTS.md`
-documents under "Choosing a timeline form" (4 or fewer → cards, more → timeline) —
+documents under "Choosing a timeline form" (4 or fewer → cards, more → timeline),
 this is that same decision, just DATA-driven instead of hand-authored.
 
 **5. `envForm` picks the environment rendering**, exactly as `milestoneForm` does:
@@ -139,7 +140,7 @@ this is that same decision, just DATA-driven instead of hand-authored.
 The mount is `env-<key>` for both. Same threshold, same source rule.
 
 **6. Every `vtimeline` entry uses the shared four-field entry contract**
-(`lead`/`chip`/`title`/`note`/`cls` — see `../../ui-components/COMPONENTS.md`),
+(`lead`/`chip`/`title`/`note`/`cls`, see `../../ui-components/COMPONENTS.md`),
 whatever it describes. The renderer places them identically, so a new content
 type adapts by filling the same fields and needs no new CSS.
 
@@ -164,7 +165,7 @@ The field-by-field contract for every key is documented in the header comment of
 |---|---|---|
 | `mstone-row` | Up to 4 dated checkpoints | Status on the top border: `done` `next` `goal` `risk`, plus `est` for a dashed (estimated) date, or `envc e-qa` for an environment-coloured card |
 | `vtimeline` | More than 4 dated checkpoints | Same array, same `cls` vocabulary, rendered as a rail. Only the marker carries colour, in three decodable states that need no legend: blue ahead, amber for risk or an estimated date, green for done and for the final live milestone. `est` also hollows the marker and dashes the connector. The date stays neutral heading ink throughout |
-| `sgantt` | A grouped schedule over named columns | Sprint columns plus shaded release-stage columns (`phase:true`). Adjacent lit cells merge into one bar. The full grid shows; the column header sticks under the nav as the page scrolls. This component exists only in create-report — the shared `gantt` covers the continuous-axis case only |
+| `sgantt` | A grouped schedule over named columns | Sprint columns plus shaded release-stage columns (`phase:true`). Adjacent lit cells merge into one bar. The full grid shows; the column header sticks under the nav as the page scrolls. This component exists only in create-report, the shared `gantt` covers the continuous-axis case only |
 | `sg-bar` toolbar | Search, expand/collapse all, match count | Search covers name, description, group and tags. Zero matches shows an empty state, not a blank grid |
 | `sg-tip` tooltip | Start, end, elapsed weeks, span, tags | Flips at the viewport edge; hidden below 700px |
 | Edit mode | Add a row, delete with one-level undo, tag, export JSON | Opt in per plan with `editable:true`. State is in-memory for the tab; say so in the UI |
@@ -232,7 +233,7 @@ Do not put both in one report. Pick the one the content is.
 
 **This is the only place that decision is made for a delivery plan.** It is the
 same rule `../../ui-components/COMPONENTS.md` documents under "Choosing a
-timeline form" for hand-authored content — here it is DATA-driven via
+timeline form" for hand-authored content, here it is DATA-driven via
 `milestoneForm`/`envForm` instead of picked by which markup you paste.
 
 | Content | Entries | `milestoneForm` / `envForm` |
@@ -246,7 +247,7 @@ The cut is at 4 for the same reason in both cases: `.mstone-row` is an auto-fit
 grid with a 190px minimum and `.envcard` a 150px minimum, both inside the 920px
 `.wrap`, so a 5th entry wraps to a ragged second row or a lone banner card.
 **Never let either wrap.** If a set grows past 4, change the `Form` value, do not
-widen the container — and there is no vertical variant of `.envchain` specifically;
+widen the container, and there is no vertical variant of `.envchain` specifically;
 past 4 it renders as the same `.vtimeline` the milestones use, environment colour
 riding the chip only.
 
@@ -265,15 +266,15 @@ keep Export reachable whenever editing is on. Do not imply changes are saved.
 Produce a single self-contained file with, in order:
 
 1. Google Fonts link (Inter only). Labels use the `--label` token, which maps to Inter: no mono typeface is sanctioned by the brand
-2. The full `<style>` block, in this order: the `:root` block from
-   `../../brand/tokens.css`, then **`../../ui-components/styles.css`
-   pasted verbatim**, then, only if used, `../../ui-components/charts.css`
-   and/or `../../ui-components/icons.css`, then **this skill's own
-   `references/styles.css` pasted verbatim, last**. Order matters throughout:
-   each later block wins on any name it shares with an earlier one, which is
-   what every component is written against. This skill's file supplies only
-   chrome, sgantt and `phases` — it does not redefine anything the base
-   layer already owns
+2. The style marker, `<style>/* @aperia report charts icons */</style>`,
+   with `charts` and `icons` present only when the report uses them. The
+   assemble script replaces it with `../../brand/tokens.css`, then
+   `../../ui-components/base/styles.css`, then the optional toolkits, then
+   this skill's `references/styles.css`, last. Order matters throughout: each
+   later block wins on any name it shares with an earlier one, which is what
+   every component is written against. This skill's file supplies only
+   chrome, sgantt and `phases`, it does not redefine anything the base layer
+   already owns
 3. Sticky `nav`, exactly `56px` tall: inlined logo (left, Aperia Blue), desktop scroll-link strip (right), hamburger button (mobile)
 4. Mobile `nav-drawer` immediately after `</nav>`, set `position:fixed; top:56px`, hidden by default
 5. Gradient `hero`: eyebrow, title, subtitle, optional meta row, and the inlined `pattern-double` top-right. The hero `<em>` subtitle inside `<h1>` must **omit the em dash** and be in Title Case. Its size comes from the theme's `.hero h1 em` rule, not an inline style
@@ -281,9 +282,9 @@ Produce a single self-contained file with, in order:
 7. A `dark-panel` and/or `cta-box` (both from `../../ui-components/`) for the recommendation and the ask, each with `pattern-single` top-right
 8. Footer on Aperia Blue with the white logo + `Report Title · Subtitle · Month Year`
 9. At the end of `<body>`, only the scripts the report actually needs: the
-   accordion script from `../../ui-components/snippets.html` **if** it carries
+   accordion script from `../../ui-components/base/index.html` **if** it carries
    a `concerns` accordion, the mobile nav drawer script from this skill's
-   `snippets.html` **if** it carries the drawer (it always should — paste only
+   `snippets.html` **if** it carries the drawer (it always should, paste only
    one of these two, never both, since the shared script does not include the
    drawer toggle and this skill's does not include the accordion toggle), and
    for a delivery plan one final `<script>` holding your `DATA` object
@@ -387,7 +388,7 @@ hierarchy). Two more apply only to the sgantt subsystem, which exists only here:
 ### Responsive breakpoint (≤700px)
 
 Every component the shared layer owns collapses per its own responsive block
-(see `../../ui-components/COMPONENTS.md` and `../../ui-components/styles.css`/`charts.css`).
+(see `../../ui-components/COMPONENTS.md` and `../../ui-components/base/styles.css`/`charts.css`).
 This skill adds three of its own, plus the one documented exception:
 
 | Component | Mobile behaviour |
@@ -396,7 +397,7 @@ This skill adds three of its own, plus the one documented exception:
 | `.nav-burger` | `display:flex` |
 | `.nav-drawer` | visible when `.open` |
 | `.phases` | Stacks naturally, no override needed |
-| `.sgantt` | **Exception.** A grouped Gantt is a fixed set of named columns; collapsing them destroys the thing it exists to show, so it keeps every column and scrolls horizontally inside its own box instead. The page itself still never scrolls horizontally — the overflow is on `.sgantt`, not `body`. Only `--sg-labelw` (256px → 180px) and `--sg-endw` narrow. Do not add a one-column override for it, and do not reset its bars the way `.gantt` requires |
+| `.sgantt` | **Exception.** A grouped Gantt is a fixed set of named columns; collapsing them destroys the thing it exists to show, so it keeps every column and scrolls horizontally inside its own box instead. The page itself still never scrolls horizontally, the overflow is on `.sgantt`, not `body`. Only `--sg-labelw` (256px → 180px) and `--sg-endw` narrow. Do not add a one-column override for it, and do not reset its bars the way `.gantt` requires |
 | `.sg-tip` | `display:none` (no hover on touch) |
 
 ### Printing
@@ -422,8 +423,8 @@ specifics:
 
 ### Reference files
 
-- **`../../ui-components/styles.css`, `snippets.html`, `charts.css`, `charts.html`, `icons.css`, `icons.html`, `COMPONENTS.md`**: the base component library, shared with every other Aperia skill. Read `COMPONENTS.md` for what each file covers.
-- **`references/styles.css`** (this skill): chrome, the `phases` timeline, and the sgantt subsystem. Paste inside `<style>`, after the base layer.
+- **`../../ui-components/base/styles.css`, `snippets.html`, `charts.css`, `charts.html`, `icons.css`, `icons.html`, `COMPONENTS.md`**: the base component library, shared with every other Aperia skill. Read `COMPONENTS.md` for what each file covers.
+- **`references/styles.css`** (this skill): chrome, the `phases` timeline, and the sgantt subsystem. Injected last by `../../ui-components/assemble.py`; never pasted.
 - **`references/snippets.html`** (this skill): skip link, nav, drawer, hero, `phases`, delivery-plan mount points, footer, and the nav-drawer script.
 - **`references/interactive.html`**: the delivery-plan components. Mount-point markup for milestones, the environment chain, the Gantt and the A/R/D block, the toolbar and edit form, and the documented render script with the DATA-object contract.
 - **`../../brand/assets/*.svg`**: raw path data for the logo and both patterns.
@@ -438,8 +439,8 @@ Checklist in `../../brand/BRAND.md`.
 
 ### Chrome and page-level, always applies
 
-- [ ] `BRAND.md` and `tokens.css` were read before writing, with no palette values from memory
-- [ ] The `<style>` block order is `tokens.css` `:root`, then `../../ui-components/styles.css` (and `charts.css`/`icons.css` if used), then this skill's own `references/styles.css`, last, all verbatim
+- [ ] `BRAND.md` was read before writing, with no palette values from memory
+- [ ] `assemble.py` was run after the last edit, the marker names `charts` and `icons` only if the report uses them, and nothing was typed or edited inside the injected `<style data-aperia>` block
 - [ ] Inter loaded with weight 600 included; Arial fallback declared; body Light/Regular, never Bold
 - [ ] Logo inlined in nav (Aperia Blue) and footer (`#FFFFFF`), undistorted, ≥24px
 - [ ] Nav strip scrolls horizontally (`flex-wrap:nowrap; overflow-x:auto; min-width:0`); hamburger wired
@@ -450,10 +451,10 @@ Checklist in `../../brand/BRAND.md`.
 - [ ] Section order follows the default flow, or the delivery-plan flow when the content is a schedule
 - [ ] Footer reads `Title · Subtitle · Month Year`
 - [ ] Skip link present
-- [ ] Only the scripts the report uses are shipped — the nav-drawer script and the accordion script are never both pasted from two different files
+- [ ] Only the scripts the report uses are shipped, the nav-drawer script and the accordion script are never both pasted from two different files
 - [ ] Printed to PDF and checked: dark surfaces (hero, footer, and everything the shared layer owns) keep their fill and white type, any `sgantt` fits the page width whole, no heading stranded at a page foot, no card or row split across pages, footer prints cleanly
 - [ ] File is self-contained, with Google Fonts as the only external dependency
-- [ ] **No pie charts anywhere in the report** — stricter than `../../ui-components/COMPONENTS.md`'s constrained allowance; use `stack` or `treemap` instead
+- [ ] **No pie charts anywhere in the report**, stricter than `../../ui-components/COMPONENTS.md`'s constrained allowance; use `stack` or `treemap` instead
 
 ### Per component, only if the report carries it
 

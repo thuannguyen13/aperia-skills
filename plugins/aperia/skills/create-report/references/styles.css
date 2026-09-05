@@ -1,15 +1,17 @@
 /* ===== APERIA REPORT THEME (chrome + sgantt + phases only) =====
-   This file no longer carries the base component library — cards, badges,
+   This file no longer carries the base component library, cards, badges,
    callouts, tables, timelines, charts, and everything else a report shares
    with any other Aperia UI surface now lives once, in ../../ui-components/
-   references/styles.css (plus charts.css and icons.css where used). Paste
-   order in the report's <head>, all inside one <style> tag:
+   references/styles.css (plus charts.css and icons.css where used).
+   ../../ui-components/assemble.py injects the whole stack into the report's
+   marker (a style element holding the comment `@aperia report`, plus the
+   words `charts` and `icons` when used), in this order:
 
-     1. ../../brand/tokens.css        (:root block only)
-     2. ../../ui-components/styles.css   (verbatim)
-     3. ../../ui-components/charts.css    (verbatim, only if the report uses the extended chart family)
-     4. ../../ui-components/icons.css      (verbatim, only if the report uses icons)
-     5. THIS FILE                     (verbatim, always — it supplies the nav/hero/footer
+     1. ../../brand/tokens.css        (the brand token file)
+     2. ../../ui-components/base/styles.css
+     3. ../../ui-components/charts/styles.css    (only with the `charts` word)
+     4. ../../ui-components/icons/styles.css      (only with the `icons` word)
+     5. THIS FILE                     (always, it supplies the nav/hero/footer
                                         chrome, the sgantt subsystem, and the phases
                                         timeline, none of which exist anywhere else)
 
@@ -23,7 +25,7 @@
    nothing else needs. */
 
 :root {
-  /* Grouped Gantt geometry — the one set of custom properties unique to the
+  /* Grouped Gantt geometry, the one set of custom properties unique to the
      sgantt subsystem in this file, so it lives here rather than in the
      shared base layer, which no other surface needs. */
   --sg-labelw:256px; --sg-endw:92px; --sg-colw:104px;
@@ -46,32 +48,32 @@ nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,.95); bac
 /* Desktop link strip */
 .nav-links { display:flex; gap:2px; list-style:none; flex-wrap:nowrap; overflow-x:auto; min-width:0; scrollbar-width:none; -ms-overflow-style:none; -webkit-overflow-scrolling:touch }
 .nav-links::-webkit-scrollbar { display:none }
-.nav-links a { font-size:var(--text-xs); color:var(--muted-fg); text-decoration:none; padding:5px 9px; border-radius:6px; transition:all .15s; white-space:nowrap }
+.nav-links a { font-size:var(--text-xs); color:var(--muted-fg); text-decoration:none; padding:5px 9px; border-radius:var(--radius-sm); transition:all .15s; white-space:nowrap }
 .nav-links a:hover { color:var(--aperia-blue); background:var(--muted) }
 /* Hamburger button, hidden on desktop */
 .nav-burger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:6px; border:none; background:transparent; flex-shrink:0 }
-.nav-burger span { display:block; width:22px; height:2px; background:var(--aperia-blue); border-radius:2px; transition:all .25s }
+.nav-burger span { display:block; width:22px; height:2px; background:var(--aperia-blue); border-radius:var(--radius-sm); transition:all .25s }
 .nav-burger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg) }
 .nav-burger.open span:nth-child(2) { opacity:0 }
 .nav-burger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg) }
 /* Mobile drawer: place immediately after </nav> in HTML */
-.nav-drawer { display:none; position:fixed; top:56px; left:0; right:0; background:#fff; border-bottom:1px solid var(--border); z-index:99; box-shadow:0 8px 24px rgba(0,47,103,.1) }
+.nav-drawer { display:none; position:fixed; top:56px; left:0; right:0; background:var(--white); border-bottom:1px solid var(--border); z-index:99; box-shadow:0 8px 24px rgba(0,47,103,.1) }
 .nav-drawer.open { display:block }
 .nav-drawer ul { list-style:none; padding:12px 20px 16px }
-.nav-drawer ul li a { display:block; padding:10px 12px; font-size:var(--text-base); color:var(--fg); text-decoration:none; border-radius:6px; font-weight:500 }
+.nav-drawer ul li a { display:block; padding:10px 12px; font-size:var(--text-base); color:var(--fg); text-decoration:none; border-radius:var(--radius-sm); font-weight:500 }
 .nav-drawer ul li a:hover { background:var(--muted); color:var(--aperia-blue) }
 
 /* hero (Aperia Blue gradient) */
 .hero { padding:0; border-bottom:1px solid var(--border); background:linear-gradient(120deg, var(--aperia-blue) 0%, var(--dark-blue) 55%, var(--sapphire) 130%); position:relative; overflow:hidden }
 .hero-inner { padding:90px 0 80px; position:relative; z-index:1 }
 .hero .eyebrow { font-family:var(--label); font-size:var(--text-xs); letter-spacing:.1em; text-transform:uppercase; color:var(--sky-blue); margin-bottom:20px }
-.hero h1 { font-size:clamp(var(--text-2xl),4.4vw,var(--text-5xl)); font-weight:700; line-height:1.12; letter-spacing:-.02em; max-width:640px; margin-bottom:18px; color:#fff }
+.hero h1 { font-size:clamp(var(--text-2xl),4.4vw,var(--text-5xl)); font-weight:700; line-height:1.12; letter-spacing:-.02em; max-width:640px; margin-bottom:18px; color:var(--white) }
 .hero h1 em { font-style:normal; color:var(--sky-blue); font-weight:400; font-size:var(--text-lg); line-height:var(--leading-lg) }
 .hero-sub { font-size:var(--text-base); color:#cfe0f0; max-width:540px; line-height:1.7; font-weight:300 }
 .hero-shape { position:absolute; top:0; right:0; height:100%; width:auto; z-index:0; opacity:1 }
 .hero-meta { display:flex; gap:24px; margin-top:32px; flex-wrap:wrap }
 .hero-meta div { font-size:var(--text-xs); color:#9fbedb }
-.hero-meta strong { display:block; color:#fff; font-size:var(--text-sm); font-weight:600; margin-top:2px; font-family:var(--label) }
+.hero-meta strong { display:block; color:var(--white); font-size:var(--text-sm); font-weight:600; margin-top:2px; font-family:var(--label) }
 
 /* footer (Aperia Blue) */
 footer { padding:44px 0; text-align:center; background:var(--aperia-blue) }
@@ -85,7 +87,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
    milestone/status timelines (mstone-row/vtimeline/htimeline): those plot
    dated checkpoints with a three-state status marker, this one narrates
    sequential PHASES of work, each with a duration pill and a bulleted list
-   of deliverables — closer in spirit to `flow`, but heavier per stage.
+   of deliverables, closer in spirit to `flow`, but heavier per stage.
    ===================================================== */
 .phases { margin:28px 0; display:flex; flex-direction:column }
 .p-item { display:flex; gap:20px; padding-bottom:28px }
@@ -196,7 +198,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 .sg-bar input[type=search]::placeholder { color:var(--med-gray) }
 .sg-btn { padding:7px 14px; border:1px solid var(--border); border-radius:var(--radius-pill); background:var(--card); color:var(--muted-fg); cursor:pointer; font-family:var(--sans); font-size:var(--text-xs); font-weight:500; transition:border-color .15s, color .15s }
 .sg-btn:hover { border-color:var(--sapphire); color:var(--sapphire) }
-.sg-btn.on { background:var(--aperia-blue); border-color:var(--aperia-blue); color:#fff }
+.sg-btn.on { background:var(--aperia-blue); border-color:var(--aperia-blue); color:var(--white) }
 .sg-btn[disabled] { opacity:.45; cursor:default }
 .sg-fcount { color:var(--muted-fg); font-size:var(--text-xs); white-space:nowrap; font-family:var(--label) }
 .sg-legend { display:flex; gap:18px; flex-wrap:wrap; font-size:var(--text-xs); color:var(--muted-fg); margin-bottom:10px }
@@ -227,7 +229,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 .editing .sg-editnote { display:flex }
 .sg-editnote strong { color:var(--fg) }
 .sg-editnote .callout-tag { background:var(--card); border-color:var(--st-prog-line); color:var(--dark-blue) }
-.sg-del { display:none; border:none; background:none; color:var(--med-gray); cursor:pointer; font-size:var(--text-xs); line-height:1; padding:2px 4px; margin-left:8px; border-radius:4px }
+.sg-del { display:none; border:none; background:none; color:var(--med-gray); cursor:pointer; font-size:var(--text-xs); line-height:1; padding:2px 4px; margin-left:8px; border-radius:var(--radius-sm) }
 .sg-del:hover { color:var(--danger); background:#fef2f2 }
 .editing .sg-del { display:inline-block }
 .sg-tadd { display:none }
@@ -246,10 +248,10 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 .sg-field.wide { grid-column:span 2 }
 .sg-field.full { grid-column:1/-1 }
 .sg-field label { font-family:var(--label); font-size:var(--text-xs); letter-spacing:.1em; text-transform:uppercase; color:var(--muted-fg) }
-.sg-field input, .sg-field select { font-family:var(--sans); font-size:var(--text-sm); color:var(--fg); background:var(--card); border:1px solid var(--border); border-radius:6px; padding:7px 10px }
+.sg-field input, .sg-field select { font-family:var(--sans); font-size:var(--text-sm); color:var(--fg); background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:7px 10px }
 .sg-field input:focus, .sg-field select:focus { outline:none; border-color:var(--sapphire); box-shadow:0 0 0 3px rgba(0,114,188,.16) }
 .sg-formbtns { display:flex; gap:10px; margin-top:16px; align-items:center; flex-wrap:wrap }
-.sg-primary { display:inline-flex; align-items:center; gap:7px; font-family:var(--sans); font-weight:600; font-size:var(--text-sm); line-height:1; padding:9px 20px; border-radius:var(--radius-pill); border:1px solid transparent; background:var(--aperia-blue); color:#fff; cursor:pointer; box-shadow:var(--shadow) }
+.sg-primary { display:inline-flex; align-items:center; gap:7px; font-family:var(--sans); font-weight:600; font-size:var(--text-sm); line-height:1; padding:9px 20px; border-radius:var(--radius-pill); border:1px solid transparent; background:var(--aperia-blue); color:var(--white); cursor:pointer; box-shadow:var(--shadow) }
 .sg-primary:hover { background:var(--dark-blue) }
 .sg-formerr { color:var(--danger); font-size:var(--text-xs) }
 
@@ -273,13 +275,13 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
    ACCESSIBILITY: the skip link, chrome-only (:focus-visible and the
    reduced-motion query are already in the shared base layer)
    ===================================================== */
-.skip-link { position:absolute; left:-999px; background:var(--aperia-blue); color:#fff; padding:10px 14px; border-radius:var(--radius); z-index:200; font-size:var(--text-sm) }
+.skip-link { position:absolute; left:-999px; background:var(--aperia-blue); color:var(--white); padding:10px 14px; border-radius:var(--radius); z-index:200; font-size:var(--text-sm) }
 .skip-link:focus { left:14px; top:14px }
 
 /* =====================================================
-   RESPONSIVE: ≤700px — chrome, sgantt and phases only. Every component the
+   RESPONSIVE: ≤700px, chrome, sgantt and phases only. Every component the
    base layer already owns collapses via its own responsive block in
-   ../../ui-components/styles.css and charts.css; nothing here repeats that.
+   ../../ui-components/base/styles.css and charts.css; nothing here repeats that.
    ===================================================== */
 @media(max-width:700px) {
   .nav-inner { padding:0 16px }
@@ -290,13 +292,13 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
   /* Grouped Gantt keeps its columns and scrolls inside its own box. Only the
      label column narrows; the bars stay readable and aligned. The narrow
      viewport almost always trips .scrolls, which turns the box into a
-     scrollport and stops the header sticking — no extra override needed. */
+     scrollport and stops the header sticking, no extra override needed. */
   .sgantt { --sg-labelw:180px; --sg-endw:88px }
   .sg-tip { display:none }
 }
 
 /* =====================================================
-   PRINT — chrome, sgantt and phases only, for the same reason.
+   PRINT, chrome, sgantt and phases only, for the same reason.
    ===================================================== */
 @media print {
   /* --- page boxes ---------------------------------------------------------
@@ -322,14 +324,14 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
      real fragility is gradients, which engines drop far more often than flat
      fills, so every dark surface is repainted as a solid Aperia Blue here.
      dark-panel/cta-box get the same treatment from the shared layer's print
-     block already (../../ui-components/styles.css); hero and footer are
+     block already (../../ui-components/base/styles.css); hero and footer are
      chrome, so they get it here. */
   .hero, footer {
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
-    background:var(--aperia-blue) !important; color:#fff !important;
+    background:var(--aperia-blue) !important; color:var(--white) !important;
   }
   .hero .eyebrow, .hero h1 em { color:var(--sky-blue) !important }
-  .hero-sub, .hero-meta div, footer p { color:#fff !important }
+  .hero-sub, .hero-meta div, footer p { color:var(--white) !important }
   .sg-blk, .p-dot {
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }

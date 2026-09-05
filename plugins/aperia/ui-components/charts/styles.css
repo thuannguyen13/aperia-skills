@@ -1,8 +1,9 @@
 /* ===== APERIA ANALYTICAL CHARTS =====
-   The extended chart family: paste this AFTER styles.css (which
-   must already be pasted after tokens.css :root — see COMPONENTS.md). These
-   components share styles.css's tokens (--aperia-blue, --text-*, --radius,
-   --shadow, --st-*) and add none of their own hex values.
+   The extended chart family. Injected after base/styles.css by
+   ../assemble.py when the marker carries the `charts` word, see
+   COMPONENTS.md. These components share base/styles.css's tokens
+   (--aperia-blue, --text-*, --radius, --shadow, --st-*) and add none of
+   their own hex values.
 
    Multi-series color order follows BRAND.md's sanctioned chart-series ramp:
    1 aperia-blue, 2 dark-blue, 3 sapphire, 4 sky-blue, 5 light-blue,
@@ -21,19 +22,19 @@
      For a value v against axis max M: y = 266 - (v/M)*250
    These are plain <svg viewBox="0 0 640 300">, so they scale fluidly with
    their container width. No mobile override is needed for the SVG itself
-   (unlike the flex-based bar/gantt components in styles.css) — only the
+   (unlike the flex-based bar/gantt components in base/styles.css), only the
    legend below the chart wraps at narrow widths, handled below. */
 
 .chart-card { margin:24px 0; padding:22px 24px 18px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
 .chart-card svg { display:block; width:100%; height:auto; overflow:visible }
 .cf-grid line { stroke:var(--border) }
-.cf-axis text { font-family:var(--label); font-size:11px; fill:var(--muted-fg) }
+.cf-axis text { font-family:var(--label); font-size:var(--text-xs); fill:var(--muted-fg) }
 .cf-line { fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round }
 .cf-line.s1 { stroke:var(--aperia-blue) }
 .cf-line.s2 { stroke:var(--dark-blue) }
 .cf-line.s3 { stroke:var(--sapphire) }
 .cf-line.compare { stroke-dasharray:5 4 }
-.cf-dot { stroke:#fff; stroke-width:1.5 }
+.cf-dot { stroke:var(--white); stroke-width:1.5 }
 .cf-dot.s1 { fill:var(--aperia-blue) }
 .cf-dot.s2 { fill:var(--dark-blue) }
 .cf-dot.s3 { fill:var(--sapphire) }
@@ -43,27 +44,27 @@
 .cf-area.s3 { fill:var(--sapphire) }
 .cf-bar.s1 { fill:var(--aperia-blue) }
 .cf-bar.s2 { fill:var(--dark-blue) }
-.cf-pt { stroke:#fff; stroke-width:1.5 }
+.cf-pt { stroke:var(--white); stroke-width:1.5 }
 .cf-pt.s1 { fill:var(--aperia-blue) }
 .cf-pt.s2 { fill:var(--dark-blue) }
 .cf-pt.s3 { fill:var(--sapphire) }
 .cf-pt.s4 { fill:var(--med-gray) }
 .cf-quadrant { stroke:var(--border); stroke-dasharray:4 3 }
-.cf-qlabel { font-family:var(--label); font-size:11px; fill:var(--muted-fg); letter-spacing:.02em }
+.cf-qlabel { font-family:var(--label); font-size:var(--text-xs); fill:var(--muted-fg); letter-spacing:.02em }
 .cf-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); list-style:none }
 .cf-legend li { display:flex; align-items:center; gap:6px }
-.cf-legend li i { width:12px; height:3px; border-radius:2px; flex-shrink:0; display:inline-block }
+.cf-legend li i { width:12px; height:3px; border-radius:var(--radius-sm); flex-shrink:0; display:inline-block }
 .cf-legend li i.dot { width:8px; height:8px; border-radius:50% }
 .cf-legend li i.dashed { background-image:linear-gradient(90deg,currentColor 60%,transparent 0); background-size:6px 3px; background-color:transparent; color:var(--med-gray) }
 
 /* --- Grouped bar chart: side-by-side series per category --- */
 /* USE FOR comparing 2-3 series across a handful of categories. For a single
-   series, ranked and sorted descending, use .bchart in styles.css instead
+   series, ranked and sorted descending, use .bchart in base/styles.css instead
    (it reads better for a ranked list than a category axis does). */
 .gbar { margin:24px 0; padding:22px 24px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
 .gbar-plot { display:flex; align-items:flex-end; gap:28px; height:200px; border-bottom:1px solid var(--border); padding-bottom:2px }
 .gbar-grp { flex:1; min-width:0; display:flex; align-items:flex-end; justify-content:center; gap:5px; height:100% }
-.gbar-bar { width:22px; border-radius:3px 3px 0 0; position:relative }
+.gbar-bar { width:22px; border-radius:var(--radius-sm) var(--radius-sm) 0 0; position:relative }
 .gbar-bar.s1 { background:var(--aperia-blue) }
 .gbar-bar.s2 { background:var(--dark-blue) }
 .gbar-bar.s3 { background:var(--sapphire) }
@@ -71,12 +72,12 @@
 .gbar-lbl { flex:1; text-align:center; font-size:var(--text-xs); color:var(--muted-fg); font-family:var(--label) }
 
 /* --- Stacked category bar chart: one bar per category, segments summed --- */
-/* Distinct from .stack in styles.css: .stack is ONE bar divided into
+/* Distinct from .stack in base/styles.css: .stack is ONE bar divided into
    categorical shares of a single whole. .sbar is MANY bars (one per x-axis
    category), each internally stacked, e.g. volume by channel over months. */
 .sbar { margin:24px 0; padding:22px 24px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
 .sbar-plot { display:flex; align-items:flex-end; gap:20px; height:200px; border-bottom:1px solid var(--border); padding-bottom:2px }
-.sbar-grp { flex:1; min-width:0; display:flex; flex-direction:column-reverse; height:100%; border-radius:3px 3px 0 0; overflow:hidden }
+.sbar-grp { flex:1; min-width:0; display:flex; flex-direction:column-reverse; height:100%; border-radius:var(--radius-sm) var(--radius-sm) 0 0; overflow:hidden }
 .sbar-seg.s1 { background:var(--aperia-blue) }
 .sbar-seg.s2 { background:var(--sapphire) }
 .sbar-labels { display:flex; gap:20px; margin-top:8px }
@@ -93,17 +94,17 @@
 .gauge-fill.ahead { stroke:var(--st-prog-bar) }
 .gauge-fill.risk { stroke:var(--st-risk-bar) }
 .gauge-fill.done { stroke:var(--st-done-bar) }
-.gauge-val { font-family:var(--label); font-weight:700; font-size:26px; fill:var(--aperia-blue) }
-.gauge-end { font-family:var(--label); font-size:10px; fill:var(--muted-fg) }
+.gauge-val { font-family:var(--label); font-weight:700; font-size:var(--text-xl); fill:var(--aperia-blue) }
+.gauge-end { font-family:var(--label); font-size:var(--text-xs); fill:var(--muted-fg) }
 .gauge-lbl { margin-top:6px; font-size:var(--text-sm); font-weight:500; color:var(--fg); text-align:center }
 .gauge-sub { font-size:var(--text-xs); color:var(--muted-fg); text-align:center; margin-top:2px }
 
 /* --- Pie / donut: a part-to-whole story, at most ~5 slices --- */
-/* Sanctioned, but constrained — see COMPONENTS.md's "Chart rules": at most 5
+/* Sanctioned, but constrained, see COMPONENTS.md's "Chart rules": at most 5
    slices, sorted descending starting at 12 o'clock going clockwise, every
    slice labeled with its % in the legend (never color/angle alone). Built
-   with conic-gradient, so slice boundaries are plain cumulative percentages
-   — no arc-path math, no risk of a mis-swept SVG arc. Each stop is
+   with conic-gradient, so slice boundaries are plain cumulative percentages:
+   no arc-path math, no risk of a mis-swept SVG arc. Each stop is
    "color START% END%"; END% of one slice must equal START% of the next,
    and the last slice must end at 100%. */
 .pie-wrap { display:flex; align-items:center; gap:24px; margin:24px 0; padding:22px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow); flex-wrap:wrap }
@@ -116,7 +117,7 @@
 .pie-center span { font-size:var(--text-xs); color:var(--muted-fg); margin-top:3px }
 .pie-legend { display:flex; flex-direction:column; gap:9px; font-size:var(--text-sm); color:var(--fg); list-style:none; flex:1; min-width:170px }
 .pie-legend li { display:flex; align-items:center; gap:8px }
-.pie-legend li i { width:11px; height:11px; border-radius:3px; flex-shrink:0 }
+.pie-legend li i { width:11px; height:11px; border-radius:var(--radius-sm); flex-shrink:0 }
 .pie-legend li b { margin-left:auto; font-family:var(--label); font-weight:600; color:var(--muted-fg); font-size:var(--text-xs) }
 
 /* --- Treemap: area-correct proportions via nested flex-grow, no faked % --- */
@@ -124,14 +125,14 @@
    (flex-grow on each .tm-row = that row's value sum), and within a row each
    cell's width ratio = its value share of the row (flex-grow on each
    .tm-cell = its own value). Cell AREA is therefore exactly proportional to
-   its value with no separate percentage math — assign flex-grow the raw
+   its value with no separate percentage math, assign flex-grow the raw
    values themselves and the browser does the rest. */
 .treemap { display:flex; flex-direction:column; gap:2px; height:260px; border-radius:var(--radius); overflow:hidden; margin:16px 0 }
 .tm-row { display:flex; gap:2px; min-height:0 }
 .tm-cell { flex-basis:0; min-width:0; display:flex; flex-direction:column; justify-content:flex-end; padding:10px 12px; overflow:hidden }
-.tm-cell.s1 { background:var(--aperia-blue); color:#fff }
-.tm-cell.s2 { background:var(--dark-blue); color:#fff }
-.tm-cell.s3 { background:var(--sapphire); color:#fff }
+.tm-cell.s1 { background:var(--aperia-blue); color:var(--white) }
+.tm-cell.s2 { background:var(--dark-blue); color:var(--white) }
+.tm-cell.s3 { background:var(--sapphire); color:var(--white) }
 .tm-cell.s4 { background:var(--sky-blue); color:var(--aperia-blue) }
 .tm-cell.s5 { background:var(--light-blue); color:var(--aperia-blue) }
 .tm-cell.s6 { background:var(--muted); color:var(--fg) }
@@ -141,7 +142,7 @@
 /* --- Radar chart: up to 5-7 axes, 1-2 overlaid profiles --- */
 /* More than ~7 axes crowds the labels; if the content has more dimensions
    than that, use stack-table instead. Grid rings are drawn as concentric
-   circles (not polygons) — a deliberate simplification that keeps the scale
+   circles (not polygons), a deliberate simplification that keeps the scale
    honest without the extra geometry, and reads identically at a glance. */
 .radar-card { margin:24px 0; padding:22px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
 .radar-card svg { display:block; width:100%; max-width:340px; height:auto; margin:0 auto }
@@ -150,11 +151,11 @@
 .radar-poly { stroke-width:2 }
 .radar-poly.s1 { fill:var(--sapphire); fill-opacity:.2; stroke:var(--sapphire) }
 .radar-poly.compare { fill:none; stroke:var(--med-gray); stroke-dasharray:4 3 }
-.radar-lbl { font-family:var(--label); font-size:11px; fill:var(--muted-fg) }
+.radar-lbl { font-family:var(--label); font-size:var(--text-xs); fill:var(--muted-fg) }
 
 /* --- Funnel: sequential stages, each narrower than the last --- */
 .funnel { display:flex; flex-direction:column; align-items:center; margin:20px 0 }
-.fn-row { width:100%; padding:14px 22px; border-radius:6px; color:#fff; display:flex; justify-content:space-between; align-items:baseline; gap:12px }
+.fn-row { width:100%; padding:14px 22px; border-radius:var(--radius-sm); color:var(--white); display:flex; justify-content:space-between; align-items:baseline; gap:12px }
 .fn-name { font-size:var(--text-sm); font-weight:600 }
 .fn-val { font-family:var(--label); font-size:var(--text-sm); font-weight:600 }
 .fn-drop { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); padding:5px 0 }
@@ -170,7 +171,7 @@
 .spark-delta.down { color:var(--danger); background:#fef2f2 }
 
 /* --- Heatmap: two categorical axes, color-coded intensity --- */
-/* Color alone never carries a value on hover-less print output — every cell
+/* Color alone never carries a value on hover-less print output, every cell
    ships an SVG-style <title> for hover, and the legend states the scale in
    words, not just a gradient. */
 .heatmap { margin:20px 0 }
@@ -178,18 +179,18 @@
 .hm-corner { }
 .hm-colhead, .hm-rowhead { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); display:flex; align-items:center; justify-content:center; text-align:center }
 .hm-rowhead { justify-content:flex-end; padding-right:8px; text-align:right }
-.hm-cell { aspect-ratio:1.4; border-radius:3px; cursor:default }
+.hm-cell { aspect-ratio:1.4; border-radius:var(--radius-sm); cursor:default }
 .hm-legend { display:flex; align-items:center; gap:8px; margin-top:12px; font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg) }
-.hm-legend-bar { width:120px; height:8px; border-radius:4px; background:linear-gradient(90deg,var(--muted) 0%,var(--sapphire) 100%) }
+.hm-legend-bar { width:120px; height:8px; border-radius:var(--radius-sm); background:linear-gradient(90deg,var(--muted) 0%,var(--sapphire) 100%) }
 
 @media(max-width:700px) {
   .gbar-plot,.sbar-plot { gap:12px }
   .gbar-bar { width:14px }
   .gbar-labels,.sbar-labels { gap:12px }
-  .gbar-lbl,.sbar-lbl { font-size:10px }
+  .gbar-lbl,.sbar-lbl { font-size:var(--text-xs) }
   .treemap { height:320px }
   .hm-grid { grid-template-columns:40px repeat(var(--hm-cols,7),1fr) }
-  .hm-rowhead { font-size:10px; padding-right:4px }
+  .hm-rowhead { font-size:var(--text-xs); padding-right:4px }
   .spark-card { flex-wrap:wrap }
   .cf-legend { gap:10px }
   .pie-wrap { flex-direction:column; align-items:flex-start }

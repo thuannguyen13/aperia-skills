@@ -79,7 +79,7 @@
 <!-- ========== STACK TABLE (categorical rows with role/type/focus badges) ========== -->
 <!-- Use when data is categorical with no real numeric axis, or the end column
      needs a text label / badge rather than a number. Never invent a % to force
-     this into a bar chart instead — see bchart's notes below. -->
+     this into a bar chart instead, see bchart's notes below. -->
 <table class="stack-table">
   <thead>
     <tr>
@@ -148,7 +148,7 @@
 
 <!-- ========== PRINCIPLES GRID (parallel, unordered items) ========== -->
 <!-- If the items happen in order and feed each other, use the flow component
-     below instead — a grid implies parallel/unordered. -->
+     below instead, a grid implies parallel/unordered. -->
 <div class="principles">
   <div class="principle"><span class="num">01</span><div><div class="ptext">Principle Name</div><div class="pdesc">Short explanation.</div></div></div>
   <div class="principle"><span class="num">02</span><div><div class="ptext">Principle Name</div><div class="pdesc">Short explanation.</div></div></div>
@@ -228,7 +228,7 @@
 
 <!-- ========== HORIZONTAL BAR CHART (bchart) ========== -->
 <!--
-  CONSISTENCY RULES — violating any of these causes unequal column widths:
+  CONSISTENCY RULES, violating any of these causes unequal column widths:
   1. NEVER use inline style= on .bval, .bname, or .beff
   2. NEVER put <p> tags, headings, or non-row content inside .bchart
   3. Header row (.brow-head) must have the SAME divs as data rows
@@ -338,7 +338,7 @@
 <!-- ========== PROPORTIONAL TIMELINE (effort distribution, NOT a sequence) ========== -->
 <!-- Shows how total EFFORT is distributed across phases (relative size only).
      flex:N where N = phase duration. Do NOT use this for a schedule where
-     phases start where the last ends — flush bars read as one segmented bar,
+     phases start where the last ends, flush bars read as one segmented bar,
      not a sequence. Use gantt or a milestone timeline for that. -->
 <div class="tline">
   <div class="tline-bars">
@@ -451,7 +451,7 @@
 
 
 <!-- ========== MILESTONE CARDS (mstone-row): ≤4 dated checkpoints ========== -->
-<!-- More than 4 entries wraps this grid to a ragged second row — switch to
+<!-- More than 4 entries wraps this grid to a ragged second row, switch to
      vtimeline instead of widening the container. -->
 <div class="mstone-row">
   <div class="mstone done">
@@ -533,12 +533,12 @@
 </div>
 
 
-<!-- ========== HORIZONTAL TIMELINE (htimeline): NEW — sideways form, up to ~6 entries ========== -->
+<!-- ========== HORIZONTAL TIMELINE (htimeline): NEW, sideways form, up to ~6 entries ========== -->
 <!-- Same entry shape and status vocabulary as vtimeline, laid out left to
      right along a rail. Use for a short roadmap or compact process that
      benefits from reading left-to-right; past ~6 entries or with more body
      text per entry, use vtimeline instead. At <=700px this collapses to the
-     same vertical rail as vtimeline automatically (styles.css handles it) —
+     same vertical rail as vtimeline automatically (styles.css handles it),
      no separate markup needed for mobile. -->
 <div class="htimeline">
   <div class="ht-item done">
@@ -593,7 +593,7 @@
 
 
 <!-- ========== ENVIRONMENT CHAIN (envchain): DEV to PROD, ≤4 environments ========== -->
-<!-- 5+ environments do not get a vertical variant of this card — render them
+<!-- 5+ environments do not get a vertical variant of this card, render them
      as vtimeline (or htimeline) with envc e-* entries instead, above. -->
 <div class="envchain">
   <div class="envcard e-dev">

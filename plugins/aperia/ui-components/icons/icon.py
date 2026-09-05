@@ -3,11 +3,11 @@
 
 The icon inherits its color from CSS (`stroke="currentColor"`), so it takes
 whatever color the surrounding text or element already has. Never hard-code
-a stroke color — recolor the way you'd recolor text.
+a stroke color, recolor the way you'd recolor text.
 
-    python3 scripts/icon.py shield-check
-    python3 scripts/icon.py search alert-triangle
-    python3 scripts/icon.py --search alert
+    python3 icons/icon.py shield-check
+    python3 icons/icon.py search alert-triangle
+    python3 icons/icon.py --search alert
 
 As a module:
 
@@ -16,14 +16,14 @@ As a module:
 
 Same asset and the same `svg()`/`search()` behavior as
 create-slides/scripts/icon.py, which points at this same JSON file rather
-than keeping its own copy — see ../COMPONENTS.md, "Icon toolkit".
+than keeping its own copy, see ../COMPONENTS.md, "Icon toolkit".
 """
 import json
 import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ICONS_PATH = os.path.join(HERE, "..", "assets", "lucide-icons.json")
+ICONS_PATH = os.path.join(HERE, "lucide-icons.json")
 
 with open(ICONS_PATH, encoding="utf-8") as fh:
     ICONS = json.load(fh)

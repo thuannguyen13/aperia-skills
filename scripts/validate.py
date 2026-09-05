@@ -9,14 +9,30 @@ Checks:
   2. Every plugin `source` in marketplace.json resolves to a real plugin.
   3. Every skill has a SKILL.md with name + description frontmatter, and the
      name matches its directory (the directory is what /aperia:<name> uses).
-  4. Every hex in the plugin is either in tokens.css or listed in an ```approved
-     block in DEVIATIONS.md. Off-palette values must be a decision, not an
+  4. Every color in the plugin, written as six-digit hex, three-digit hex or
+     rgb()/rgba(), is either in tokens.css or listed in an ```approved block
+     in DEVIATIONS.md. Off-palette values must be a decision, not an
      accident, and mentioning one in prose is not a decision.
   5. tokens.css defines the core and neutral palette and the chart series ramp.
+  6. No stylesheet redefines a token the brand layer already defines. One
+     source per value; the documented overrides are listed in OVERRIDES
+     below, with the reason each is allowed.
+  7. BRAND.md states no value that tokens.css owns, and every token it names
+     exists. The guideline carries the rules and the print equivalents; the
+     digital values have one home, so there is nothing to drift.
+  8. No stylesheet sets a raw px font-size or a border-radius outside the
+     shape tokens. Sizes come from the --text-* ramp, shape from --radius,
+     --radius-sm, --radius-pill, 50% or 0.
+  9. No em dash anywhere in the plugin or the repo docs. The model reads
+     these files as its writing example.
+
+The palette itself is read by plugins/aperia/brand/palette.py, which the
+deck QA script shares, so neither holds a copy of it.
 
 Usage: python3 scripts/validate.py
 """
 
+import importlib.util
 import json
 import re
 import sys
@@ -136,30 +152,55 @@ def check_skills(plugin_name, plugin_dir):
         if not description:
             fail(f"{rel}/SKILL.md: frontmatter has no 'description'")
         elif len(description) < 80:
-            note(f"{rel}/SKILL.md: description is {len(description)} chars. "
+            fail(f"{rel}/SKILL.md: description is {len(description)} chars, under 80. "
                  f"It is the only thing Claude sees when deciding to load the skill.")
 
 
 HEX = re.compile(r"#([0-9a-fA-F]{6})\b")
 
-# Only hexes inside a fenced ```approved block in DEVIATIONS.md are allowlisted.
-APPROVED_BLOCK = re.compile(r"^```approved[ \t]*\n(.*?)^```", re.M | re.S)
+# tokens.css is the single source of brand values, guideline and system alike.
+TOKENS = "tokens.css"
+
+# Stylesheets the checks below walk: the layers and every skill theme.
+STYLESHEETS = ("brand", "ui-components", "skills")
+
+
+def brand_css(plugin_dir):
+    """The token file as one string, or None if it is missing."""
+    path = plugin_dir / "brand" / TOKENS
+    if not path.exists():
+        return None, [TOKENS]
+    return path.read_text(), []
+
+
+def palette_module(plugin_dir):
+    """brand/palette.py, the plugin's own palette reader, loaded from its path."""
+    path = plugin_dir / "brand" / "palette.py"
+    if not path.exists():
+        return None
+    spec = importlib.util.spec_from_file_location("palette", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def check_palette(plugin_name, plugin_dir):
     """Checks 4 and 5."""
-    tokens_path = plugin_dir / "brand" / "tokens.css"
-    if not tokens_path.exists():
-        fail(f"{plugin_name}: brand/tokens.css is missing, so there is no palette to "
-             f"check against")
+    tokens, missing = brand_css(plugin_dir)
+    if tokens is None:
+        fail(f"{plugin_name}: brand/{TOKENS} is missing, so there is no palette "
+             f"to check against")
         return
-    tokens = tokens_path.read_text()
+    palette_mod = palette_module(plugin_dir)
+    if palette_mod is None:
+        fail(f"{plugin_name}: brand/palette.py is missing, so nothing can read the palette")
+        return
 
-    # tokens.css is the single source of brand values. Every hex it defines is,
-    # by definition, the palette.
-    palette = {m.group(1).upper() for m in HEX.finditer(tokens)}
+    # tokens.css is the single source of brand values. Every color it defines
+    # is, by definition, the palette.
+    palette = palette_mod.tokens(plugin_dir / "brand")
     if not palette:
-        fail(f"{plugin_name}/tokens.css: no hex values found, so the palette is empty")
+        fail(f"{plugin_name}/{TOKENS}: no color values found, so the palette is empty")
         return
 
     # Check 5: the named tokens every skill relies on are actually defined.
@@ -169,10 +210,10 @@ def check_palette(plugin_name, plugin_dir):
     ]
     for name in required:
         if not re.search(rf"{re.escape(name)}\s*:", tokens):
-            fail(f"{plugin_name}/tokens.css: missing required token '{name}'")
+            fail(f"{plugin_name}/{TOKENS}: missing required token '{name}'")
     for n in range(1, 8):
         if not re.search(rf"--series-{n}\s*:", tokens):
-            fail(f"{plugin_name}/tokens.css: missing chart series step '--series-{n}'")
+            fail(f"{plugin_name}/{TOKENS}: missing chart series step '--series-{n}'")
 
     deviations_path = plugin_dir / "brand" / "DEVIATIONS.md"
     if not deviations_path.exists():
@@ -182,20 +223,18 @@ def check_palette(plugin_name, plugin_dir):
     # Approval is structural, not textual. Only the fenced ```approved blocks
     # count, so a hex named in prose, in a "was" column, or in a paragraph about a
     # value that was removed does not silently pass.
-    blocks = APPROVED_BLOCK.findall(deviations_path.read_text())
-    recorded = {m.group(1).upper() for block in blocks for m in HEX.finditer(block)}
-    if not blocks:
+    recorded, has_blocks = palette_mod.approved(plugin_dir / "brand")
+    if not has_blocks:
         fail(f"{plugin_name}/DEVIATIONS.md: no ```approved blocks found. Off-palette "
              f"values are approved by listing them in one, not by mentioning them.")
 
     offenders = {}
     for path in sorted(plugin_dir.rglob("*")):
-        if not path.is_file() or path.suffix.lower() not in {".css", ".html", ".svg", ".json", ".md"}:
+        if not path.is_file() or path.suffix.lower() not in {".css", ".html", ".svg", ".json", ".md", ".py"}:
             continue
-        if path == deviations_path:
+        if path == deviations_path or path.name == "palette.py":
             continue
-        for match in HEX.finditer(path.read_text(errors="ignore")):
-            value = match.group(1).upper()
+        for value in palette_mod.colors_in(path.read_text(errors="ignore")):
             if value not in palette and value not in recorded:
                 offenders.setdefault(value, set()).add(str(path.relative_to(ROOT)))
 
@@ -205,11 +244,116 @@ def check_palette(plugin_name, plugin_dir):
              f"with a reason")
 
 
+# Every stylesheet reads brand/tokens.css rather than repeating it, so a
+# token defined in both is a second source for one value. These are
+# deliberate and recorded; anything else is drift.
+OVERRIDES = {
+    "--fg": "near-black body ink over the brand's Aperia Blue, DEVIATIONS.md section 4",
+    "--radius": "create-slides maps the radius onto its 1920 canvas, slides.css :root",
+    "--radius-sm": "create-slides maps the radius onto its 1920 canvas, slides.css :root",
+}
+
+DECL = re.compile(r"(--[\w-]+)\s*:")
+
+
+def root_tokens(path):
+    """Token names defined in any :root block of a stylesheet."""
+    if not path.exists():
+        return set()
+    text = re.sub(r"/\*.*?\*/", "", path.read_text(), flags=re.S)
+    return {m.group(1) for block in re.findall(r":root\s*\{(.*?)\n\}", text, re.S)
+            for m in DECL.finditer(block)}
+
+
+def stylesheets(plugin_dir):
+    """Every stylesheet other than tokens.css itself."""
+    for folder in STYLESHEETS:
+        for sheet in sorted((plugin_dir / folder).rglob("*.css")):
+            if sheet.name != TOKENS:
+                yield sheet
+
+
+def check_single_source(plugin_name, plugin_dir):
+    """Check 6."""
+    brand = root_tokens(plugin_dir / "brand" / TOKENS)
+    if not brand:
+        return
+    for sheet in stylesheets(plugin_dir):
+        for name in sorted(root_tokens(sheet) & brand):
+            if name in OVERRIDES:
+                continue
+            fail(f"{sheet.relative_to(ROOT)}: redefines '{name}', which brand/{TOKENS} "
+                 f"already defines. Read it with var() instead, or record the override.")
+
+
+# BRAND.md sets a 12px floor and a ten-step ramp; COMPONENTS.md says shape
+# comes from the radius tokens. Both are rules about literals, so both are
+# checked as literals. Circles (50%) and squared corners (0) are not shapes
+# the tokens name.
+RAW_FONT_SIZE = re.compile(r"font-size\s*:\s*[\d.]+px")
+RADIUS = re.compile(r"border-radius\s*:\s*([^;}]+)")
+LENGTH = re.compile(r"\d*\.?\d+(?:px|em|rem|%)")
+
+
+def check_literals(plugin_name, plugin_dir):
+    """Check 8."""
+    for sheet in stylesheets(plugin_dir):
+        text = re.sub(r"/\*.*?\*/", "", sheet.read_text(), flags=re.S)
+        rel = sheet.relative_to(ROOT)
+        for m in RAW_FONT_SIZE.finditer(text):
+            fail(f"{rel}: '{m.group(0)}' is a raw px size. Use a --text-* token.")
+        for m in RADIUS.finditer(text):
+            if any(length != "50%" for length in LENGTH.findall(m.group(1))):
+                fail(f"{rel}: 'border-radius:{m.group(1)}' is off the shape tokens. "
+                     f"Use --radius, --radius-sm or --radius-pill.")
+
+
+def check_no_em_dash():
+    """Check 9. Repo docs and everything in plugins/."""
+    paths = [p for p in ROOT.glob("*.md")]
+    paths += [p for p in (ROOT / "plugins").rglob("*") if p.is_file()
+              and p.suffix.lower() in {".md", ".css", ".html", ".py", ".svg", ".json"}]
+    for path in sorted(paths):
+        for n, line in enumerate(path.read_text(errors="ignore").splitlines(), 1):
+            if "\u2014" in line:
+                fail(f"{path.relative_to(ROOT)}:{n}: em dash. Use a colon, a comma or two sentences.")
+
+
+# BRAND.md names tokens rather than repeating their values: | Aperia Blue |
+# `--aperia-blue` | ... Two things can go wrong, and both are checked.
+NAMED_TOKEN = re.compile(r"`(--[\w-]+)`")
+
+
+def check_guideline_states_no_values(plugin_name, plugin_dir):
+    """Check 7."""
+    brand_md = plugin_dir / "brand" / "BRAND.md"
+    tokens, _ = brand_css(plugin_dir)
+    if tokens is None or not brand_md.exists():
+        return
+    text = brand_md.read_text()
+
+    # A hex in the guideline is a second copy of a value tokens.css owns.
+    for m in HEX.finditer(text):
+        fail(f"{plugin_name}/BRAND.md: states #{m.group(1)}. Colors live in "
+             f"{TOKENS}; name the token instead, so there is one copy of the value.")
+
+    # A token the guideline names must exist, or the pointer dangles.
+    defined = root_tokens(plugin_dir / "brand" / TOKENS)
+    for m in NAMED_TOKEN.finditer(text):
+        if m.group(1) not in defined:
+            fail(f"{plugin_name}/BRAND.md: names '{m.group(1)}', which {TOKENS} "
+                 f"does not define.")
+
+
 def main():
     plugins = check_manifests()
     for plugin_name, plugin_dir in plugins:
         check_skills(plugin_name, plugin_dir)
         check_palette(plugin_name, plugin_dir)
+        check_single_source(plugin_name, plugin_dir)
+        check_guideline_states_no_values(plugin_name, plugin_dir)
+        check_literals(plugin_name, plugin_dir)
+    check_no_em_dash()
 
     for msg in NOTES:
         print(f"note: {msg}")

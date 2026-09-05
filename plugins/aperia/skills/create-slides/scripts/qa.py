@@ -11,6 +11,8 @@ read them, then decide.
 
 It cannot check what the slide *looks* like. Still open the file.
 """
+import importlib.util
+import os
 import re
 import sys
 from collections import Counter
@@ -19,6 +21,15 @@ try:
     from bs4 import BeautifulSoup
 except ImportError:
     sys.exit("pip install beautifulsoup4 --break-system-packages")
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+# The palette is read from the brand layer, not copied here: tokens.css plus
+# the approved blocks in DEVIATIONS.md, through the same module validate.py
+# uses. See ../../../brand/palette.py.
+BRAND_DIR = os.path.join(HERE, "..", "..", "..", "brand")
+_spec = importlib.util.spec_from_file_location("palette", os.path.join(BRAND_DIR, "palette.py"))
+palette = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(palette)
 
 ALWAYS_DARK = ["s-cover", "s-agenda", "s-section", "s-statement", "s-quote", "s-end"]
 NO_FOOTER = ["s-cover", "s-section", "s-end"]
@@ -34,17 +45,7 @@ DATA_LABELS = {"col-val", "bval", "dlbl", "axlbl", "seg", "stack-legend", "gantt
                "gantt-axis", "col-lbl", "tline-bar", "s-num", "chart-note", "donut-val",
                "donut-lbl", "stat-val", "s-meta", "flow-node"}
 
-PALETTE = {
-    # brand
-    "002f67", "004785", "0072bc", "7ed3f7", "c8eaf5", "004583",
-    "000000", "ffffff", "fff", "58595b", "a7a9ac", "f1f2f2",
-    # theme-internal neutrals and blue tints defined in slides.css
-    "1c1f24", "e3e6ea", "cfe0f0", "9fbedb", "a8c4dd", "3a8fd1", "6cb0e0",
-    "eaf3fb", "bfdcf0", "eafaff", "f4f8fc", "f6fafe", "0a1e38",
-    # sentiment (callouts and badges only)
-    "16a34a", "d97706", "dc2626", "15803d", "bbf7d0", "b45309",
-    "fde68a", "fffbeb", "fef2f2", "fecaca", "f0fdf4",
-}
+PALETTE = palette.load(BRAND_DIR)
 
 BANNED = [
     (r"lorem|ipsum", "lorem placeholder"),
@@ -108,10 +109,8 @@ def main(path):
         if n > 1:
             errs.append(f"  [doc] duplicate id '{i}' used {n} times")
 
-    for hexv in set(m.lower() for m in re.findall(r"#([0-9a-fA-F]{3,6})\b", raw)):
-        if hexv not in PALETTE and not re.fullmatch(r"[a-f0-9]{6}", hexv) is None:
-            if hexv not in PALETTE:
-                errs.append(f"  [doc] off-palette color #{hexv}")
+    for hexv in sorted(palette.colors_in(raw) - PALETTE):
+        errs.append(f"  [doc] off-palette color #{hexv}")
 
     deck_text = soup.select_one(".deck").get_text(" ", strip=True) if soup.select_one(".deck") else ""
     for pat, label in BANNED:

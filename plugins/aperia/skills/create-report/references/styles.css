@@ -4,7 +4,8 @@
    with any other Aperia UI surface now lives once, in ../../ui-components/
    references/styles.css (plus charts.css and icons.css where used).
    ../../ui-components/assemble.py injects the whole stack into the report's
-   marker, <style>/* @aperia report [charts] [icons] */</style>, in this order:
+   marker (a style element holding the comment `@aperia report`, plus the
+   words `charts` and `icons` when used), in this order:
 
      1. ../../brand/tokens.css        (the brand token file)
      2. ../../ui-components/base/styles.css

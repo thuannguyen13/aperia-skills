@@ -84,6 +84,9 @@ def css_for(words):
     for path in files:
         if not path.exists():
             sys.exit(f"assemble: missing layer file {path}")
+        if "</style" in path.read_text():
+            # The browser ends the style element at that text, comment or not.
+            sys.exit(f"assemble: {path.name} contains '</style', which would cut the block short")
         parts.append(f"/* ---- {path.name} ({path.parent.name}) ---- */\n{path.read_text().strip()}")
     head = ("/* Assembled by ui-components/assemble.py from the words in data-aperia.\n"
             "   Do not edit inside this block: it is replaced on every run. Put\n"

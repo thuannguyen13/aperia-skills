@@ -2,7 +2,8 @@
    APERIA HTML SLIDES: THEME
    Injected by ../../ui-components/assemble.py after ../../brand/tokens.css,
    which it reads for every palette, weight and type value. Nothing here
-   restates a brand value; the deck marker is <style>/* @aperia slides */</style>.
+   restates a brand value; the deck marker is a style element holding the
+   comment `@aperia slides`.
    Load fonts first:
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

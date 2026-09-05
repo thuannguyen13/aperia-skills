@@ -10,6 +10,7 @@
 - Stale text fixed: version stamps and `chartSeries` in `DEVIATIONS.md`, `deck`/`report` skill names in `BRAND.md`, "three skills" and "720px" in the slides skill, and `MAINTAINING.md`'s edit order, which 0.7.0 had inverted.
 - Skill descriptions rewritten to two or three sentences that name the output and, for slides, that PowerPoint is not one.
 - Every em dash in the docs, comments and snippets replaced. `.prettierrc` committed alongside the existing `.prettierignore`.
+- `examples/toolkit-0-8-0-release.html`: this release written up with `create-report`, assembled by the script from a bare marker. The assemble script refuses a layer file containing a closing style tag, which the browser would treat as the end of the block even inside a comment.
 
 ## 0.7.0
 

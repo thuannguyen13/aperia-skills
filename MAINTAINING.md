@@ -51,6 +51,10 @@ Values are controlled in two places and no third. A change for every future outp
 
 The script resolves the layers from its own location, so it works from a plugin install and from a standalone bundle without a rewrite.
 
+A layer file must never contain a closing style tag, even inside a comment, because the browser ends the style element there. The script refuses to inject one.
+
+`examples/` holds one assembled output per skill, built from a bare marker with the script. Rebuild them after a theme change so they keep showing what the skills produce.
+
 ## bundle-skills.py
 
 ```bash

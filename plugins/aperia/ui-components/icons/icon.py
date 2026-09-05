@@ -3,7 +3,7 @@
 
 The icon inherits its color from CSS (`stroke="currentColor"`), so it takes
 whatever color the surrounding text or element already has. Never hard-code
-a stroke color — recolor the way you'd recolor text.
+a stroke color, recolor the way you'd recolor text.
 
     python3 icons/icon.py shield-check
     python3 icons/icon.py search alert-triangle
@@ -16,7 +16,7 @@ As a module:
 
 Same asset and the same `svg()`/`search()` behavior as
 create-slides/scripts/icon.py, which points at this same JSON file rather
-than keeping its own copy — see ../COMPONENTS.md, "Icon toolkit".
+than keeping its own copy, see ../COMPONENTS.md, "Icon toolkit".
 """
 import json
 import os

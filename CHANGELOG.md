@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0
+
+- **Styles are injected, not typed.** New `ui-components/assemble.py` fills a document's style marker (`<style>/* @aperia report charts icons */</style>` or `/* @aperia slides */`) with the layer files in order, byte for byte, and replaces its own block on re-run. Both skills stop telling the model to read and paste stylesheets; document-specific rules go in a second `<style>` after the marker. Cuts about 90 KB of hand-copied CSS per output and the drift that came with it.
+- **The palette has one source again.** `slides.css` reads `tokens.css` instead of restating the ten hexes and the type ramp; its canvas radii are recorded overrides. `qa.py` reads the palette through the new `brand/palette.py`, which `validate.py` shares, instead of a hardcoded set. Check 6 now covers `skills/` too.
+- **Shipped CSS follows its own rules.** Six chart label sizes at 10px and 11px moved onto the `--text-*` ramp. New `--radius-sm` (4px, 7.5 canvas units in decks) replaces every small literal radius. `tokens.css` sets body in Regular, matching what every theme already did; recorded as `DEVIATIONS.md` section 9.
+- `validate.py`: the palette check now sees three-digit hex and `rgb()`/`rgba()`; new checks fail raw px `font-size`, off-token `border-radius`, skill descriptions under 80 characters, and any em dash. The 26 `#fff` literals became `var(--white)`.
+- `tokens.css` no longer `@import`s Inter; the `<link>` in `<head>` is the one place the font loads.
+- Stale text fixed: version stamps and `chartSeries` in `DEVIATIONS.md`, `deck`/`report` skill names in `BRAND.md`, "three skills" and "720px" in the slides skill, and `MAINTAINING.md`'s edit order, which 0.7.0 had inverted.
+- Skill descriptions rewritten to two or three sentences that name the output and, for slides, that PowerPoint is not one.
+- Every em dash in the docs, comments and snippets replaced. `.prettierrc` committed alongside the existing `.prettierignore`.
+
 ## 0.7.0
 
 - **`BRAND.md` no longer states any value `tokens.css` owns.** Its palette tables listed the HEX and RGB for all 10 colors and its type scale listed all 20 size and leading numbers, every one of them a second copy. The tables now name the token instead and keep what a stylesheet cannot carry: Pantone, CMYK and the role each color plays. The type scale keeps its rules and drops its numbers. `#FFFFFF` in the logo rule, `600` in the weight rule and the four `12px` mentions of the on-screen floor all became token names too.
@@ -28,7 +39,7 @@
 - **Removed the `apply-branding` and `apply-ui-components` skills.** The
   plugin now ships two skills, `create-report` and `create-slides`.
 - **`apply-ui-components`'s component library moved out of `skills/` into a
-  new top-level reference folder, `plugins/aperia/ui-components/`** —
+  new top-level reference folder, `plugins/aperia/ui-components/`**,
   `styles.css`, `snippets.html`, `charts.css`/`charts.html`,
   `icons.css`/`icons.html`, and a new `COMPONENTS.md` documenting all of it
   (the same role `brand/BRAND.md` plays for the brand layer). It is a
@@ -40,18 +51,18 @@
 - **New build step, `scripts/bundle-skills.py`.** Builds one standalone bundle per skill in `dist/`, inlining the layers that skill reads and rewriting its references, so a skill uploaded on its own to Claude Desktop carries the same files a plugin install would have given it. Without it `create-report` cannot render outside a plugin install, since its base components now live in `ui-components/`. CI builds the bundles on every push and pull request, so a broken layer reference fails there instead of at upload time.
 - Fixed two stale reference paths the bundle check surfaced: `brand/tokens.css` pointed at `../BRAND.md` for a file in its own directory, and `brand/DEVIATIONS.md` still named the component theme by its pre-refactor path.
 - There is currently no skill for a freeform branding request that fits
-  neither `create-report` nor `create-slides` — that was `apply-branding`'s
+  neither `create-report` nor `create-slides`, that was `apply-branding`'s
   job. See `MAINTAINING.md`, "Ad-hoc branding", if that need comes back.
 
 ## 0.2.0
 
 - New skill: `apply-ui-components`. A paste-in library of the presentational
-  components from the report theme — cards, badges, callouts, tables,
+  components from the report theme, cards, badges, callouts, tables,
   milestone/status timelines (including a new `htimeline`, the horizontal
   form), a chart toolkit (bar/stacked/scenario/PERT plus the extended family:
   line, area, combo, scatter, bubble, grouped/stacked category bars, a
   constrained pie/donut, radial gauge, treemap, radar, funnel, sparkline,
-  heatmap), and a 37-icon set extracted from a licensed Streamline Icon Set —
+  heatmap), and a 37-icon set extracted from a licensed Streamline Icon Set,
   for dropping into anything that isn't a full report or deck.
 - `create-report` and `create-slides` now consume `apply-ui-components` as
   the shared base component layer instead of maintaining their own parallel

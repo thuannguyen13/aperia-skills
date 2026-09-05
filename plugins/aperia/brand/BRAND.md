@@ -78,7 +78,7 @@ Ensure high contrast between type and its background in every composition. Do no
 
 **Inter** is the primary typeface and a foundational pillar of the identity (free, SIL OFL, at rsms.me/inter or Google Fonts).
 
-- Weights in use: **Light, Regular, Medium, SemiBold, Bold**. Light is the default for body text; in MS Office applications (Word, PowerPoint) use **Regular** for body.
+- Weights in use: **Light, Regular, Medium, SemiBold, Bold**. The guideline makes Light the default for body text and Regular the Office body weight. The HTML themes here set body in **Regular** too, because Light is too thin at screen sizes; recorded in `DEVIATIONS.md` section 9.
 - **SemiBold (`--fw-semibold`) is sanctioned for UI emphasis in the HTML themes**: headings, table headers, card titles, labels and buttons, where Bold is too heavy against Light body copy and Medium is too weak. It is not a body weight. Body copy stays Regular or Light, and the never-set-body-in-Bold rule is unchanged. Weights outside this list remain exceptional.
 - **Alternative typeface: Arial** wherever Inter can't be embedded (Outlook emails and signatures, system-font contexts). Arial is the system font on Mac and Windows.
 - **Body text: Regular or Light only.** Never set body copy in Bold. Bold is for brief highlights.
@@ -120,7 +120,7 @@ before treating them as final.
 The two display utilities clamp between ramp steps and are named for their
 ceiling: `2xl` runs 20/32 to 28/40, and `5xl` runs 28/40 to 40/56.
 
-The `deck` skill is the exception: its slide faces are measured in canvas units on
+The `create-slides` skill is the exception: its slide faces are measured in canvas units on
 a 1920x1080 box that is scaled to fit the viewport, so it maps this ramp onto that
 canvas with 19.5px as its own floor, which holds the on-screen minimum down to a 1180px
 viewport.
@@ -264,5 +264,5 @@ Run this before delivering any branded artifact:
 
 - **PowerPoint / Word**: Inter Regular for body (not Light, because of Office rendering). Headings in Bold or Medium. Slide backgrounds in Aperia Blue with the graphic element top-right, or white with Aperia Blue type. Convert HEX via `RGBColor`.
 - **Excel**: header rows in Aperia Blue with white type; banding in Light Gray; Sapphire Blue for emphasis. Keep the graphic element out of data sheets and use it on cover/summary sheets only.
-- **HTML / web**: load Inter from Google Fonts; define the palette as CSS custom properties; inline the SVG assets. For full report layouts use the `report` skill.
+- **HTML / web**: load Inter from Google Fonts; define the palette as CSS custom properties; inline the SVG assets. For full report layouts use the `create-report` skill.
 - **Diagrams / charts**: palette-only series, left-aligned labels, Inter, high-contrast pairs, no pie charts where a proportional stacked bar reads better.

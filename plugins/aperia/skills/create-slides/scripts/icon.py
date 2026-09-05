@@ -19,7 +19,7 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# Shared with ui-components/icons/icon.py — one 2000+ icon asset for the
+# Shared with ui-components/icons/icon.py, one 2000+ icon asset for the
 # whole plugin, not a copy per skill. See ../../../ui-components/COMPONENTS.md.
 ICONS_PATH = os.path.join(HERE, "..", "..", "..", "ui-components", "icons", "lucide-icons.json")
 

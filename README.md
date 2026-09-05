@@ -15,7 +15,7 @@ Each skill reads two shared layers before producing anything:
 `ui-components/` (cards, badges, callouts, tables, a full chart toolkit, an
 icon set, and milestone/status timelines), so the same piece looks and
 behaves the same way whether it lands in a report or a deck. Neither layer
-is a skill on its own — they're reference folders every skill reads, the
+is a skill on its own, they're reference folders every skill reads, the
 same way `brand/` always has been.
 
 ## How to install

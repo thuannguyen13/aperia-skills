@@ -1,6 +1,6 @@
 ---
 name: create-slides
-description: Build an on-brand Aperia slide deck as a single self-contained HTML file.
+description: Build an on-brand Aperia slide deck as one self-contained HTML file that runs in the browser and prints to a 16:9 PDF. Use for presentations, readouts, and pitch decks. It does not produce PowerPoint.
 ---
 
 # Aperia Deck
@@ -13,13 +13,13 @@ Before writing a line of HTML:
 
 1. Read **`../../brand/BRAND.md`** in full, especially Color, Typography, Logo,
    Graphic Element, and Format Notes.
-2. Read **`../../brand/tokens.css`** for the values, but **never paste it into
-   a deck**. `references/slides.css` is the only style block a deck carries: it
-   already mirrors the brand values in canvas space, so a second `:root` would
-   override them with screen-px ones. `--radius` is the clearest case, 15 canvas
-   units here against 8px there, and a paste flattens every card in the deck.
-3. Read **`references/slides.css`** (the slide theme) and
-   **`references/snippets.html`** (the layouts and the deck script).
+2. Read **`references/snippets.html`** (the layouts and the deck script) and
+   skim **`references/slides.css`** for the class names and the type tokens.
+   Do not paste either stylesheet. The deck carries one marker,
+   `<style>/* @aperia slides */</style>`, and
+   `../../ui-components/assemble.py` fills it with `../../brand/tokens.css`
+   and `slides.css`, in that order, byte for byte. `slides.css` reads the
+   palette and the type ramp from the tokens and maps them onto the canvas.
 
 **Do not work from memory of the palette or the type rules.** If a value is not
 in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
@@ -36,14 +36,15 @@ chart-series order (aperia-blue, dark-blue, sapphire, sky-blue, light-blue),
 and the chart-selection logic (a bar chart needs a real quantitative axis, a
 part-to-whole story stays within a slice budget, never invent a percentage
 to force a chart). `slides.css` already implements all of this in canvas
-units — the badge and callout palettes below are the same hex values
-`../../ui-components/base/styles.css` uses on screen, not a reinterpretation.
+units, reading the same brand tokens `../../ui-components/base/styles.css`
+reads on screen, not a reinterpretation.
 When the two diverge (this deck caps a donut at 3 segments where
 `../../ui-components/COMPONENTS.md` allows 5, since a slide is read from
 across a room in a few seconds), that is a deliberate, more conservative
 choice for the presentation context, not a gap to close.
 
-No PowerPoint template, no build step, no dependency beyond Google Fonts.
+No PowerPoint template, no dependency beyond Google Fonts. The one build step
+is the assemble script, which copies the stylesheets in.
 
 What the output does:
 
@@ -64,14 +65,21 @@ What the output does:
    a slide. Offer the choice plainly: keep the exact contents as a table, or
    convert it into a chart or a diagram. Ask once, listing each table you found,
    and never convert silently, the numbers may be the point.
-4. **Read `references/slides.css` and `references/snippets.html`** before writing
-   a line of HTML. Paste the theme verbatim; copy the layout markup and replace
-   the copy, not the structure.
-5. **Build** the single HTML file.
-6. **QA**: run `python3 <this skill dir>/scripts/qa.py <file>`, required, then
+4. **Read `references/snippets.html`** before writing a line of HTML. Copy the
+   layout markup and replace the copy, not the structure.
+5. **Build** the single HTML file with the style marker from the skeleton in
+   place of any stylesheet.
+6. **Assemble**: run `python3 <plugin dir>/ui-components/assemble.py <file>`,
+   required. It fills the marker with the theme. Re-run it after any later
+   edit that touched the marker block; it replaces its own output.
+7. **QA**: run `python3 <this skill dir>/scripts/qa.py <file>`, required, then
    look at it.
-7. **Save** as `<slug>.html` in the working directory, unless the user names a
+8. **Save** as `<slug>.html` in the working directory, unless the user names a
    different location, and tell them the path.
+
+Anything a deck needs beyond the theme goes in a second `<style>` block after
+the marker, never inside the injected one, which the next assemble run
+replaces. This is rare: the theme is meant to cover every layout.
 
 Tell the user how to drive it: arrow keys, `O`, `N`, `F`, and Ctrl/Cmd+P for the
 PDF.
@@ -206,9 +214,11 @@ use them for a chart series. `qa.py` flags any hex outside the theme.
 > The values above are the brand-guideline palette and are the default. The
 > official Aperia PowerPoint template ships two slightly different accents. If
 > this HTML deck will be shown next to a deck built on that template, and only
-> then, swap Sapphire `#0072BC` → `#1570E0` and Sky `#7ED3F7` → `#25B4F1`, and
-> add both to the palette list in `qa.py`. Ask before doing this; otherwise
-> keep the values above.
+> then, swap Sapphire `#0072BC` → `#1570E0` and Sky `#7ED3F7` → `#25B4F1` by
+> redefining `--sapphire-blue` and `--sky-blue` in the deck's own `<style>`
+> block after the marker. Both values are approved in `DEVIATIONS.md` section
+> 6, so `qa.py` already accepts them. Ask before doing this; otherwise keep the
+> values above.
 
 ### Typography: Inter
 
@@ -269,7 +279,7 @@ other way, never distort, rotate, or add effects.
    a subtle "element behind", that is intended.
 6. **Fill the full slide height, never capped.** Both elements, the double
    pattern on covers (`.shape-cover`) and the single pattern on sections,
-   statements and dark in-body slides (`.shape-panel`), run the full 720px at
+   statements and dark in-body slides (`.shape-panel`), run the full 1080px at
    `height:100%; width:auto`, anchored top-right. A width cap forces a shorter
    shape and breaks the treatment, so neither class carries one.
 7. **Proportion follows the artwork, not a cap.** The double pattern is
@@ -287,7 +297,7 @@ other way, never distort, rotate, or add effects.
 ## Icons
 
 Lucide line icons, the full set bundled offline in
-`../../ui-components/icons/lucide-icons.json` — shared with
+`../../ui-components/icons/lucide-icons.json`, shared with
 `../../ui-components/`, not a local copy. Browse at https://lucide.dev/icons/
 and use the exact slug.
 
@@ -345,7 +355,7 @@ file. Pick the form that matches the data.
   donut for that case and the stacked bar for everything else. (`../../ui-components/COMPONENTS.md`
   allows a plain pie too, capped at 5 slices, for freeform pages read up close;
   a slide is read from across a room, so this deck stays with the donut-only,
-  3-segment ceiling `qa.py` enforces — narrower, not a different rule.)
+  3-segment ceiling `qa.py` enforces, narrower, not a different rule.)
 - **Never invent numbers to make a chart work.** If you had to manufacture the
   percentages, the data is categorical, use a table or cards.
 - **A table from the source is a decision, not a default.** Ask first (step 3),
@@ -398,8 +408,8 @@ wherever you are. Each one resolves its own assets, so neither cares about the
 current directory.
 
 `qa.py` needs `beautifulsoup4`. If it is missing the script says so and prints
-the install command. This is the one dependency in the plugin; the other three
-skills need none.
+the install command. This is the one dependency in the plugin; the other
+skill needs none.
 
 It checks tone rules, notes on every slide, bullet and word density, palette
 compliance, graphic-element handling, chart insight lines, duplicate ids,
@@ -419,10 +429,12 @@ a collision with the footer, or an icon crowding a heading. Check in particular:
 
 ## Files
 
-- `references/slides.css`: the complete slide theme. Paste inside `<style>`.
-  Read this first.
-- `references/snippets.html`: document skeleton, brand sprite, every layout,
-  every chart, and the deck script. Read this second, copy from it.
+- `references/snippets.html`: document skeleton with the style marker, brand
+  sprite, every layout, every chart, and the deck script. Read this first,
+  copy from it.
+- `references/slides.css`: the complete slide theme. Injected by the assemble
+  script after `../../brand/tokens.css`; skim it for class names, never paste it.
+- `../../ui-components/assemble.py`: fills the marker. Required step.
 - `../../brand/assets/`: `aperia-logo.svg`, `pattern-single-portrait.svg`,
   `pattern-double.svg` if you need raw path data.
 - `../../ui-components/icons/lucide-icons.json`: all 2,025 Lucide icons as path data, shared with `../../ui-components/`.
@@ -434,7 +446,9 @@ a collision with the footer, or an icon crowding a heading. Check in particular:
 `qa.py` covers density, notes, palette, duplicate ids, and Title Case. This
 covers what it cannot see.
 
-- [ ] `BRAND.md` and `tokens.css` were read before writing
+- [ ] `BRAND.md` was read before writing
+- [ ] `assemble.py` was run after the last edit; nothing was typed or edited
+      inside the injected `<style data-aperia>` block
 - [ ] Every color traces to `tokens.css`, or to a recorded entry in
       `brand/DEVIATIONS.md`
 - [ ] Inter with Arial fallback; nothing underlined; no justified text

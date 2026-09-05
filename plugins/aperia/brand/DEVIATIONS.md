@@ -12,8 +12,6 @@ Approving a value means adding it to an `approved` block, deliberately.
 Keep those blocks accurate: a value in use and not listed fails the build, and a
 value listed but no longer used should be deleted along with its narrative.
 
-Status as of plugin v3.0.0.
-
 ---
 
 ## 1. Asset / guideline mismatch, needs a decision from the brand owner
@@ -129,9 +127,9 @@ has a related and separate gap of its own, recorded in section 5.
 
 ## 5. Open: dark-slide chart ramp in the deck theme
 
-Added with the HTML `deck` skill in v2.0.0.
+Added with the `create-slides` skill.
 
-On a light slide the chart series map cleanly onto `chartSeries` in
+On a light slide the chart series map cleanly onto the `--series-*` steps in
 `tokens.css`. On a dark navy slide, Aperia Blue and Dark Blue are invisible
 against the background, so `slides.css` shifts the whole ramp lighter. The
 palette offers only three light-enough blues (Sapphire, Sky, Light Blue) and the
@@ -191,7 +189,7 @@ here records that the appearance is deliberate.
 
 ## 7. Accepted: delivery-plan status ramp and environment chain
 
-Added with the `create-report` skill's delivery-plan components in v3.0.0: the grouped
+Added with the `create-report` skill's delivery-plan components: the grouped
 Gantt, milestone cards and the environment chain need a four-state status ramp
 and five environment colors. The guideline palette has neither.
 
@@ -273,3 +271,11 @@ already does, and we change it when the components need it to change.
 
 This is a policy entry, not an approval of specific values. Each scale gets
 recorded here as it lands, with what it was derived from and what it changed.
+
+---
+
+## 9. Accepted: body copy in Regular on screen
+
+The guideline makes Light (300) the default body weight and Regular (400) the Office body weight. Every HTML theme in this plugin sets body copy in Regular, and `tokens.css` now does the same, so the value has one home. Light at 14px to 16px on a screen is thin enough to hurt legibility, especially on Windows rendering, and the guideline's own Office exception exists for the same reason. Headings and emphasis are unchanged. Body copy is still never Bold.
+
+No `approved` block. Weights are not colors; this section records the decision so no theme reintroduces Light as a local choice.

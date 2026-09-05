@@ -28,25 +28,28 @@ Pantone and CMYK are for print and promotional items. **RGB/HEX are for web and 
 
 ### Core palette
 
-| Name | HEX | RGB | Pantone | CMYK | Role |
-|---|---|---|---|---|---|
-| Aperia Blue | `#002F67` | 0/47/103 | P108-16C | 100/70/0/50 | Primary brand color: hero fills, dark panels, headings on light |
-| Dark Blue | `#004785` | 0/71/133 | P105-8C | 100/65/0/30 | Secondary blue, gradient partner |
-| Sapphire Blue | `#0072BC` | 0/114/188 | P106-8C | 100/50/0/0 | Accent: labels, links, highlights, chart series |
-| Sky Blue | `#7ED3F7` | 126/211/247 | P115-5C | 45/0/0/0 | Light accent, eyebrow text on dark |
-| Light Blue | `#C8EAF5` | 200/234/245 | P115-10C | 20/0/2/0 | Tints, soft fills |
+**Digital values live in `tokens.css`, not here.** This table carries what a
+stylesheet cannot: the print equivalents and the role each color plays.
+
+| Name | Token | Pantone | CMYK | Role |
+|---|---|---|---|---|
+| Aperia Blue | `--aperia-blue` | P108-16C | 100/70/0/50 | Primary brand color: hero fills, dark panels, headings on light |
+| Dark Blue | `--dark-blue` | P105-8C | 100/65/0/30 | Secondary blue, gradient partner |
+| Sapphire Blue | `--sapphire-blue` | P106-8C | 100/50/0/0 | Accent: labels, links, highlights, chart series |
+| Sky Blue | `--sky-blue` | P115-5C | 45/0/0/0 | Light accent, eyebrow text on dark |
+| Light Blue | `--light-blue` | P115-10C | 20/0/2/0 | Tints, soft fills |
 
 ### Neutral palette
 
 Neutrals add texture and depth. In text-heavy compositions, de-emphasize secondary information by setting it in grey.
 
-| Name | HEX | RGB | Pantone | Role |
-|---|---|---|---|---|
-| Black | `#000000` | 0/0/0 | n/a | Type, logo alternate |
-| Dark Gray | `#58595B` | 88/89/91 | P179-13C | Muted body copy, captions |
-| Medium Gray | `#A7A9AC` | 167/169/172 | P179-6C | Subtle UI, rules, disabled |
-| Light Gray | `#F1F2F2` | 241/242/242 | P179-2C | Muted backgrounds, cards |
-| White | `#FFFFFF` | 255/255/255 | n/a | Backgrounds, type on dark |
+| Name | Token | Pantone | Role |
+|---|---|---|---|
+| Black | `--black` | n/a | Type, logo alternate |
+| Dark Gray | `--dark-gray` | P179-13C | Muted body copy, captions |
+| Medium Gray | `--medium-gray` | P179-6C | Subtle UI, rules, disabled |
+| Light Gray | `--light-gray` | P179-2C | Muted backgrounds, cards |
+| White | `--white` | n/a | Backgrounds, type on dark |
 
 ### Accessible combinations
 
@@ -76,15 +79,15 @@ Ensure high contrast between type and its background in every composition. Do no
 **Inter** is the primary typeface and a foundational pillar of the identity (free, SIL OFL, at rsms.me/inter or Google Fonts).
 
 - Weights in use: **Light, Regular, Medium, SemiBold, Bold**. Light is the default for body text; in MS Office applications (Word, PowerPoint) use **Regular** for body.
-- **SemiBold (600) is sanctioned for UI emphasis in the HTML themes**: headings, table headers, card titles, labels and buttons, where Bold is too heavy against Light body copy and Medium is too weak. It is not a body weight. Body copy stays Regular or Light, and the never-set-body-in-Bold rule is unchanged. Weights outside this list remain exceptional.
+- **SemiBold (`--fw-semibold`) is sanctioned for UI emphasis in the HTML themes**: headings, table headers, card titles, labels and buttons, where Bold is too heavy against Light body copy and Medium is too weak. It is not a body weight. Body copy stays Regular or Light, and the never-set-body-in-Bold rule is unchanged. Weights outside this list remain exceptional.
 - **Alternative typeface: Arial** wherever Inter can't be embedded (Outlook emails and signatures, system-font contexts). Arial is the system font on Mac and Windows.
 - **Body text: Regular or Light only.** Never set body copy in Bold. Bold is for brief highlights.
 - **Never underline** text or headlines.
 - Build hierarchy with different **sizes/scales and weights**: big, strong headlines against smaller type. Inter Medium suits pull quotes and large paragraphs.
 - Print minimum type size: **5pt**.
-- **Minimum on-screen type size: 12px.** Nothing renders below it, including
+- **Minimum on-screen type size: `--min-size`.** Nothing renders below it, including
   micro-labels, badges, tag pills, chart legends, axis ticks, captions and footnotes.
-  Where a label needs to read as subordinate at 12px, build that from weight,
+  Where a label needs to read as subordinate at that size, build that from weight,
   letter-spacing, case and color, never by going smaller.
 
 ### Type scale
@@ -96,32 +99,22 @@ Token names are **size-semantic, never role names**, and no size is tied to an
 `h1`..`h6` tag. A heading gets its size from a token applied at the use site, so the
 same step can serve a heading in one place and a number in another.
 
-| Token | Size / line-height | Ratio |
-|---|---|---|
-| `xs` | 12 / 16 | |
-| `sm` | 14 / 20 | 1.17 |
-| `base` | 16 / 24 | 1.14 |
-| `md` | 18 / 28 | 1.13 |
-| `lg` | 20 / 32 | 1.11 |
-| `xl` | 24 / 36 | 1.20 |
-| `2xl` | 28 / 40 | 1.17 |
-| `3xl` | 32 / 48 | 1.14 |
-| `4xl` | 36 / 52 | 1.13 |
-| `5xl` | 40 / 56 | 1.11 |
+**The sizes live in `tokens.css`, not here.** Ten steps, `--text-xs` through
+`--text-5xl`, each with the paired `--leading-*`. Use them together; a size
+without its leading is a bug, not a choice.
 
-Each step carries the paired line-height shown; use them together.
+The ramp rises in roughly 1.1x to 1.2x steps and is deliberately fine-grained
+rather than merged, because it is the shared reference for every skill and has
+to cover editorial, data and display type without pushing a component onto a
+step that does not fit it.
 
 **Two Figma steps are not in the web ramp.** The design system also holds 10/12 and
-11/16. Both fall below the 12px on-screen minimum above, so they stay print and
+11/16. Both fall below the on-screen minimum above, so they stay print and
 Figma only and the web ramp starts at `xs`.
 
 **The 36 and 40 leadings are derived**, not taken from Figma, which stops at 32/48.
 They continue the ramp's +4 leading progression. Confirm them with the designer
 before treating them as final.
-
-The ramp is deliberately fine-grained rather than merged: it is the shared
-reference for every skill, so it has to cover editorial, data and display type
-without a component being pushed onto a step that does not fit it.
 
 **Responsive headings** are clamped between two ramp steps, never off-scale values.
 The two display utilities clamp between ramp steps and are named for their
@@ -129,7 +122,7 @@ ceiling: `2xl` runs 20/32 to 28/40, and `5xl` runs 28/40 to 40/56.
 
 The `deck` skill is the exception: its slide faces are measured in canvas units on
 a 1920x1080 box that is scaled to fit the viewport, so it maps this ramp onto that
-canvas with 19.5px as its own floor, which holds the 12px minimum down to a 1180px
+canvas with 19.5px as its own floor, which holds the on-screen minimum down to a 1180px
 viewport.
 
 ### Case
@@ -160,7 +153,7 @@ viewport.
 
 The Aperia wordmark ships with this skill: `assets/aperia-logo.svg` (135×40, Aperia Blue). Inline it into HTML/SVG artifacts rather than linking externally.
 
-- **Color**: Aperia Blue, black, or white **only**. On dark or blue backgrounds, recolor every `fill` to `#FFFFFF`.
+- **Color**: Aperia Blue, black, or white **only**. On dark or blue backgrounds, recolor every `fill` to White (`--white`).
 - **Clear space / exclusion zone**: equal to the cap height of "Aperia" on all sides. Nothing intrudes into it.
 - **Minimum size**: 24px height on screen, 10mm in print.
 - **Pairing with partners**: center-aligned, optically equal size, **two letter-'A' spacing** between marks. Horizontal or vertical alignment allowed.
@@ -255,7 +248,7 @@ Run this before delivering any branded artifact:
 
 - [ ] Every color is from the core or neutral palette, with no off-palette values
 - [ ] Type is Inter (or Arial fallback); body in Regular/Light, never Bold
-- [ ] No on-screen type below 12px anywhere, labels and legends included
+- [ ] No on-screen type below `--min-size` anywhere, labels and legends included
 - [ ] Nothing underlined; no all-caps or all-lowercase running text
 - [ ] Text left-aligned (center only for hero/landing); nothing justified or right-aligned
 - [ ] Contrast pairs come from the approved accessible combinations

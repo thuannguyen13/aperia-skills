@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0
+
+- **`BRAND.md` no longer states any value `tokens.css` owns.** Its palette tables listed the HEX and RGB for all 10 colors and its type scale listed all 20 size and leading numbers, every one of them a second copy. The tables now name the token instead and keep what a stylesheet cannot carry: Pantone, CMYK and the role each color plays. The type scale keeps its rules and drops its numbers. `#FFFFFF` in the logo rule, `600` in the weight rule and the four `12px` mentions of the on-screen floor all became token names too.
+- `validate.py` check 7 is inverted to match: it used to compare the guideline's copy against the tokens, and now fails on any hex in `BRAND.md` at all, plus on any token the guideline names that `tokens.css` does not define. Comparing copies was treating the symptom.
+
 ## 0.6.0
 
 - **`tokens.css` is one file again, with provenance marked inside it.** The 0.5.0 split into `colors.css` / `typography.css` / `shape.css` is reversed: 98 lines across three files was structure without payoff, and a consumer that pasted two of three got undefined radii with nothing to catch it. The file now opens with the rule that governs it: a GUIDELINE section for values Aperia Brand Guidelines v1.0 states, and a SYSTEM section, kept separate, for scales the guideline is silent on. All 57 tokens carry over unchanged.

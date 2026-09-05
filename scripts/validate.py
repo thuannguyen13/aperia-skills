@@ -16,9 +16,9 @@ Checks:
   6. The component layer does not redefine a token the brand layer already
      defines. One source per value; the two documented overrides are listed
      in OVERRIDES below, with the reason each is allowed.
-  7. Every color BRAND.md names in a palette table is defined under the
-     matching token name, with the same value. The guideline and the tokens
-     are two transcriptions of one palette, so they must not drift.
+  7. BRAND.md states no value that tokens.css owns, and every token it names
+     exists. The guideline carries the rules and the print equivalents; the
+     digital values have one home, so there is nothing to drift.
 
 Usage: python3 scripts/validate.py
 """
@@ -258,33 +258,30 @@ def check_single_source(plugin_name, plugin_dir):
                  f"already defines. Read it with var() instead, or record the override.")
 
 
-# A palette row in BRAND.md: | Aperia Blue | `#002F67` | ... The name slugifies
-# to the token that must carry the same value.
-PALETTE_ROW = re.compile(r"^\|\s*([A-Za-z][A-Za-z ]+?)\s*\|\s*`#([0-9a-fA-F]{6})`", re.M)
-
-VALUE = re.compile(r"{}\s*:\s*([^;]+)")
+# BRAND.md names tokens rather than repeating their values: | Aperia Blue |
+# `--aperia-blue` | ... Two things can go wrong, and both are checked.
+NAMED_TOKEN = re.compile(r"`(--[\w-]+)`")
 
 
-def check_guideline_matches_tokens(plugin_name, plugin_dir):
+def check_guideline_states_no_values(plugin_name, plugin_dir):
     """Check 7."""
     brand_md = plugin_dir / "brand" / "BRAND.md"
-    tokens, missing = brand_css(plugin_dir)
+    tokens, _ = brand_css(plugin_dir)
     if tokens is None or not brand_md.exists():
         return
+    text = brand_md.read_text()
 
-    defined = {}
-    for m in re.finditer(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})", tokens):
-        defined.setdefault(m.group(1), m.group(2).upper())
+    # A hex in the guideline is a second copy of a value tokens.css owns.
+    for m in HEX.finditer(text):
+        fail(f"{plugin_name}/BRAND.md: states #{m.group(1)}. Colors live in "
+             f"{TOKENS}; name the token instead, so there is one copy of the value.")
 
-    for m in PALETTE_ROW.finditer(brand_md.read_text()):
-        name, value = m.group(1).strip(), m.group(2).upper()
-        token = "--" + name.lower().replace(" ", "-")
-        if token not in defined:
-            fail(f"{plugin_name}: BRAND.md names '{name}' but no token '{token}' "
-                 f"defines it. The guideline and the tokens must agree.")
-        elif defined[token] != "#" + value:
-            fail(f"{plugin_name}: '{name}' is #{value} in BRAND.md and "
-                 f"{defined[token]} in '{token}'. One of them is wrong.")
+    # A token the guideline names must exist, or the pointer dangles.
+    defined = root_tokens(plugin_dir / "brand" / TOKENS)
+    for m in NAMED_TOKEN.finditer(text):
+        if m.group(1) not in defined:
+            fail(f"{plugin_name}/BRAND.md: names '{m.group(1)}', which {TOKENS} "
+                 f"does not define.")
 
 
 def main():
@@ -293,7 +290,7 @@ def main():
         check_skills(plugin_name, plugin_dir)
         check_palette(plugin_name, plugin_dir)
         check_single_source(plugin_name, plugin_dir)
-        check_guideline_matches_tokens(plugin_name, plugin_dir)
+        check_guideline_states_no_values(plugin_name, plugin_dir)
 
     for msg in NOTES:
         print(f"note: {msg}")

@@ -1,6 +1,6 @@
 /* ===== APERIA ANALYTICAL CHARTS =====
    The extended chart family: paste this AFTER base/styles.css (which
-   must already be pasted after the brand primitives — see COMPONENTS.md). These
+   must already be pasted after tokens.css — see COMPONENTS.md). These
    components share base/styles.css's tokens (--aperia-blue, --text-*, --radius,
    --shadow, --st-*) and add none of their own hex values.
 

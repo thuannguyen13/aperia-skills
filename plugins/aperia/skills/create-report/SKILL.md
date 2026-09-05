@@ -22,14 +22,14 @@ check there before improvising.
 Before writing a single line of HTML:
 
 1. Read **`../../brand/BRAND.md`** in full.
-2. Read the three brand primitives and paste them into your `<style>`, in this order: **`../../brand/colors.css`**, **`../../brand/typography.css`**, **`../../brand/shape.css`**.
+2. Read **`../../brand/tokens.css`** and paste it into your `<style>`.
 3. Read **`../../ui-components/base/styles.css`** and **`../../ui-components/base/index.html`** — the base component library every report is built from — and **`../../ui-components/COMPONENTS.md`** for the full component toolkit, chart toolkit and the rules governing them (bar chart consistency, no invented percentages, pie/donut constraints, the timeline entry contract, etc.). This file does not repeat that guidance; `COMPONENTS.md` is the source of it.
 4. If the report needs the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), also read **`../../ui-components/charts/styles.css`** and **`../../ui-components/charts/index.html`**.
 5. If the report needs an inline icon, also read **`../../ui-components/icons/styles.css`** and **`../../ui-components/icons/index.html`** — icons are generated on demand with `../../ui-components/icons/icon.py`, not copied from a fixed list.
 6. Read **`references/styles.css`** (this skill — chrome, sgantt, the phased-roadmap timeline) and **`references/snippets.html`** (this skill's own markup: nav, hero, footer, phases, delivery-plan mount points).
 7. If the report is a delivery, release or roadmap plan, also read **`references/interactive.html`** (the script-driven delivery-plan components and the DATA-object contract).
 
-**Do not work from memory of the palette, the type rules, or the graphic-element rules.** They live in `BRAND.md` and only there. If a value you want is not in `BRAND.md` or a brand primitive, it is not an Aperia value. Do not invent it.
+**Do not work from memory of the palette, the type rules, or the graphic-element rules.** They live in `BRAND.md` and only there. If a value you want is not in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
 
 Brand assets are at `../../brand/assets/`. Inline the SVGs, never link them.
 
@@ -266,7 +266,7 @@ Produce a single self-contained file with, in order:
 
 1. Google Fonts link (Inter only). Labels use the `--label` token, which maps to Inter: no mono typeface is sanctioned by the brand
 2. The full `<style>` block, in this order: the `:root` block from
-   the three brand primitives, then **`../../ui-components/base/styles.css`
+   `../../brand/tokens.css`, then **`../../ui-components/base/styles.css`
    pasted verbatim**, then, only if used, `../../ui-components/charts/styles.css`
    and/or `../../ui-components/icons/styles.css`, then **this skill's own
    `references/styles.css` pasted verbatim, last**. Order matters throughout:
@@ -438,8 +438,8 @@ Checklist in `../../brand/BRAND.md`.
 
 ### Chrome and page-level, always applies
 
-- [ ] `BRAND.md` and the three brand primitives were read before writing, with no palette values from memory
-- [ ] The `<style>` block order is `colors.css`, `typography.css`, `shape.css`, then `../../ui-components/base/styles.css` (and `charts.css`/`icons.css` if used), then this skill's own `references/styles.css`, last, all verbatim
+- [ ] `BRAND.md` and `tokens.css` were read before writing, with no palette values from memory
+- [ ] The `<style>` block order is `tokens.css`, then `../../ui-components/base/styles.css` (and `charts.css`/`icons.css` if used), then this skill's own `references/styles.css`, last, all verbatim
 - [ ] Inter loaded with weight 600 included; Arial fallback declared; body Light/Regular, never Bold
 - [ ] Logo inlined in nav (Aperia Blue) and footer (`#FFFFFF`), undistorted, ≥24px
 - [ ] Nav strip scrolls horizontally (`flex-wrap:nowrap; overflow-x:auto; min-width:0`); hamburger wired

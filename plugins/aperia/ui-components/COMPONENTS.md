@@ -7,7 +7,7 @@
 > units). Do not duplicate a component's CSS into a skill, reference it here.
 >
 > **Companion files** (one folder per toolkit, beside this file):
-> - `base/styles.css`: the base component theme. Paste after the brand primitives (`../brand/colors.css`, `../brand/typography.css`, `../brand/shape.css`), which it reads for every palette, type and radius value.
+> - `base/styles.css`: the base component theme. Paste after `../brand/tokens.css`, which it reads for every palette, type and radius value.
 > - `base/index.html`: ready-to-paste markup for every component below.
 > - `charts/styles.css` / `charts/index.html`: the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap) — load only if used.
 > - `icons/styles.css` / `icons/index.html` / `icons/icon.py` / `icons/lucide-icons.json`: Lucide icons (MIT), 2000+ available, generated on demand — see "Icon toolkit" below.
@@ -22,8 +22,8 @@ documented in that skill's own files.
 
 ## How a skill consumes this layer
 
-1. Read **`../brand/BRAND.md`** in full, and paste the three brand primitives into the output's `<style>`, in this order: **`../brand/colors.css`**, **`../brand/typography.css`**, **`../brand/shape.css`**. One file per primitive, and together they are the only place a brand value is defined.
-2. Paste **`base/styles.css`** from this folder **after** it, verbatim. It reads those files rather than repeating them: the palette lives in `colors.css`, the ramp and font stack in `typography.css`, the radii in `shape.css`, and nowhere else. This file adds the surface roles, the status ramp and the environment colors, and aliases the two names the brand layer spells differently (`--sapphire` for `--sapphire-blue`, `--med-gray` for `--medium-gray`). One token, `--fg`, deliberately overrides the brand value; it says so in place and is recorded in `../brand/DEVIATIONS.md` section 4. Order still matters, because the aliases resolve against the brand files.
+1. Read **`../brand/BRAND.md`** in full, and paste **`../brand/tokens.css`** into the output's `<style>`. It is the only place a foundation value is defined, guideline and system alike.
+2. Paste **`base/styles.css`** from this folder **after** it, verbatim. It reads that file rather than repeating it: the palette, the type ramp, the font stack and the radii are defined in `tokens.css` and nowhere else. This file adds the surface roles, the status ramp and the environment colors, and aliases the two names the brand layer spells differently (`--sapphire` for `--sapphire-blue`, `--med-gray` for `--medium-gray`). One token, `--fg`, deliberately overrides the brand value; it says so in place and is recorded in `../brand/DEVIATIONS.md` section 4. Order still matters, because the aliases resolve against the brand block.
 3. Load Inter with weight 600 included (`https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap`); Arial fallback via the `--sans` token. Body text is Light/Regular, never Bold.
 4. Wrap components in `<div class="wrap">...</div>` unless they already sit inside a container with its own width constraint — `.wrap` caps content at 920px, which every component here is designed against.
 5. Copy the matching block(s) from **`base/index.html`**, fill in real content. Never ship an empty card or lorem ipsum.
@@ -32,7 +32,7 @@ documented in that skill's own files.
 8. If the content needs an inline icon, also paste **`icons/styles.css`** and copy markup from **`icons/index.html`** — see the Icon toolkit below, including the licensing note, before using them.
 9. Run the checklist at the bottom of this file and the Application Checklist in `../brand/BRAND.md`.
 
-**Do not work from memory of the palette or the type rules.** If a value is not in `BRAND.md` or one of the brand primitives, it is not an Aperia value. Do not invent it.
+**Do not work from memory of the palette or the type rules.** If a value is not in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
 
 ## Component toolkit
 
@@ -207,8 +207,8 @@ same vertical rail `vtimeline` uses, handled entirely by `base/styles.css`.
 
 ## Checklist before delivering
 
-- [ ] `BRAND.md` and the three brand primitives read this session, no palette or size values from memory
-- [ ] `<style>` block is `colors.css`, `typography.css`, `shape.css` first, then `base/styles.css` verbatim
+- [ ] `BRAND.md` and `tokens.css` read this session, no palette or size values from memory
+- [ ] `<style>` block is `tokens.css` first, then `base/styles.css` verbatim
 - [ ] Inter loaded with weight 600; Arial fallback declared; body text Light/Regular, never Bold
 - [ ] Every size is a `--text-*` token; no raw px, no new step, nothing below `--text-xs`, no bare `h1`..`h6` rule setting `font-size`
 - [ ] Shape from `--radius` / `--radius-pill`; no literal `border-radius:100px`

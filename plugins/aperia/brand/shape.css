@@ -1,9 +1,0 @@
-/* Aperia shape primitives. Aperia Brand Guidelines v1.0
-   Source of truth: BRAND.md. One of three primitive files: colors.css,
-   typography.css, shape.css. */
-
-:root {
-  /* --- Shape --------------------------------------------------------------- */
-  --radius:      8px;     /* cards, panels, inputs                      */
-  --radius-pill: 100px;   /* pills: badges, tags, chips, round buttons  */
-}

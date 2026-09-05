@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+- **`tokens.css` is one file again, with provenance marked inside it.** The 0.5.0 split into `colors.css` / `typography.css` / `shape.css` is reversed: 98 lines across three files was structure without payoff, and a consumer that pasted two of three got undefined radii with nothing to catch it. The file now opens with the rule that governs it: a GUIDELINE section for values Aperia Brand Guidelines v1.0 states, and a SYSTEM section, kept separate, for scales the guideline is silent on. All 57 tokens carry over unchanged.
+- **`DEVIATIONS.md` gains section 8**, the policy for those system scales: spacing, elevation and motion are derived from what the components already do, not signed off by the brand owner, and each lands with a record of what it changed. No scale is defined yet.
+- `validate.py` gains check 7: every color `BRAND.md` names in a palette table must be defined under the matching token name with the same value, so the guideline and the tokens cannot drift apart.
+
 ## 0.5.0
 
 - **The brand layer is one file per primitive.** `tokens.css` is split into `colors.css` (palette, semantic aliases, gradients, the seven chart series steps), `typography.css` (font stack, weights, the ten size/leading steps, the guideline element defaults, the Inter `@import`) and `shape.css` (the two radii). A consumer pastes all three, in that order. All 57 tokens carry over with no value changed and nothing defined twice.

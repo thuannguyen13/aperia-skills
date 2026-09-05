@@ -58,7 +58,7 @@ series positions.
 | `#3A8FD1` (`.tline-bar.b4`, `.gantt-bar.b4`, 4th `.flow-node`, gantt dot) | Sky Blue `#7ED3F7` | Text flipped from `#FFF` to Aperia Blue. White on Sky Blue is 1.67:1 and fails; Aperia Blue on Sky Blue is 7.83:1 and is a listed approved pair |
 | `#5FA9D8` (5th stacked segment) | Light Blue `#C8EAF5` | Same text flip, 10.32:1 |
 
-This now matches the `--series-1` to `--series-7` order in `colors.css`.
+This now matches the `--series-1` to `--series-7` order in `tokens.css`.
 
 **No `approved` block, deliberately.** Both values above are history. `#5FA9D8` is
 used nowhere and must stay that way. `#3A8FD1` is still in the deck theme and is
@@ -132,7 +132,7 @@ has a related and separate gap of its own, recorded in section 5.
 Added with the HTML `deck` skill in v2.0.0.
 
 On a light slide the chart series map cleanly onto `chartSeries` in
-`colors.css`. On a dark navy slide, Aperia Blue and Dark Blue are invisible
+`tokens.css`. On a dark navy slide, Aperia Blue and Dark Blue are invisible
 against the background, so `slides.css` shifts the whole ramp lighter. The
 palette offers only three light-enough blues (Sapphire, Sky, Light Blue) and the
 ramp needs five distinguishable steps, so two intermediates were invented:
@@ -252,3 +252,24 @@ maps is either core palette or already approved in section 3.
 Aperia Blue and Sapphire Blue over white, the same technique the theme already
 uses for shadows. They composite to a value not in the palette but introduce no
 new hex literal.
+
+---
+
+## 8. Policy: system scales the guideline does not cover
+
+The guideline states color, typography and shape as values. It does not state
+spacing, elevation or motion: BRAND.md says "group related elements tightly"
+and "leading ~1.5x", with no numbers for space, no shadow definition and
+nothing about duration or easing. The components need all three anyway, so
+today they carry them as literals, roughly 400 raw px plus five box-shadows
+and four transition timings.
+
+Those scales belong in `tokens.css`, in a SYSTEM section kept separate from the
+guideline block, for one reason: there should be one place to look up a
+foundation value. The separation is what keeps that honest. A value in the
+guideline block came from Aperia Brand Guidelines v1.0 and only the brand owner
+changes it. A value in the SYSTEM section was derived from what this codebase
+already does, and we change it when the components need it to change.
+
+This is a policy entry, not an approval of specific values. Each scale gets
+recorded here as it lands, with what it was derived from and what it changed.

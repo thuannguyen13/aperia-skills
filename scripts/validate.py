@@ -9,10 +9,10 @@ Checks:
   2. Every plugin `source` in marketplace.json resolves to a real plugin.
   3. Every skill has a SKILL.md with name + description frontmatter, and the
      name matches its directory (the directory is what /aperia:<name> uses).
-  4. Every hex in the plugin is either in the brand primitives or listed in an ```approved
+  4. Every hex in the plugin is either in tokens.css or listed in an ```approved
      block in DEVIATIONS.md. Off-palette values must be a decision, not an
      accident, and mentioning one in prose is not a decision.
-  5. The brand primitives define the core and neutral palette and the series ramp.
+  5. tokens.css defines the core and neutral palette and the chart series ramp.
   6. The component layer does not redefine a token the brand layer already
      defines. One source per value; the two documented overrides are listed
      in OVERRIDES below, with the reason each is allowed.
@@ -151,32 +151,31 @@ HEX = re.compile(r"#([0-9a-fA-F]{6})\b")
 # Only hexes inside a fenced ```approved block in DEVIATIONS.md are allowlisted.
 APPROVED_BLOCK = re.compile(r"^```approved[ \t]*\n(.*?)^```", re.M | re.S)
 
-# The brand layer is one file per primitive. Together they are the single
-# source of brand values; a consumer pastes all three, in this order.
-PRIMITIVES = ("colors.css", "typography.css", "shape.css")
+# tokens.css is the single source of brand values, guideline and system alike.
+TOKENS = "tokens.css"
 
 
 def brand_css(plugin_dir):
-    """The three primitive files as one string, or None if any is missing."""
-    missing = [f for f in PRIMITIVES if not (plugin_dir / "brand" / f).exists()]
-    if missing:
-        return None, missing
-    return "\n".join((plugin_dir / "brand" / f).read_text() for f in PRIMITIVES), []
+    """The token file as one string, or None if it is missing."""
+    path = plugin_dir / "brand" / TOKENS
+    if not path.exists():
+        return None, [TOKENS]
+    return path.read_text(), []
 
 
 def check_palette(plugin_name, plugin_dir):
     """Checks 4 and 5."""
     tokens, missing = brand_css(plugin_dir)
     if tokens is None:
-        fail(f"{plugin_name}: brand/{', brand/'.join(missing)} missing, so there is no "
-             f"palette to check against")
+        fail(f"{plugin_name}: brand/{TOKENS} is missing, so there is no palette "
+             f"to check against")
         return
 
-    # The primitive files are the single source of brand values. Every hex they
-    # define is, by definition, the palette.
+    # tokens.css is the single source of brand values. Every hex it defines is,
+    # by definition, the palette.
     palette = {m.group(1).upper() for m in HEX.finditer(tokens)}
     if not palette:
-        fail(f"{plugin_name}: no hex values in brand/colors.css, so the palette is empty")
+        fail(f"{plugin_name}/{TOKENS}: no hex values found, so the palette is empty")
         return
 
     # Check 5: the named tokens every skill relies on are actually defined.
@@ -186,10 +185,10 @@ def check_palette(plugin_name, plugin_dir):
     ]
     for name in required:
         if not re.search(rf"{re.escape(name)}\s*:", tokens):
-            fail(f"{plugin_name}: missing required token '{name}' in the brand primitives")
+            fail(f"{plugin_name}/{TOKENS}: missing required token '{name}'")
     for n in range(1, 8):
         if not re.search(rf"--series-{n}\s*:", tokens):
-            fail(f"{plugin_name}: missing chart series step '--series-{n}' in brand/colors.css")
+            fail(f"{plugin_name}/{TOKENS}: missing chart series step '--series-{n}'")
 
     deviations_path = plugin_dir / "brand" / "DEVIATIONS.md"
     if not deviations_path.exists():
@@ -222,7 +221,7 @@ def check_palette(plugin_name, plugin_dir):
              f"with a reason")
 
 
-# The component layer reads the brand primitives rather than repeating them, so a
+# The component layer reads brand/tokens.css rather than repeating it, so a
 # token defined in both is a second source for one value. These two are
 # deliberate and recorded; anything else is drift.
 OVERRIDES = {
@@ -248,16 +247,15 @@ def check_single_source(plugin_name, plugin_dir):
     of the palette in references/slides.css, so widening this to skills/ is the
     acceptance test for folding those components back into the shared layer.
     """
-    brand = set().union(*(root_tokens(plugin_dir / "brand" / f) for f in PRIMITIVES))
+    brand = root_tokens(plugin_dir / "brand" / TOKENS)
     if not brand:
         return
     for sheet in sorted((plugin_dir / "ui-components").rglob("*.css")):
         for name in sorted(root_tokens(sheet) & brand):
             if name in OVERRIDES:
                 continue
-            fail(f"{sheet.relative_to(ROOT)}: redefines '{name}', which the brand "
-                 f"primitives already define. Read it with var() instead, or record "
-                 f"the override.")
+            fail(f"{sheet.relative_to(ROOT)}: redefines '{name}', which brand/{TOKENS} "
+                 f"already defines. Read it with var() instead, or record the override.")
 
 
 # A palette row in BRAND.md: | Aperia Blue | `#002F67` | ... The name slugifies

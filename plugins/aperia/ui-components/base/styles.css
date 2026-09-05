@@ -1,9 +1,8 @@
 /* ===== APERIA UI COMPONENTS =====
-   Paste this entire block inside a <style> tag, AFTER the three brand
-   primitives: ../../brand/colors.css, ../../brand/typography.css and
-   ../../brand/shape.css. It reads them rather than repeating them: the
-   palette, the type ramp, the radii and the font stack are defined there and
-   only there. See COMPONENTS.md.
+   Paste this entire block inside a <style> tag, AFTER ../../brand/tokens.css.
+   It reads that file rather than repeating it: the palette, the type ramp, the
+   radii and the font stack are defined there and only there. See
+   COMPONENTS.md.
    Load fonts first, 600 required:
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -13,15 +12,15 @@
 
 :root {
   /* The palette, the type ramp, the radii and the font stack come from
-     the brand primitives and are NOT repeated here. This block holds only
+     ../../brand/tokens.css and are NOT repeated here. This block holds only
      what the component layer adds on top, plus two aliases for names the
-     brand layer spells differently. Paste those files first; nothing below
+     brand layer spells differently. Paste tokens.css first; nothing below
      overrides it except --fg, which says so. */
   --sapphire:var(--sapphire-blue);
   --med-gray:var(--medium-gray);
   --sans:var(--font-sans); --label:var(--sans); /* no mono typeface: BRAND.md sanctions Inter only */
 
-  /* The one deliberate override of the brand layer: colors.css maps --fg to
+  /* The one deliberate override of the brand layer: tokens.css maps --fg to
      Aperia Blue, the components set near-black body ink. Open question for the
      brand owner, recorded in DEVIATIONS.md section 4. */
   --fg:#1c1f24;

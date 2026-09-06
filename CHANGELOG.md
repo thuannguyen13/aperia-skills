@@ -2,14 +2,19 @@
 
 ## 0.9.0
 
-- **The shared layers live inside a third skill, `apply-branding`.** Claude Desktop mounts each folder under `skills/` that has a `SKILL.md`, side by side, and nothing else, so `brand/` and `ui-components/` at the plugin root never arrived: no palette, no components, no assemble script, an empty style marker. Broken since 0.3.0. Both layers now sit in `skills/apply-branding/`, and the other two skills read them as `../apply-branding/brand/` and `../apply-branding/ui-components/`. One copy, no build step; `bundle-skills.py` and `dist/` are gone. The Desktop skill uploader, which takes one folder, is no longer an install path; upload the whole plugin as a zip instead.
-- **`apply-branding` is back as a real skill**, the freeform entry point 0.3.0 removed: a landing page, an email, a dashboard, a graphic, anything that is not a report or a deck. `assemble.py` gains a `page` recipe for it: tokens and base components, optional charts and icons, no skill theme.
-- `qa.py` and the slides icon wrapper say which skill is missing instead of failing on an import when the layers are not beside them. Two comments that cited the repo's `validate.py`, which does not ship, are reworded.
-- Every `SKILL.md` carries `metadata.version`, checked against `plugin.json`, so a mounted copy can say which release it is.
-- **Icons are fetched, not bundled.** The 430 KB Lucide JSON is gone. `ui-components/icons/icon.py` fetches an icon from the Lucide CDN on first use, pinned to release 1.41.0, and caches it locally; `--search` reads the CDN's name index. Without network it says so and exits, and the icon is left out. `create-slides/scripts/icon.py` is now a thin wrapper over the shared script instead of a copy.
-- **`scripts/gallery.py` renders the component libraries as one reviewable page.** The snippet files introduce each component with an HTML comment, which a browser does not show, so there was no way to look at the components: both bugs fixed in this release were found by eye on a Desktop run rather than by anything in the repo. The gallery is generated from those same comments and assembled with the real layers, so it cannot drift from what the skills copy. Maintainer tool, outside `plugins/`, nothing shipped to an install.
-- **The snippet libraries are split by group and the sections renamed.** `base/index.html` and `charts/index.html` are gone, replaced by one file per group: `base/structure.html`, `emphasis.html`, `tables.html`, `charts.html`, `timelines.html`, and `charts/trend.html`, `compare.html`, `proportion.html`, `intensity.html`. Every section now has a short, distinct name (`Ranked Bars`, `Effort Bars`, `Estimate Range`) with the caveat that used to sit in the name moved to a note under it or to the group header. No CSS class is renamed, so documents already produced are unaffected.
-- **`examples/` and `dist/` are gone.** The checked-in sample report was assembled against the 0.8.0 component names and files, so after this release's renaming it no longer showed what the skills produce, and a sample that drifts is worse than none. `scripts/gallery.py` renders the current components on demand instead. `dist/` was already unused: nothing writes it since the bundle step was removed earlier in this release. The 0.8.0 notes below still mention both; they are a record of that release, not a pointer.
+- `brand/` and `ui-components/` moved into a third skill, `apply-branding`. Desktop mounts only folders under `skills/` that have a `SKILL.md`, so layers at the plugin root never arrived. Broken since 0.3.0. The other skills read them as `../apply-branding/`. `bundle-skills.py` and `dist/` are gone.
+- `apply-branding` is a skill again, for anything that is not a report or a deck. New `page` recipe in `assemble.py`: tokens and base components, optional charts and icons, no theme.
+- Icons are fetched, not bundled. `icons/icon.py` pulls from the Lucide CDN on first use, pinned to 1.41.0, and caches. The 430 KB JSON is gone. The slides copy is now a thin wrapper.
+- Every `SKILL.md` carries `metadata.version`, checked against `plugin.json`.
+- `qa.py` and the slides icon wrapper name the missing skill instead of failing on an import.
+- Snippet libraries split by group: `base/` becomes `structure`, `emphasis`, `tables`, `charts`, `timelines`; `charts/` becomes `trend`, `compare`, `proportion`, `intensity`. Both `index.html` files are gone.
+- Every component section renamed to a short, distinct name (`Ranked Bars`, `Effort Bars`, `Estimate Range`). Caveats moved from the name to a note under it. No CSS class renamed.
+- Both toolkit tables in `COMPONENTS.md` gain a **File** column naming where each component's markup lives, replacing the `**(charts/)**` suffix.
+- `.gantt-bar` and `.tline-bar` gain `b5` to `b7`, completing the seven-step series ramp. Dark text on the light fills.
+- `.hm-grid` reads `var(--hm-labelw, 56px)` instead of a hardcoded gutter, so a heatmap with word labels needs no override.
+- Column-chart bars sit on their baseline. `.col-lbl` carried a `margin-top` that pushed the axis rule 21px below the bars.
+- New `scripts/gallery.py` renders the snippet libraries as one labelled page, assembled with the real layers. Maintainer tool, outside `plugins/`.
+- `examples/` and `dist/` removed. The sample report was built against the old component names; `gallery.py` replaces it.
 
 ## 0.8.0
 

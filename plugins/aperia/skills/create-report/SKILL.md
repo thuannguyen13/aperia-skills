@@ -21,6 +21,8 @@ check there before improvising.
 
 ## Step 0: Read the brand and component layers first (required)
 
+**Where the shared layer is.** `brand/` and `ui-components/` live in the sibling skill `apply-branding`. Every path below writes that folder as `../apply-branding/`, which is its name in Claude Code; on Claude Desktop the same folder is `../aperia:apply-branding/`. Run `ls ..` from this skill folder once and use the name you find. The scripts resolve it on their own.
+
 Before writing a single line of HTML:
 
 1. Read **`../apply-branding/brand/BRAND.md`** in full.

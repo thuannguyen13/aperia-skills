@@ -13,16 +13,21 @@ The icon inherits its color from CSS (`stroke="currentColor"`), so the theme
 handles the tone rule automatically: dark blue on light slides, sky blue on
 dark ones. Never hard-code a stroke color.
 """
+import glob
 import importlib.util
 import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SHARED = os.path.join(HERE, "..", "..", "apply-branding", "ui-components", "icons", "icon.py")
-
-if not os.path.exists(SHARED):
-    sys.exit(f"icon.py: cannot find {os.path.normpath(SHARED)}. The apply-branding skill, which "
-             f"holds the shared icon script, is not installed beside create-slides.")
+# Clients name a mounted skill folder differently, apply-branding in Claude
+# Code and aperia:apply-branding on Claude Desktop, so look for both.
+_SKILLS = os.path.join(HERE, "..", "..")
+_LAYER = next((d for d in [os.path.join(_SKILLS, "apply-branding")] + sorted(glob.glob(os.path.join(_SKILLS, "*:apply-branding")))
+               if os.path.isdir(d)), None)
+if _LAYER is None:
+    sys.exit("icon.py: the apply-branding skill, which holds the shared icon script, is not "
+             f"installed beside create-slides under {os.path.normpath(_SKILLS)}.")
+SHARED = os.path.join(_LAYER, "ui-components", "icons", "icon.py")
 _spec = importlib.util.spec_from_file_location("shared_icon", SHARED)
 shared = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(shared)

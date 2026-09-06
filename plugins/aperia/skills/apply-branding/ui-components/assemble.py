@@ -29,8 +29,9 @@ Recipes, in paste order:
              [charts/styles.css], [icons/styles.css], no skill theme
 
 The layers live inside the apply-branding skill, beside the other skill
-folders, so a client that mounts a plugin's skills side by side sees them
-at ../apply-branding/.
+folders. Clients name a mounted skill folder differently, `create-report`
+in Claude Code and `aperia:create-report` on Claude Desktop, so sibling
+skills are found by either name.
 """
 import re
 import sys
@@ -67,9 +68,17 @@ MARKER = re.compile(
 )
 
 
+def sibling(skill):
+    """A sibling skill folder, by its plain name or a client's <plugin>:<name>."""
+    for candidate in [SKILLS / skill] + sorted(SKILLS.glob(f"*:{skill}")):
+        if candidate.is_dir():
+            return candidate
+    sys.exit(f"assemble: cannot find the {skill} skill beside {LAYERS.name} under {SKILLS}")
+
+
 def theme_path(skill, name):
     """The skill's own theme, in its references/ folder."""
-    candidate = SKILLS / skill / "references" / name
+    candidate = sibling(skill) / "references" / name
     if candidate.exists():
         return candidate
     sys.exit(f"assemble: cannot find {name} for {skill} under {SKILLS}")

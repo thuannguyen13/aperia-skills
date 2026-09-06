@@ -55,6 +55,20 @@ A layer file must never contain a closing style tag, even inside a comment, beca
 
 `examples/` holds one assembled output per skill, built from a bare marker with the script. Rebuild them after a theme change so they keep showing what the skills produce.
 
+## gallery.py
+
+```bash
+python3 scripts/gallery.py [out.html]      # default: gallery.html
+```
+
+Renders the three snippet libraries as one page so the components can be reviewed by eye, then runs `assemble.py` on it, so the gallery is styled by the same layers a real document gets. Each component carries its name, an anchor and the class names its markup uses; a sticky index lists all of them, grouped by source file; the raw markup sits behind a disclosure on each one.
+
+The page is generated, never hand-edited, so it cannot drift from what the skills actually copy. Nothing under `plugins/` is written, and the snippet libraries are read exactly as the skills read them.
+
+It parses the `<!-- ===== NAME ===== -->` comments the libraries already use. A comment whose name line is followed by prose and a plain `-->` is a group heading and renders as one; each file's banner header, a bare run of `=`, is not a component and does not appear. Add a component to a library and it appears here with no change to this script.
+
+The script stays outside `plugins/` on purpose: a Desktop install mounts the skills, and the gallery is for whoever is working on them, not for the model. The generated file is gitignored.
+
 ## Where the shared layers live
 
 `brand/` and `ui-components/` sit inside `plugins/aperia/skills/apply-branding/`, and the other two skills read them as `../apply-branding/brand/` and `../apply-branding/ui-components/`. One copy, no build step.

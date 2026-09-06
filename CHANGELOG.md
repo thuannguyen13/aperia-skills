@@ -7,6 +7,7 @@
 - `qa.py` and the slides icon wrapper say which skill is missing instead of failing on an import when the layers are not beside them. Two comments that cited the repo's `validate.py`, which does not ship, are reworded.
 - Every `SKILL.md` carries `metadata.version`, checked against `plugin.json`, so a mounted copy can say which release it is.
 - **Icons are fetched, not bundled.** The 430 KB Lucide JSON is gone. `ui-components/icons/icon.py` fetches an icon from the Lucide CDN on first use, pinned to release 1.41.0, and caches it locally; `--search` reads the CDN's name index. Without network it says so and exits, and the icon is left out. `create-slides/scripts/icon.py` is now a thin wrapper over the shared script instead of a copy.
+- **`scripts/gallery.py` renders the component libraries as one reviewable page.** The snippet files introduce each component with an HTML comment, which a browser does not show, so there was no way to look at the components: both bugs fixed in this release were found by eye on a Desktop run rather than by anything in the repo. The gallery is generated from those same comments and assembled with the real layers, so it cannot drift from what the skills copy. Maintainer tool, outside `plugins/`, nothing shipped to an install.
 
 ## 0.8.0
 

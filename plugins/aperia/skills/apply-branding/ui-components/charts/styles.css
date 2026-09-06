@@ -175,7 +175,9 @@
    ships an SVG-style <title> for hover, and the legend states the scale in
    words, not just a gradient. */
 .heatmap { margin:20px 0 }
-.hm-grid { display:grid; grid-template-columns:56px repeat(var(--hm-cols,7),1fr); gap:3px }
+/* --hm-labelw sizes the row-label gutter; raise it on the .heatmap when the
+   row labels are words rather than the 56px default's short ranges. */
+.hm-grid { display:grid; grid-template-columns:var(--hm-labelw,56px) repeat(var(--hm-cols,7),1fr); gap:3px }
 .hm-corner { }
 .hm-colhead, .hm-rowhead { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); display:flex; align-items:center; justify-content:center; text-align:center }
 .hm-rowhead { justify-content:flex-end; padding-right:8px; text-align:right }
@@ -189,7 +191,7 @@
   .gbar-labels,.sbar-labels { gap:12px }
   .gbar-lbl,.sbar-lbl { font-size:var(--text-xs) }
   .treemap { height:320px }
-  .hm-grid { grid-template-columns:40px repeat(var(--hm-cols,7),1fr) }
+  .hm-grid { grid-template-columns:var(--hm-labelw,40px) repeat(var(--hm-cols,7),1fr) }
   .hm-rowhead { font-size:var(--text-xs); padding-right:4px }
   .spark-card { flex-wrap:wrap }
   .cf-legend { gap:10px }

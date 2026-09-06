@@ -153,6 +153,7 @@ permissive default, not a floor every consumer must offer.
 - **`piechart`/`donutchart` stops are cumulative conic-gradient percentages** (`color START% END%`), not degrees and not a hand-drawn SVG arc, each slice's END% must equal the next slice's START%, and the last slice ends at exactly 100%.
 - **Treemap and stacked-bar/area proportions come from `flex-grow` ratios or true cumulative sums, never hand-typed percentages that might not add to 100.**
 - **A heatmap always ships a legend bar and a `title` per cell.** A single-hue opacity ramp is not decodable from color alone in print or for a color-blind reader without the value in the tooltip.
+- **A heatmap's row-label gutter is `--hm-labelw`, set on the `.heatmap`** (default 56px, 40px at ≤700px). Word labels need a wider value; never hand-write a `grid-template-columns` override.
 - **`gauge-card`'s fill color is a status token** (`.ahead`/`.risk`/`.done`, the same three states the milestone timelines use), chosen for what the number means, not decoration.
 
 ## The entry contract (mstone-row / vtimeline / htimeline / envchain)
@@ -206,6 +207,7 @@ same vertical rail `vtimeline` uses, handled entirely by `base/styles.css`.
 - **No equal-width timeline bars for a sequence.** `tline-bars` is for effort *distribution* only (`flex:N`, bars sit flush and share one row); a real schedule is `gantt` or a milestone timeline. Flush bars read as one segmented bar, not phases progressing over time.
 - **No `principles` grid for a sequential process.** Use `flow`.
 - **`gantt` positioning**: `left% = (start/T)*100`, `width% = (duration/T)*100` where T is total days; verify each row's `left + width` equals the next row's `left`. Axis ticks carry no space (`60d`), `white-space:nowrap`, first/last ticks aligned to the axis edges (already handled by the shipped CSS).
+- **`tline-bars` and `gantt` bars use `b1` to `b7`**, the same fixed series order as the chart `s1` to `s7` classes: assign from `b1` outward in phase order and stop where the phases stop. `b4`, `b5` and `b7` already pair dark text with their light fills, so never override a bar's `color`.
 - **`gantt` mobile reset is mandatory**: at ≤700px the CSS resets bars to left-anchored fills, but the per-bar width overrides in the `@media` block are per-report and must be recomputed for your phase durations (scaled to the longest phase), or bars render as slivers.
 
 ## Checklist before delivering

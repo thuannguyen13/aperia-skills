@@ -9,8 +9,8 @@
 > **Companion files** (one folder per toolkit, beside this file):
 > - `assemble.py`: fills a document's style marker with the stylesheets below, in order. The one way styles reach an output; nothing is pasted by hand.
 > - `base/styles.css`: the base component theme. Injected after `../brand/tokens.css`, which it reads for every palette, type and radius value.
-> - `base/index.html`: ready-to-paste markup for every component below.
-> - `charts/styles.css` / `charts/index.html`: the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), load only if used.
+> - `base/`: ready-to-paste markup, one file per group. `structure.html` (card grid, stat row, principle cards, part header), `emphasis.html` (badge, callout, accordion, dark panel, CTA box), `tables.html` (comparison, stack, outcome, tier cards, swatch grid), `charts.html` (ranked bars, proportion bar, scenario bars, estimate range), `timelines.html` (gantt, effort bars, step flow, risk block, and the four dated-checkpoint components).
+> - `charts/styles.css` plus `charts/trend.html` (line, area, combo, sparkline), `compare.html` (grouped bars, stacked bars, scatter, bubble, radar), `proportion.html` (pie, donut, treemap, funnel) and `intensity.html` (heatmap, radial gauge), load only if used.
 > - `icons/styles.css` / `icons/index.html` / `icons/icon.py`: Lucide icons (MIT), 2,000+ available, fetched from the Lucide CDN on demand, see "Icon toolkit" below.
 
 Everything here is static, hand-authored markup plus CSS, with one
@@ -27,9 +27,9 @@ documented in that skill's own files.
 2. Put one marker where the styles go, `<style>/* @aperia report */</style>` (a deck uses `slides`), and run **`assemble.py <file>`** from this folder once the document is written. It injects `tokens.css`, then **`base/styles.css`**, then any optional toolkit, then the skill's own theme, byte for byte, and replaces its own block on every re-run. Nothing is pasted by hand and nothing is edited inside the injected block; document-specific rules go in a second `<style>` after it. `base/styles.css` reads the tokens rather than repeating them and adds the surface roles, the status ramp, the environment colors, and two aliases for names the brand layer spells differently (`--sapphire` for `--sapphire-blue`, `--med-gray` for `--medium-gray`). One token, `--fg`, deliberately overrides the brand value; it says so in place and is recorded in `../brand/DEVIATIONS.md` section 4.
 3. Load Inter with weight 600 included (`https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap`) with a `<link>` in `<head>`; Arial fallback via the `--sans` token. Body text is Regular, never Bold.
 4. Wrap components in `<div class="wrap">...</div>` unless they already sit inside a container with its own width constraint, `.wrap` caps content at 920px, which every component here is designed against.
-5. Copy the matching block(s) from **`base/index.html`**, fill in real content. Never ship an empty card or lorem ipsum.
-6. If you use the `concerns` accordion, ship its toggle script (in `base/index.html`, right after the accordion markup) once per page.
-7. If the chart you need is a line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, or heatmap (see the Chart toolkit below), add the word `charts` to the marker so **`charts/styles.css`** is injected, and copy markup from **`charts/index.html`**.
+5. Copy the matching block(s) from the **`base/`** file for that group, fill in real content. Never ship an empty card or lorem ipsum.
+6. If you use the `concerns` accordion, ship its toggle script (in `base/emphasis.html`, right after the accordion markup) once per page.
+7. If the chart you need is a line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, or heatmap (see the Chart toolkit below), add the word `charts` to the marker so **`charts/styles.css`** is injected, and copy markup from the matching **`charts/`** file.
 8. If the content needs an inline icon, add the word `icons` to the marker so **`icons/styles.css`** is injected, and copy markup from **`icons/index.html`**, see the Icon toolkit below, including the licensing note, before using them.
 9. Run the checklist at the bottom of this file and the Application Checklist in `../brand/BRAND.md`.
 
@@ -93,7 +93,7 @@ concluding Lucide doesn't have it; with 2,000+ icons it almost always does.
 One category, whatever the underlying geometry, a bar, a curve, an arc and a
 grid square are all still just a chart. Everything through `bchart`/`stack`/
 `tier-wrap` lives in `base/styles.css` (already loaded in step 2 above).
-Everything from `linechart` down needs `charts/styles.css` and `charts/index.html` too,
+Everything from `linechart` down needs `charts/styles.css` and the matching `charts/` file too,
 load them per step 7 before using any row marked **(charts/)**. That
 split is a file-loading convenience only (no report needs a radar chart, so
 it isn't force-loaded into every one); it is not a second category, and
@@ -130,7 +130,7 @@ exec-summary "here's the mix" moment), not a place precise comparison
 matters. Past 5 categories, or whenever two slices are close enough in size
 that the reader needs to compare them precisely, angles stop being legible,
 group the long tail into one "Other" slice (see the donut example in
-`charts/index.html`) or reach for `stack`/`bchart` instead, both of which compare
+`charts/proportion.html`) or reach for `stack`/`bchart` instead, both of which compare
 more precisely than a pie ever will. `gauge-card` is a different job
 entirely and is not a pie/donut substitute: it shows one value against its
 own min-max range, never a categorical breakdown.

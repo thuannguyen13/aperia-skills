@@ -1,0 +1,104 @@
+<!-- ============================================================
+     APERIA UI COMPONENTS: READY-TO-PASTE HTML SNIPPETS
+     Copy what you need into the page you're building. Wrap content in
+     <div class="wrap">...</div> unless it already sits in a container with
+     its own width constraint. Keep gradient ids unique across the page if
+     you paste more than one dark-panel/cta-box.
+     One group per file: structure, emphasis, tables, charts, timelines.
+     ============================================================ -->
+
+<!-- ==========================================================
+     TABLES AND GRIDS
+     Rows and columns, for content a chart would flatten. Reach for these when the
+     values are categorical or the reader needs to look one up.
+     ========================================================== -->
+
+<!-- ========== Comparison Table ========== -->
+<!-- The recommended column gets .hl. -->
+<table class="cmp-table">
+  <thead><tr><th>Criterion</th><th>Option A</th><th class="hl">Option B (Recommended)</th><th>Option C</th></tr></thead>
+  <tbody>
+    <tr><td>Feature X</td><td><span class="ic-mid">~</span> Partial</td><td class="hl"><span class="ic-ok">✓</span> Full</td><td><span class="ic-no">✗</span> None</td></tr>
+  </tbody>
+</table>
+
+<!-- ========== Stack Table ========== -->
+<!-- Categorical rows with role / type / focus badges. -->
+<!-- Use when data is categorical with no real numeric axis, or the end column
+     needs a text label / badge rather than a number. Never invent a % to force
+     this into a bar chart instead, see bchart's notes below. -->
+<table class="stack-table">
+  <thead>
+    <tr>
+      <th style="width:200px">Source / Item</th>
+      <th style="width:120px">Type</th>
+      <th>Focus / Description</th>
+      <th style="width:110px">Priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><div class="layer-name">Item Name A</div><div class="layer-tool">Subtitle or tool name</div></td>
+      <td><span class="badge b-blue">Network</span></td>
+      <td>Description of what this item covers, its role, or key characteristics.</td>
+      <td><span class="badge b-blue">Required</span></td>
+    </tr>
+    <tr>
+      <td><div class="layer-name">Item Name B</div><div class="layer-tool">Subtitle or tool name</div></td>
+      <td><span class="badge b-gray">Validation</span></td>
+      <td>Description of what this item covers.</td>
+      <td><span class="badge b-amber">Conditional</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ========== Outcome Grid ========== -->
+<!-- Role-based before and after. -->
+<div class="outcome-grid">
+  <div class="outcome-card">
+    <div class="outcome-role">Support Team</div>
+    <div class="outcome-from">↓ Manual triage on every ticket</div>
+    <div class="outcome-to">↑ Auto-routed by category</div>
+  </div>
+  <div class="outcome-card">
+    <div class="outcome-role">End User</div>
+    <div class="outcome-from">↓ 3-day average response</div>
+    <div class="outcome-to">↑ Same-day response</div>
+  </div>
+</div>
+
+<!-- ========== Tier Cards ========== -->
+<div class="tier-wrap">
+  <div class="tier-card">
+    <div class="tier-label">High Complexity</div>
+    <div class="tier-count">7</div>
+    <div class="tier-of">Functional · ~70 hr</div>
+    <div class="tier-list">Item A · <strong>Item B</strong> · <strong>Item C</strong></div>
+  </div>
+  <div class="tier-card">
+    <div class="tier-label">Medium Complexity</div>
+    <div class="tier-count">7</div>
+    <div class="tier-of">Interactive · ~32 hr</div>
+    <div class="tier-list">Item D · Item E · Item F</div>
+  </div>
+  <div class="tier-card">
+    <div class="tier-label">Low Complexity</div>
+    <div class="tier-count">6</div>
+    <div class="tier-of">Static · ~12 hr</div>
+    <div class="tier-list">Item G · Item H · Item I</div>
+  </div>
+</div>
+
+<!-- ========== Swatch Grid ========== -->
+<!-- Lays out palette values for reference. -->
+<!-- A small set of named colors with hex, e.g. a palette strip. -->
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-chip" style="background:var(--aperia-blue)"></div>
+    <div class="swatch-body"><div class="swatch-name">Aperia Blue</div><span class="swatch-hex">#002F67</span></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-chip" style="background:var(--sapphire)"></div>
+    <div class="swatch-body"><div class="swatch-name">Sapphire</div><span class="swatch-hex">#0072BC</span></div>
+  </div>
+</div>

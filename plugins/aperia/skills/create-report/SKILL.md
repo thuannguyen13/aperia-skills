@@ -26,8 +26,8 @@ check there before improvising.
 Before writing a single line of HTML:
 
 1. Read **`../apply-branding/brand/BRAND.md`** in full.
-2. Read **`../apply-branding/ui-components/COMPONENTS.md`** for the full component toolkit, chart toolkit and the rules governing them (bar chart consistency, no invented percentages, pie/donut constraints, the timeline entry contract, etc.), and **`../apply-branding/ui-components/base/index.html`** for the markup of every base component. This file does not repeat that guidance; `COMPONENTS.md` is the source of it.
-3. If the report needs the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), also read **`../apply-branding/ui-components/charts/index.html`**.
+2. Read **`../apply-branding/ui-components/COMPONENTS.md`** for the full component toolkit, chart toolkit and the rules governing them (bar chart consistency, no invented percentages, pie/donut constraints, the timeline entry contract, etc.), and the **`../apply-branding/ui-components/base/`** file for the group you need (`structure.html`, `emphasis.html`, `tables.html`, `charts.html`, `timelines.html`) for the markup of every base component. This file does not repeat that guidance; `COMPONENTS.md` is the source of it.
+3. If the report needs the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), also read the matching **`../apply-branding/ui-components/charts/`** file: `trend.html`, `compare.html`, `proportion.html` or `intensity.html`.
 4. If the report needs an inline icon, also read **`../apply-branding/ui-components/icons/index.html`**; icons are generated on demand with `../apply-branding/ui-components/icons/icon.py`, not copied from a fixed list.
 5. Read **`references/snippets.html`** (this skill's own markup: the style marker, nav, hero, footer, phases, delivery-plan mount points).
 6. If the report is a delivery, release or roadmap plan, also read **`references/interactive.html`** (the script-driven delivery-plan components and the DATA-object contract).
@@ -286,7 +286,7 @@ Produce a single self-contained file with, in order:
 7. A `dark-panel` and/or `cta-box` (both from `../apply-branding/ui-components/`) for the recommendation and the ask, each with `pattern-single` top-right
 8. Footer on Aperia Blue with the white logo + `Report Title · Subtitle · Month Year`
 9. At the end of `<body>`, only the scripts the report actually needs: the
-   accordion script from `../apply-branding/ui-components/base/index.html` **if** it carries
+   accordion script from `../apply-branding/ui-components/base/emphasis.html` **if** it carries
    a `concerns` accordion, the mobile nav drawer script from this skill's
    `snippets.html` **if** it carries the drawer (it always should, paste only
    one of these two, never both, since the shared script does not include the

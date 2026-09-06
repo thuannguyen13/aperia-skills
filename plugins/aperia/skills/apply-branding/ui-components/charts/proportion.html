@@ -1,0 +1,105 @@
+<!-- ============================================================
+     APERIA ANALYTICAL CHARTS: READY-TO-PASTE HTML SNIPPETS
+     Add the word `charts` to the assemble marker so charts/styles.css is
+     injected after base/styles.css. Every SVG example below uses the
+     shared 640x300 chart frame documented at the top of charts.css:
+       plot origin (44,16), plot size 576x250, baseline y=266, right edge x=620
+       gridline y-values: 266, 203.5, 141, 78.5, 16  (0/25/50/75/100% of axis max)
+     Recompute point positions for your own data with the formulas in that
+     file's header comment, never eyeball pixel values.
+     One group per file: trend, compare, proportion, intensity.
+     ============================================================ -->
+
+<!-- ==========================================================
+     PARTS OF A WHOLE
+     Everything here answers how a total divides up. Each has a slice budget: past it
+     the chart stops being readable, so group the tail into one entry.
+     ========================================================== -->
+
+<!-- ========== Pie Chart ========== -->
+<!-- At most ~5 slices, sorted descending from 12 o'clock. -->
+<!-- conic-gradient stops are cumulative %: "color START% END%", each END%
+     equal to the next slice's START%, last slice ending at 100%. No arc math.
+     3 slices here, none tiny, the case a pie is actually good at. -->
+<div class="pie-wrap">
+  <div class="piechart" style="background:conic-gradient(var(--aperia-blue) 0% 45%, var(--dark-blue) 45% 80%, var(--sapphire) 80% 100%)" role="img" aria-label="Chargeback reasons: card present 45%, e-commerce 35%, other 20%"></div>
+  <ul class="pie-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Card present<b>45%</b></li>
+    <li><i style="background:var(--dark-blue)"></i>E-commerce<b>35%</b></li>
+    <li><i style="background:var(--sapphire)"></i>Other<b>20%</b></li>
+  </ul>
+</div>
+
+<!-- ========== Donut Chart ========== -->
+<!-- Same rule, plus a center total. -->
+<!-- Same fraud-reason data as the treemap example, but capped at the 5-slice
+     budget: the treemap's 3 smallest categories (Expired Card, Invalid CVV,
+     Other) are grouped into one "Other" slice here. That's the move whenever
+     a part-to-whole set runs past what a pie/donut can hold, group the long
+     tail rather than adding a 6th sliver, or use treemap/stack-table instead
+     of forcing every category into the circle. -->
+<div class="pie-wrap">
+  <div class="donutchart" style="background:conic-gradient(var(--aperia-blue) 0% 36.8%, var(--dark-blue) 36.8% 59.5%, var(--sapphire) 59.5% 79%, var(--sky-blue) 79% 100%)" role="img" aria-label="Fraud case mix by reason, 925 total cases">
+    <div class="pie-center"><b>925</b><span>Total Cases</span></div>
+  </div>
+  <ul class="pie-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Suspected fraud<b>36.8%</b></li>
+    <li><i style="background:var(--dark-blue)"></i>Insufficient funds<b>22.7%</b></li>
+    <li><i style="background:var(--sapphire)"></i>Do not honor<b>19.5%</b></li>
+    <li><i style="background:var(--sky-blue)"></i>Other<b>21.0%</b></li>
+  </ul>
+</div>
+
+<!-- ========== Treemap ========== -->
+<!-- More categories than a pie can hold. -->
+<!-- Row flex-grow = the row's value total; cell flex-grow = the cell's own
+     value. That alone makes every cell's rendered AREA proportional to its
+     value, no percentage math to get wrong. Row 1 here totals 550
+     (340+210), row 2 totals 375 (180+95+60+40), grand total 925. -->
+<div class="treemap">
+  <div class="tm-row" style="flex-grow:550">
+    <div class="tm-cell s1" style="flex-grow:340">
+      <div class="tm-name">Suspected Fraud</div><div class="tm-val">340 · 36.8%</div>
+    </div>
+    <div class="tm-cell s3" style="flex-grow:210">
+      <div class="tm-name">Insufficient Funds</div><div class="tm-val">210 · 22.7%</div>
+    </div>
+  </div>
+  <div class="tm-row" style="flex-grow:375">
+    <div class="tm-cell s2" style="flex-grow:180">
+      <div class="tm-name">Do Not Honor</div><div class="tm-val">180 · 19.5%</div>
+    </div>
+    <div class="tm-cell s4" style="flex-grow:95">
+      <div class="tm-name">Expired Card</div><div class="tm-val">95 · 10.3%</div>
+    </div>
+    <div class="tm-cell s5" style="flex-grow:60">
+      <div class="tm-name">Invalid CVV</div><div class="tm-val">60 · 6.5%</div>
+    </div>
+    <div class="tm-cell s6" style="flex-grow:40">
+      <div class="tm-name">Other</div><div class="tm-val">40 · 4.3%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Funnel ========== -->
+<!-- Stages that each lose volume. -->
+<!-- Width% is relative to the FIRST stage (always 100%), never to a shared
+     axis max, a funnel has no axis, only a sequence of ratios. Colors
+     follow the series ramp in order so stage identity reads at a glance. -->
+<div class="funnel">
+  <div class="fn-row" style="width:100%;background:var(--aperia-blue)">
+    <span class="fn-name">Applications Started</span><span class="fn-val">1,000</span>
+  </div>
+  <div class="fn-drop">↓ 28% drop-off</div>
+  <div class="fn-row" style="width:72%;background:var(--dark-blue)">
+    <span class="fn-name">Identity Verified</span><span class="fn-val">720</span>
+  </div>
+  <div class="fn-drop">↓ 33% drop-off</div>
+  <div class="fn-row" style="width:48%;background:var(--sapphire)">
+    <span class="fn-name">Approved</span><span class="fn-val">480</span>
+  </div>
+  <div class="fn-drop">↓ 27% drop-off</div>
+  <div class="fn-row" style="width:35%;background:var(--dark-gray)">
+    <span class="fn-name">Funded</span><span class="fn-val">350</span>
+  </div>
+</div>

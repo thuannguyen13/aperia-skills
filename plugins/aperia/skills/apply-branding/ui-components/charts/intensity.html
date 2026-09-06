@@ -1,0 +1,106 @@
+<!-- ============================================================
+     APERIA ANALYTICAL CHARTS: READY-TO-PASTE HTML SNIPPETS
+     Add the word `charts` to the assemble marker so charts/styles.css is
+     injected after base/styles.css. Every SVG example below uses the
+     shared 640x300 chart frame documented at the top of charts.css:
+       plot origin (44,16), plot size 576x250, baseline y=266, right edge x=620
+       gridline y-values: 266, 203.5, 141, 78.5, 16  (0/25/50/75/100% of axis max)
+     Recompute point positions for your own data with the formulas in that
+     file's header comment, never eyeball pixel values.
+     One group per file: trend, compare, proportion, intensity.
+     ============================================================ -->
+
+<!-- ==========================================================
+     INTENSITY AND PROGRESS
+     A value read as strength rather than as a length. Both need their number stated
+     in text: color alone is not decodable.
+     ========================================================== -->
+
+<!-- ========== Heatmap ========== -->
+<!-- Intensity across two categorical axes. Ships a legend and a title per cell. -->
+<!-- Two categorical axes (here: time bucket x day of week), one value per
+     cell. Cell background is a single hue at varying opacity (never a
+     rainbow scale, that isn't in the palette), so pair it with the legend
+     bar AND a <title> per cell: color alone is not accessible or printable. -->
+<div class="heatmap" style="--hm-cols:7">
+  <div class="hm-grid">
+    <div class="hm-corner"></div>
+    <div class="hm-colhead">Mon</div><div class="hm-colhead">Tue</div><div class="hm-colhead">Wed</div>
+    <div class="hm-colhead">Thu</div><div class="hm-colhead">Fri</div><div class="hm-colhead">Sat</div><div class="hm-colhead">Sun</div>
+
+    <div class="hm-rowhead">00–04</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.12)" title="Mon 00-04: 8 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.10)" title="Tue 00-04: 6 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.14)" title="Wed 00-04: 9 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.18)" title="Thu 00-04: 12 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.28)" title="Fri 00-04: 22 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.55)" title="Sat 00-04: 48 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.62)" title="Sun 00-04: 54 attempts"></div>
+
+    <div class="hm-rowhead">04–08</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.08)" title="Mon 04-08: 5 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.06)" title="Tue 04-08: 4 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.08)" title="Wed 04-08: 5 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.10)" title="Thu 04-08: 6 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.14)" title="Fri 04-08: 9 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.30)" title="Sat 04-08: 24 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.34)" title="Sun 04-08: 27 attempts"></div>
+
+    <div class="hm-rowhead">08–12</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.30)" title="Mon 08-12: 24 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.32)" title="Tue 08-12: 25 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.34)" title="Wed 08-12: 27 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.36)" title="Thu 08-12: 29 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.40)" title="Fri 08-12: 33 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.44)" title="Sat 08-12: 38 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.38)" title="Sun 08-12: 31 attempts"></div>
+
+    <div class="hm-rowhead">12–16</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.42)" title="Mon 12-16: 36 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.44)" title="Tue 12-16: 38 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.46)" title="Wed 12-16: 40 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.48)" title="Thu 12-16: 42 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.52)" title="Fri 12-16: 46 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.58)" title="Sat 12-16: 51 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.50)" title="Sun 12-16: 44 attempts"></div>
+
+    <div class="hm-rowhead">16–20</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.36)" title="Mon 16-20: 29 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.38)" title="Tue 16-20: 31 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.40)" title="Wed 16-20: 33 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.44)" title="Thu 16-20: 38 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.60)" title="Fri 16-20: 53 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.72)" title="Sat 16-20: 66 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.68)" title="Sun 16-20: 61 attempts"></div>
+
+    <div class="hm-rowhead">20–24</div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.20)" title="Mon 20-24: 15 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.22)" title="Tue 20-24: 17 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.24)" title="Wed 20-24: 18 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.30)" title="Thu 20-24: 24 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.50)" title="Fri 20-24: 44 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.80)" title="Sat 20-24: 75 attempts"></div>
+    <div class="hm-cell" style="background:rgba(0,114,188,.76)" title="Sun 20-24: 70 attempts"></div>
+  </div>
+  <div class="hm-legend"><span>Fewer attempts</span><span class="hm-legend-bar"></span><span>More attempts</span></div>
+</div>
+
+<!-- ========== Radial Gauge ========== -->
+<!-- One number against a target. Fill color is a status token. -->
+<!-- ONE value on a semicircular arc, never a categorical breakdown, that is
+     what makes this different from a pie/donut, which stay off-limits.
+     pathLength="100" on both arcs lets stroke-dasharray be read directly as
+     a percentage: dasharray="{value},100". Status color follows the same
+     three tokens the milestone timelines use (ahead/risk/done); pick the one
+     that matches what the number means, not just "high = red". -->
+<div class="gauge-card">
+  <svg viewBox="0 0 200 120" width="200" height="120" role="img" aria-label="Composite risk score, 72 out of 100">
+    <path class="gauge-track" pathLength="100" d="M20,100 A80,80 0 0 1 180,100"/>
+    <path class="gauge-fill risk" pathLength="100" stroke-dasharray="72,100" d="M20,100 A80,80 0 0 1 180,100"/>
+    <text class="gauge-val" x="100" y="92" text-anchor="middle">72</text>
+    <text class="gauge-end" x="14" y="112" text-anchor="start">0</text>
+    <text class="gauge-end" x="186" y="112" text-anchor="end">100</text>
+  </svg>
+  <div class="gauge-lbl">Composite Risk Score</div>
+  <div class="gauge-sub">Above the 65 review threshold</div>
+</div>

@@ -1,0 +1,104 @@
+<!-- ============================================================
+     APERIA UI COMPONENTS: READY-TO-PASTE HTML SNIPPETS
+     Copy what you need into the page you're building. Wrap content in
+     <div class="wrap">...</div> unless it already sits in a container with
+     its own width constraint. Keep gradient ids unique across the page if
+     you paste more than one dark-panel/cta-box.
+     One group per file: structure, emphasis, tables, charts, timelines.
+     ============================================================ -->
+
+<!-- ==========================================================
+     EMPHASIS
+     Components that carry a sentiment or ask for an action. Color means something
+     here: keep it to the sanctioned set and never use it as decoration.
+     ========================================================== -->
+
+<!-- ========== Badge ========== -->
+<!-- Inline, standalone. Blue / sky / green / amber / red / gray. -->
+<span class="badge b-blue">Direction</span>
+<span class="badge b-sky">Theme</span>
+<span class="badge b-green">Positive</span>
+<span class="badge b-amber">Caution</span>
+<span class="badge b-red">Problem</span>
+<span class="badge b-gray">Neutral</span>
+
+<!-- ========== Callout ========== -->
+<!-- Blue / green / amber / red. The color is the sentiment. -->
+<div class="callout"><strong>Note:</strong> neutral information.</div>
+<div class="callout green"><strong>Good:</strong> a positive result.</div>
+<div class="callout amber"><strong>Caution:</strong> a warning.</div>
+<div class="callout red"><strong>Never:</strong> a critical do-not.</div>
+
+<!-- Tagged variant: a labelled chip beside the text instead of the plain border -->
+<div class="callout tagged">
+  <span class="callout-tag">Watch This</span>
+  <p>The thing outside the team's control, what it blocks, and what happens if it slips.</p>
+</div>
+<div class="callout tagged soft">
+  <span class="callout-tag">Draft</span>
+  <p>A neutral note: where this section came from and what would replace it.</p>
+</div>
+
+<!-- ========== Accordion ========== -->
+<!-- Interactive. Ship its toggle script once per page. -->
+<div class="concerns">
+  <div class="concern">
+    <div class="c-hdr">
+      <div class="c-left"><span class="c-icon">Q</span><span class="c-title">Question or concern, stated plainly</span></div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="c-body">Answer or resolution, two or three sentences.</div>
+  </div>
+  <div class="concern">
+    <div class="c-hdr">
+      <div class="c-left"><span class="c-icon">Q</span><span class="c-title">Another question</span></div>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="c-body">Answer or resolution.</div>
+  </div>
+</div>
+<!-- Script (place before </body>, once per page): -->
+<script>
+  document.querySelectorAll('.c-hdr').forEach(hdr => {
+    hdr.addEventListener('click', () => hdr.closest('.concern').classList.toggle('open'));
+  });
+</script>
+
+<!-- ========== Dark Panel ========== -->
+<!-- A recommendation. Aperia Blue plus the graphic element. -->
+<div class="dark-panel">
+  <svg class="dp-shape" viewBox="0 0 127.6 85.1" preserveAspectRatio="xMaxYMin meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="dpPat" x1="61.7" y1="83.4" x2="91.5" y2="1.5" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#002f67"/><stop offset="1" stop-color="#004583"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#dpPat)" d="M93.6,85.1H25.5l25.5-63.7C56.2,8.5,68.7,0,82.6,0h45l-34,85.1Z"/>
+  </svg>
+  <h3>Panel Heading</h3>
+  <p>Summary paragraph in light text on the Aperia Blue background.</p>
+  <div class="dp-cols">
+    <div class="dp-col"><div class="dp-label">Label</div><p>Column content.</p></div>
+    <div class="dp-col"><div class="dp-label">Label</div><p>Column content.</p></div>
+    <div class="dp-col"><div class="dp-label">Label</div><p>Column content.</p></div>
+  </div>
+</div>
+
+<!-- ========== CTA Box ========== -->
+<!-- The ask. Aperia Blue plus the graphic element. -->
+<div class="cta-box">
+  <svg class="cta-shape" viewBox="0 0 127.6 85.1" preserveAspectRatio="xMaxYMin meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ctaPat" x1="61.7" y1="83.4" x2="91.5" y2="1.5" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#002f67"/><stop offset="1" stop-color="#004583"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#ctaPat)" d="M93.6,85.1H25.5l25.5-63.7C56.2,8.5,68.7,0,82.6,0h45l-34,85.1Z"/>
+  </svg>
+  <h2 class="text-2xl">CTA Headline</h2>
+  <p>Supporting text for what you're asking the reader to do.</p>
+  <div class="cta-btns">
+    <button class="btn-w">Primary Action</button>
+    <button class="btn-o">Secondary Action</button>
+  </div>
+</div>

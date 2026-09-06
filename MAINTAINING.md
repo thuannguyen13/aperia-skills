@@ -65,7 +65,7 @@ Renders the three snippet libraries as one page so the components can be reviewe
 
 The page is generated, never hand-edited, so it cannot drift from what the skills actually copy. Nothing under `plugins/` is written, and the snippet libraries are read exactly as the skills read them.
 
-It parses the `<!-- ===== NAME ===== -->` comments the libraries already use. A comment whose name line is followed by prose and a plain `-->` is a group heading and renders as one; each file's banner header, a bare run of `=`, is not a component and does not appear. Add a component to a library and it appears here with no change to this script.
+It reads the nine grouped snippet files, `base/structure.html`, `emphasis.html`, `tables.html`, `charts.html`, `timelines.html` and `charts/trend.html`, `compare.html`, `proportion.html`, `intensity.html`, plus `icons/index.html`, and parses the `<!-- ===== NAME ===== -->` comments they already use. A comment whose name line is followed by prose and a plain `-->` is a group heading and renders as one; each file's banner header, a bare run of `=`, is not a component and does not appear. Add a component to a library and it appears here with no change to this script.
 
 The script stays outside `plugins/` on purpose: a Desktop install mounts the skills, and the gallery is for whoever is working on them, not for the model. The generated file is gitignored.
 

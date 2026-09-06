@@ -1,0 +1,131 @@
+<!-- ============================================================
+     APERIA UI COMPONENTS: READY-TO-PASTE HTML SNIPPETS
+     Copy what you need into the page you're building. Wrap content in
+     <div class="wrap">...</div> unless it already sits in a container with
+     its own width constraint. Keep gradient ids unique across the page if
+     you paste more than one dark-panel/cta-box.
+     One group per file: structure, emphasis, tables, charts, timelines.
+     ============================================================ -->
+
+<!-- ==========================================================
+     CHARTS
+     The four charts that need no extra stylesheet. Every other chart is in the
+     charts/ folder, behind the `charts` marker word.
+     ========================================================== -->
+
+<!-- ========== Ranked Bars ========== -->
+<!-- One series, sorted descending. Not for a proportion. -->
+<!--
+  CONSISTENCY RULES, violating any of these causes unequal column widths:
+  1. NEVER use inline style= on .bval, .bname, or .beff
+  2. NEVER put <p> tags, headings, or non-row content inside .bchart
+  3. Header row (.brow-head) must have the SAME divs as data rows
+  4. NEVER mix rows with different column counts (all rows omit .beff, or none do)
+  5. .bval holds only a number, never a badge or text label (use stack-table for that)
+
+  Use when data has a real quantitative axis and you can sort rows descending.
+  Use stat-row instead for 2-4 standalone numbers. Use stack-table instead for
+  categorical role/type data.
+-->
+<div class="bchart">
+  <div class="brow brow-head">
+    <div class="bname">Bucket</div>
+    <div class="btrack-wrap">Hours (max = N)</div>
+    <div class="bval">Hr</div>
+    <div class="beff">Hr/pg</div>
+  </div>
+  <div class="brow">
+    <div class="bname">Row Name A<small>×44 instances</small></div>
+    <div class="btrack-wrap"><div class="btrack"><div class="bfill t1" style="width:100%"></div></div></div>
+    <div class="bval">114.7</div>
+    <div class="beff">2.6</div>
+  </div>
+  <div class="brow">
+    <div class="bname">Row Name B<small>×17 instances</small></div>
+    <div class="btrack-wrap"><div class="btrack"><div class="bfill t2" style="width:52%"></div></div></div>
+    <div class="bval">60.2</div>
+    <div class="beff">5.9</div>
+  </div>
+  <div class="bchart-foot">
+    <span class="lg-t1">Top tier · X% of total</span>
+    <span class="lg-t2">Mid tier · Y%</span>
+    <span class="lg-t3">Long tail · Z%</span>
+  </div>
+</div>
+
+<!-- ========== Proportion Bar ========== -->
+<!-- One bar, the parts of a single whole. -->
+<!-- Each seg width% = (count / total) * 100. Add .hide-label to any segment
+     under about 6% or its text will not fit. Never use a pie chart for this. -->
+<div class="stack-wrap">
+  <div class="stack-title"><span>Distribution label</span><span>N total</span></div>
+  <div class="stack">
+    <div class="seg" style="width:36%;background:var(--aperia-blue)"><span>CAT A 44</span></div>
+    <div class="seg" style="width:25%;background:var(--dark-blue)"><span>CAT B 31</span></div>
+    <div class="seg" style="width:16%;background:var(--sapphire)"><span>CAT C 19</span></div>
+    <div class="seg" style="width:14%;background:#7ED3F7;color:#002F67"><span>CAT D 17</span></div>
+    <div class="seg hide-label" style="width:9%;background:var(--sky-blue);color:var(--aperia-blue)"><span></span></div>
+  </div>
+  <ul class="stack-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Category A, label</li>
+    <li><i style="background:var(--dark-blue)"></i>Category B, label</li>
+    <li><i style="background:var(--sapphire)"></i>Category C, label</li>
+  </ul>
+</div>
+
+<!-- ========== Scenario Bars ========== -->
+<!-- scn-seg-base width% = (baseline/scale_max)*100; scn-seg-add width% = (addition/scale_max)*100
+     scn-striped = out-of-scope/unknown rows. delta classes: pos, warn, danger, out -->
+<div class="scn-wrap">
+  <div class="scn-row scn-row-head">
+    <div class="scn-name text-xs">Scenario</div>
+    <div class="scn-bar-wrap text-xs">Hours (scale 0 to N)</div>
+    <div class="scn-val text-xs" style="text-align:right">Total</div>
+  </div>
+  <div class="scn-row">
+    <div class="scn-name">Baseline (current scope)<small>Single language · design only</small></div>
+    <div class="scn-bar-wrap"><div class="scn-bar-track"><div class="scn-seg-base" style="width:57%"></div></div></div>
+    <div class="scn-val"><span class="scn-val-hr">514 hr</span><span class="scn-val-delta pos">baseline</span></div>
+  </div>
+  <div class="scn-row">
+    <div class="scn-name">+ Factor A<small>Short description</small></div>
+    <div class="scn-bar-wrap"><div class="scn-bar-track"><div class="scn-seg-base" style="width:57%"></div><div class="scn-seg-add" style="width:17%"></div></div></div>
+    <div class="scn-val"><span class="scn-val-hr">668 hr</span><span class="scn-val-delta danger">+154 hr</span></div>
+  </div>
+  <ul class="scn-legend">
+    <li class="lg-base">Baseline</li>
+    <li class="lg-add">Scenario addition</li>
+  </ul>
+</div>
+
+<!-- ========== Estimate Range ========== -->
+<!-- Three columns plus a gradient confidence bar. -->
+<!-- Use when a number has real uncertainty. pert-bar-fill right% = 1 - (pessimistic / scale_max).
+     E.g. max=800, pessimistic=657 → right:17.9% -->
+<div class="pert-card">
+  <p class="pert-title">PERT Estimate Range: Label</p>
+  <div class="pert-cols">
+    <div class="pert-col">
+      <div class="pert-col-label">Optimistic</div>
+      <div class="pert-col-hr">404</div>
+      <div class="pert-col-day">50 days</div>
+    </div>
+    <div class="pert-col center-col">
+      <div class="pert-col-label">Most Likely</div>
+      <div class="pert-col-hr">514</div>
+      <div class="pert-col-day">64 days</div>
+    </div>
+    <div class="pert-col">
+      <div class="pert-col-label">Pessimistic</div>
+      <div class="pert-col-hr">657</div>
+      <div class="pert-col-day">82 days</div>
+    </div>
+  </div>
+  <div class="pert-bar-wrap">
+    <div class="pert-bar-label"><span>0</span><span>800</span></div>
+    <div class="pert-bar-track">
+      <div class="pert-bar-fill" style="right:17.9%"></div>
+    </div>
+    <p class="pert-bar-foot"><strong>N-unit spread</strong> between best and worst case. Key drivers of uncertainty.</p>
+  </div>
+</div>

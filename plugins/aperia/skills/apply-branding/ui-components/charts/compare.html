@@ -1,0 +1,174 @@
+<!-- ============================================================
+     APERIA ANALYTICAL CHARTS: READY-TO-PASTE HTML SNIPPETS
+     Add the word `charts` to the assemble marker so charts/styles.css is
+     injected after base/styles.css. Every SVG example below uses the
+     shared 640x300 chart frame documented at the top of charts.css:
+       plot origin (44,16), plot size 576x250, baseline y=266, right edge x=620
+       gridline y-values: 266, 203.5, 141, 78.5, 16  (0/25/50/75/100% of axis max)
+     Recompute point positions for your own data with the formulas in that
+     file's header comment, never eyeball pixel values.
+     One group per file: trend, compare, proportion, intensity.
+     ============================================================ -->
+
+<!-- ==========================================================
+     COMPARISON ACROSS CATEGORIES
+     A categorical axis. Use these when the question is which is bigger, not how it
+     moved over time.
+     ========================================================== -->
+
+<!-- ========== Grouped Bars ========== -->
+<!-- 2 to 3 series across a handful of categories. -->
+<!-- height% on each .gbar-bar = value/axis_max*100. Axis max here is 480. -->
+<div class="gbar">
+  <div class="gbar-plot">
+    <div class="gbar-grp">
+      <div class="gbar-bar s1" style="height:66.7%" title="Card present, Q1: 320"></div>
+      <div class="gbar-bar s2" style="height:43.8%" title="E-commerce, Q1: 210"></div>
+      <div class="gbar-bar s3" style="height:18.8%" title="Mobile wallet, Q1: 90"></div>
+    </div>
+    <div class="gbar-grp">
+      <div class="gbar-bar s1" style="height:72.9%" title="Card present, Q2: 350"></div>
+      <div class="gbar-bar s2" style="height:54.2%" title="E-commerce, Q2: 260"></div>
+      <div class="gbar-bar s3" style="height:27.1%" title="Mobile wallet, Q2: 130"></div>
+    </div>
+    <div class="gbar-grp">
+      <div class="gbar-bar s1" style="height:62.5%" title="Card present, Q3: 300"></div>
+      <div class="gbar-bar s2" style="height:60.4%" title="E-commerce, Q3: 290"></div>
+      <div class="gbar-bar s3" style="height:37.5%" title="Mobile wallet, Q3: 180"></div>
+    </div>
+    <div class="gbar-grp">
+      <div class="gbar-bar s1" style="height:79.2%" title="Card present, Q4: 380"></div>
+      <div class="gbar-bar s2" style="height:70.8%" title="E-commerce, Q4: 340"></div>
+      <div class="gbar-bar s3" style="height:50%" title="Mobile wallet, Q4: 240"></div>
+    </div>
+  </div>
+  <div class="gbar-labels">
+    <div class="gbar-lbl">Q1</div><div class="gbar-lbl">Q2</div><div class="gbar-lbl">Q3</div><div class="gbar-lbl">Q4</div>
+  </div>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Card present</li>
+    <li><i style="background:var(--dark-blue)"></i>E-commerce</li>
+    <li><i style="background:var(--sapphire)"></i>Mobile wallet</li>
+  </ul>
+</div>
+
+<!-- ========== Stacked Bars ========== -->
+<!-- Composition within each category. -->
+<!-- Distinct from .stack (styles.css), which is one bar of shares of a
+     single whole. This is many bars, one per x-axis category, each
+     internally stacked. Segment height% = value/axis_max*100; axis max 240.
+     First child in DOM sits at the bottom (column-reverse). -->
+<div class="sbar">
+  <div class="sbar-plot">
+    <div class="sbar-grp">
+      <div class="sbar-seg s1" style="height:50%" title="On-us, Jan: 120"></div>
+      <div class="sbar-seg s2" style="height:33.3%" title="Off-us, Jan: 80"></div>
+    </div>
+    <div class="sbar-grp">
+      <div class="sbar-seg s1" style="height:41.7%" title="On-us, Feb: 100"></div>
+      <div class="sbar-seg s2" style="height:45.8%" title="Off-us, Feb: 110"></div>
+    </div>
+    <div class="sbar-grp">
+      <div class="sbar-seg s1" style="height:58.3%" title="On-us, Mar: 140"></div>
+      <div class="sbar-seg s2" style="height:29.2%" title="Off-us, Mar: 70"></div>
+    </div>
+    <div class="sbar-grp">
+      <div class="sbar-seg s1" style="height:37.5%" title="On-us, Apr: 90"></div>
+      <div class="sbar-seg s2" style="height:54.2%" title="Off-us, Apr: 130"></div>
+    </div>
+  </div>
+  <div class="sbar-labels">
+    <div class="sbar-lbl">Jan</div><div class="sbar-lbl">Feb</div><div class="sbar-lbl">Mar</div><div class="sbar-lbl">Apr</div>
+  </div>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>On-us</li>
+    <li><i style="background:var(--sapphire)"></i>Off-us</li>
+  </ul>
+</div>
+
+<!-- ========== Scatter Plot ========== -->
+<!-- Two measures, one point per item. -->
+<!-- x_i = 44 + (x_value/x_max)*576; y_i = 266 - (y_value/y_max)*250 -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Risk score by transaction amount, by channel">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/><line x1="44" y1="203.5" x2="620" y2="203.5"/>
+      <line x1="44" y1="141" x2="620" y2="141"/><line x1="44" y1="78.5" x2="620" y2="78.5"/><line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="38" y="270" text-anchor="end">0</text><text x="38" y="145" text-anchor="end">50</text><text x="38" y="20" text-anchor="end">100</text>
+      <text x="44" y="284" text-anchor="middle">$0</text><text x="332" y="284" text-anchor="middle">$250</text><text x="620" y="284" text-anchor="middle">$500</text>
+    </g>
+    <g class="cf-pt s1"><circle cx="113.1" cy="216" r="5"/><circle cx="205.3" cy="178.5" r="5"/><circle cx="401.1" cy="128.5" r="5"/></g>
+    <g class="cf-pt s3"><circle cx="147.7" cy="153.5" r="5"/><circle cx="297.4" cy="91" r="5"/><circle cx="504.8" cy="61" r="5"/></g>
+    <g class="cf-pt s2"><circle cx="101.6" cy="241" r="5"/><circle cx="239.8" cy="191" r="5"/><circle cx="343.5" cy="146" r="5"/></g>
+    <g class="cf-pt s4"><circle cx="182.2" cy="116" r="5"/><circle cx="447.2" cy="78.5" r="5"/><circle cx="573.9" cy="41" r="5"/></g>
+  </svg>
+  <ul class="cf-legend">
+    <li><i class="dot" style="background:var(--aperia-blue)"></i>Card present</li>
+    <li><i class="dot" style="background:var(--sapphire)"></i>E-commerce</li>
+    <li><i class="dot" style="background:var(--dark-blue)"></i>Mobile wallet</li>
+    <li><i class="dot" style="background:var(--med-gray)"></i>ACH</li>
+  </ul>
+</div>
+
+<!-- ========== Bubble Chart ========== -->
+<!-- Three measures. Radius scales by the square root of the value. -->
+<!-- Same frame as scatter, plus a divider at the midpoint of each axis
+     (x=332, y=141) and a corner label per quadrant. Bubble radius encodes a
+     third value: r = 6 + sqrt(value)*k, sqrt, not linear, so AREA (not
+     radius) is proportional to the value, or larger bubbles read as more
+     than proportionally bigger. -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Flagged transactions by two detection systems, sized by volume">
+    <line class="cf-quadrant" x1="332" y1="16" x2="332" y2="266"/>
+    <line class="cf-quadrant" x1="44" y1="141" x2="620" y2="141"/>
+    <text class="cf-qlabel" x="48" y="30">VisionWeb Only</text>
+    <text class="cf-qlabel" x="616" y="30" text-anchor="end">Flagged By Both</text>
+    <text class="cf-qlabel" x="48" y="256">Not Flagged</text>
+    <text class="cf-qlabel" x="616" y="256" text-anchor="end">Mastercard Only</text>
+    <g class="cf-pt s3" opacity=".7"><circle cx="150" cy="70" r="12"/><circle cx="220" cy="100" r="16"/></g>
+    <g class="cf-pt s1" opacity=".7"><circle cx="450" cy="80" r="18"/><circle cx="520" cy="60" r="14"/></g>
+    <g class="cf-pt s4" opacity=".7"><circle cx="120" cy="200" r="20"/><circle cx="200" cy="230" r="10"/></g>
+    <g class="cf-pt s2" opacity=".7"><circle cx="480" cy="220" r="14"/><circle cx="400" cy="190" r="16"/></g>
+  </svg>
+  <ul class="cf-legend">
+    <li><i class="dot" style="background:var(--sapphire)"></i>VisionWeb only</li>
+    <li><i class="dot" style="background:var(--aperia-blue)"></i>Flagged by both</li>
+    <li><i class="dot" style="background:var(--med-gray)"></i>Not flagged</li>
+    <li><i class="dot" style="background:var(--dark-blue)"></i>Mastercard only</li>
+    <li>Bubble size = transaction volume</li>
+  </ul>
+</div>
+
+<!-- ========== Radar Chart ========== -->
+<!-- One shape across several axes. -->
+<!-- 5 axes at 72° apart, starting at 12 o'clock. Concentric circles at
+     25/50/75/100% of the 115px max radius stand in for a polygonal grid.
+     Two profiles: a solid filled "current" polygon and a dashed unfilled
+     "baseline" polygon, matching the solid/dashed comparison convention
+     used in the line chart above. -->
+<div class="radar-card">
+  <svg viewBox="0 0 320 320" role="img" aria-label="Risk factor profile, current vs baseline">
+    <circle class="radar-ring" cx="160" cy="160" r="28.75"/>
+    <circle class="radar-ring" cx="160" cy="160" r="57.5"/>
+    <circle class="radar-ring" cx="160" cy="160" r="86.25"/>
+    <circle class="radar-ring" cx="160" cy="160" r="115"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="160" y2="45"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="269.4" y2="124.5"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="227.6" y2="253"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="92.4" y2="253"/>
+    <line class="radar-spoke" x1="160" y1="160" x2="50.6" y2="124.5"/>
+    <polygon class="radar-poly compare" points="160,96.75 214.7,142.2 200.6,215.8 129.6,201.9 105.3,142.2"/>
+    <polygon class="radar-poly s1" points="160,68 231.1,136.9 220.8,243.7 122.8,211.2 83.4,135.1"/>
+    <text class="radar-lbl" x="160" y="25" text-anchor="middle">Velocity</text>
+    <text class="radar-lbl" x="288.4" y="118.3" text-anchor="start">Amount</text>
+    <text class="radar-lbl" x="239.4" y="269.2" text-anchor="start">Geography</text>
+    <text class="radar-lbl" x="80.6" y="269.2" text-anchor="end">Device</text>
+    <text class="radar-lbl" x="31.6" y="118.3" text-anchor="end">History</text>
+  </svg>
+  <ul class="cf-legend">
+    <li><i style="background:var(--sapphire)"></i>Current</li>
+    <li><i class="dashed" style="color:var(--med-gray)"></i>Baseline</li>
+  </ul>
+</div>

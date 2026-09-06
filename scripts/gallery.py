@@ -38,6 +38,7 @@ PLUGIN = ROOT / "plugins" / "aperia"
 LAYERS = Path("skills") / "apply-branding"
 UI = PLUGIN / LAYERS / "ui-components"
 
+# Section names are written as they should read, so they are used verbatim.
 # A component is introduced by <!-- ===== NAME ===== -->, and a group heading
 # by the same opener followed by prose and a plain -->. The name sits on one
 # line between two runs of '=' and contains no '=' itself, which is what keeps
@@ -49,8 +50,15 @@ CLASSES = re.compile(r'class="([^"]+)"')
 
 # Source file, the marker word that injects its stylesheet, and when it applies.
 SOURCES = [
-    ("base/index.html", None, "Always injected"),
-    ("charts/index.html", "charts", "Add `charts` to the marker"),
+    ("base/structure.html", None, "Always injected"),
+    ("base/emphasis.html", None, "Always injected"),
+    ("base/tables.html", None, "Always injected"),
+    ("base/charts.html", None, "Always injected"),
+    ("base/timelines.html", None, "Always injected"),
+    ("charts/trend.html", "charts", "Add `charts` to the marker"),
+    ("charts/compare.html", "charts", "Add `charts` to the marker"),
+    ("charts/proportion.html", "charts", "Add `charts` to the marker"),
+    ("charts/intensity.html", "charts", "Add `charts` to the marker"),
     ("icons/index.html", "icons", "Add `icons` to the marker"),
 ]
 
@@ -142,12 +150,12 @@ def build():
         path = UI / rel
         if not path.exists():
             sys.exit(f"gallery: missing {path.relative_to(ROOT)}")
-        if flag:
+        if flag and flag not in words:
             words.append(flag)
         found = sections(path)
         items = [b for b in found if b[0] == "item"]
         counts.append((rel, len(items)))
-        key = rel.split("/")[0]
+        key = slug(rel.rsplit("/", 1)[-1].removesuffix(".html"))
         nav.append(f'<div class="navgroup">{html.escape(rel)}'
                    f'<span>{len(items)}</span></div><ul>')
         body.append(f'<section class="layer"><h2 id="{key}">{html.escape(rel)}</h2>'
@@ -156,19 +164,19 @@ def build():
             anchor = f"{key}-{slug(name)}"
             if kind == "group":
                 nav.append(f'<li class="grouprow"><a href="#{anchor}">'
-                           f'{html.escape(name.title())}</a></li>')
+                           f'{html.escape(name)}</a></li>')
                 body.append(f'<div class="group" id="{anchor}">'
-                            f'<h4>{html.escape(name.title())}</h4>'
+                            f'<h4>{html.escape(name)}</h4>'
                             f'<p>{html.escape(payload)}</p></div>')
                 continue
             used = classes_in(payload)
             chips = "".join(f"<code>.{html.escape(c)}</code>" for c in used[:12])
             if len(used) > 12:
                 chips += f'<span class="more">+{len(used) - 12}</span>'
-            nav.append(f'<li><a href="#{anchor}">{html.escape(name.title())}</a></li>')
+            nav.append(f'<li><a href="#{anchor}">{html.escape(name)}</a></li>')
             body.append(
                 f'<article class="item" id="{anchor}">'
-                f'<header><h3>{html.escape(name.title())}</h3>'
+                f'<header><h3>{html.escape(name)}</h3>'
                 f'<div class="chips">{chips}</div></header>'
                 f'<div class="preview">{payload}</div>'
                 f'<details><summary>Markup</summary>'
@@ -201,7 +209,7 @@ def main():
         return result.returncode
 
     for rel, n in counts:
-        print(f"  {rel:<20} {n:>3} components")
+        print(f"  {rel:<24} {n:>3} components")
     print(f"ok: {out.name} <- {total} components, styled by "
           f"{' '.join(words)}. Open it in a browser.")
     return 0

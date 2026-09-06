@@ -25,15 +25,16 @@ Recipes, in paste order:
              [charts/styles.css], [icons/styles.css], the create-report theme
     slides   brand/tokens.css, the create-slides theme
 
-Works from a plugin install (brand/ and ui-components/ beside skills/) and
-from a standalone skill bundle (brand/ and ui-components/ beside references/).
+The layers live in skills/references/, beside the skill folders, so a client
+that mounts the plugin's skills/ directory sees them at ../references/.
 """
 import re
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent  # the plugin, or a standalone skill bundle
+HERE = Path(__file__).resolve().parent     # skills/references/ui-components
+LAYERS = HERE.parent                         # skills/references
+SKILLS = LAYERS.parent                       # skills
 
 RECIPES = {
     "report": {
@@ -57,12 +58,11 @@ MARKER = re.compile(
 
 
 def theme_path(skill, name):
-    """The skill theme, wherever this layout keeps it."""
-    for candidate in (ROOT / "skills" / skill / "references" / name,
-                      ROOT / "references" / name):
-        if candidate.exists():
-            return candidate
-    sys.exit(f"assemble: cannot find {name} for {skill} under {ROOT}")
+    """The skill's own theme, in its references/ folder."""
+    candidate = SKILLS / skill / "references" / name
+    if candidate.exists():
+        return candidate
+    sys.exit(f"assemble: cannot find {name} for {skill} under {SKILLS}")
 
 
 def css_for(words):
@@ -76,8 +76,8 @@ def css_for(words):
         allowed = ", ".join(recipe["optional"]) or "none"
         sys.exit(f"assemble: '{recipe_name}' takes no flag '{unknown[0]}' (allowed: {allowed})")
 
-    files = [ROOT / p for p in recipe["layers"]]
-    files += [ROOT / recipe["optional"][f] for f in recipe["optional"] if f in flags]
+    files = [LAYERS / p for p in recipe["layers"]]
+    files += [LAYERS / recipe["optional"][f] for f in recipe["optional"] if f in flags]
     files.append(theme_path(*recipe["theme"]))
 
     parts = []
@@ -88,7 +88,7 @@ def css_for(words):
             # The browser ends the style element at that text, comment or not.
             sys.exit(f"assemble: {path.name} contains '</style', which would cut the block short")
         parts.append(f"/* ---- {path.name} ({path.parent.name}) ---- */\n{path.read_text().strip()}")
-    head = ("/* Assembled by ui-components/assemble.py from the words in data-aperia.\n"
+    head = ("/* Assembled by references/ui-components/assemble.py from the words in data-aperia.\n"
             "   Do not edit inside this block: it is replaced on every run. Put\n"
             "   document-specific rules in a separate <style> after it. */")
     return head + "\n\n" + "\n\n".join(parts) + "\n"

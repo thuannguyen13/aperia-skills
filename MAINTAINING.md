@@ -4,7 +4,7 @@ For people editing this repo. To install and use the plugin, see [README.md](REA
 
 ## Change the brand
 
-1. Edit `plugins/aperia/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only. Then run `python3 scripts/sync-layers.py` to refresh the copy each skill carries; never edit those copies.
+1. Edit `plugins/aperia/skills/references/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only.
 2. Bump `version` in `plugins/aperia/.claude-plugin/plugin.json`.
 3. Add a `CHANGELOG.md` entry.
 4. Run `python3 scripts/validate.py`, then `claude plugin validate .`.
@@ -42,36 +42,30 @@ Approval is structural: only hexes inside a fenced ```approved block count. Ment
 ## assemble.py
 
 ```bash
-python3 plugins/aperia/ui-components/assemble.py <file.html>
+python3 plugins/aperia/skills/references/ui-components/assemble.py <file.html>
 ```
 
 Fills a document's style marker, `<style>/* @aperia report [charts] [icons] */</style>` or `<style>/* @aperia slides */</style>`, with the stylesheets in the order the recipe names. The model never reads or types the CSS; the script copies the files in. Re-running replaces the injected block from the same words, so it is safe after every content edit. `--print report charts` writes the CSS to stdout for inspection.
 
 Values are controlled in two places and no third. A change for every future output is an edit to the repo file. A change for one document is a second `<style>` block the model writes after the marker; later rules win, and the next assemble run leaves that block alone. Nothing is ever edited inside the injected block.
 
-The script resolves the layers from its own location, so it works from a plugin install and from a standalone bundle without a rewrite.
+The script resolves the layers from its own location.
 
 A layer file must never contain a closing style tag, even inside a comment, because the browser ends the style element there. The script refuses to inject one.
 
 `examples/` holds one assembled output per skill, built from a bare marker with the script. Rebuild them after a theme change so they keep showing what the skills produce.
 
-## sync-layers.py
+## Where the shared layers live
 
-```bash
-python3 scripts/sync-layers.py           # refresh the copies
-python3 scripts/sync-layers.py --check   # what CI runs
-python3 scripts/sync-layers.py --zip     # dist/<skill>.zip for the Desktop uploader
-```
+`brand/` and `ui-components/` sit at `plugins/aperia/skills/references/`, beside the two skill folders, and every skill reads them as `../references/brand/` and `../references/ui-components/`. One copy, no build step.
 
-Every client mounts a skill folder on its own. Claude Desktop puts it at `/mnt/skills/plugins/<skill>/` with nothing above it, and the Agent Skills specification says a skill may not reach outside its own directory. So `brand/` and `ui-components/` at the plugin root are the single source, and each skill carries a committed copy of both, written by this script. Skill files reference the layers from the skill root, `brand/tokens.css` and `ui-components/assemble.py`, on every client. A Claude Code install carries the layers three times, root plus two copies; only the copies are read.
+The reason for that spot is Claude Desktop. It mounts the plugin's `skills/` directory as `/mnt/skills/plugins/` and nothing above it, so a layer at the plugin root never arrived and both skills were broken there from 0.3.0 to 0.8.0. Inside `skills/` the layers travel with the skills. `skills/references/` has no `SKILL.md`, so no client treats it as a skill; `validate.py` skips it for the same reason.
 
-The copies are never edited by hand. `validate.py` fails when a copy is behind the source, so a brand change committed without a sync fails CI with this script's name in the message. The two copies add about 600 KB to the repo.
-
-After copying, the script verifies that every relative reference in a skill resolves to a file inside that skill. A reference that escapes the skill is the Desktop break this exists to prevent. This was broken from 0.3.0, when the layers moved out of the skills, until 0.9.0.
+Two consequences. A skill folder on its own is not complete, so the Claude Desktop skill uploader, which takes one folder, is not a supported install path; use the marketplace. And whether Desktop copies every folder under `skills/` or only the ones with a `SKILL.md` is not documented; 0.9.0 is the first release to rely on it, so install it on Desktop and confirm the skill sees `../references/brand/` before telling teammates to update.
 
 ## Icons
 
-Nothing is bundled. `ui-components/icons/icon.py` fetches each icon from the Lucide CDN (`cdn.jsdelivr.net/npm/lucide-static`) on first use, pinned to the release named at the top of the script, and caches it under `~/.cache/aperia-icons/`. Bump the version there on purpose. A sandbox that blocks that host cannot produce icons; the script says so and the skill leaves the icon out.
+Nothing is bundled. `skills/references/ui-components/icons/icon.py` fetches each icon from the Lucide CDN (`cdn.jsdelivr.net/npm/lucide-static`) on first use, pinned to the release named at the top of the script, and caches it under `~/.cache/aperia-icons/`. Bump the version there on purpose. A sandbox that blocks that host cannot produce icons; the script says so and the skill leaves the icon out.
 
 ## Ad-hoc branding
 

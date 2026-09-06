@@ -16,12 +16,6 @@ jobs:
       - name: Validate manifests, skills, and palette
         run: python3 scripts/validate.py
 
-      # Each skill carries a committed copy of brand/ and ui-components/,
-      # because Claude Desktop mounts a skill folder on its own. The copies
-      # are generated; this fails when one is behind the source.
-      - name: Check the layer copies inside each skill
-        run: python3 scripts/sync-layers.py --check
-
       # Schema-level checks the script above does not do. The two are
       # complementary: this one knows the manifest schema, ours knows the
       # brand palette and the skill-name rules.

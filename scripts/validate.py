@@ -25,12 +25,13 @@ Checks:
      --radius-sm, --radius-pill, 50% or 0.
   9. No em dash anywhere in the plugin or the repo docs. The model reads
      these files as its writing example.
- 10. Every skill's copy of brand/ and ui-components/ matches the source at
-     the plugin root, and every SKILL.md carries metadata.version equal to
-     plugin.json. Clients mount a skill folder on its own, so the copies are
-     what ships; scripts/sync-layers.py writes them.
+ 10. Every SKILL.md carries metadata.version equal to plugin.json, so a
+     mounted copy can say which release it is.
 
-The palette itself is read by plugins/aperia/brand/palette.py, which the
+The two shared layers live at plugins/aperia/skills/references/, beside the
+skill folders, so a client that mounts skills/ carries them along.
+
+The palette itself is read by skills/references/brand/palette.py, which the
 deck QA script shares, so neither holds a copy of it.
 
 Usage: python3 scripts/validate.py
@@ -128,6 +129,8 @@ def check_skills(plugin_name, plugin_dir):
     for skill in found:
         rel = skill.relative_to(ROOT)
         md = skill / "SKILL.md"
+        if skill.name == "references":
+            continue  # the shared layers, not a skill
         if not md.exists():
             fail(f"{rel}: no SKILL.md, so this directory will not load as a skill")
             continue
@@ -174,13 +177,14 @@ HEX = re.compile(r"#([0-9a-fA-F]{6})\b")
 # tokens.css is the single source of brand values, guideline and system alike.
 TOKENS = "tokens.css"
 
-# Stylesheets the checks below walk: the layers and every skill theme.
-STYLESHEETS = ("brand", "ui-components", "skills")
+# Where the shared layers live, relative to the plugin. skills/ holds them
+# and every skill theme, so one walk covers all stylesheets.
+LAYERS = Path("skills") / "references"
 
 
 def brand_css(plugin_dir):
     """The token file as one string, or None if it is missing."""
-    path = plugin_dir / "brand" / TOKENS
+    path = plugin_dir / LAYERS / "brand" / TOKENS
     if not path.exists():
         return None, [TOKENS]
     return path.read_text(), []
@@ -188,7 +192,7 @@ def brand_css(plugin_dir):
 
 def palette_module(plugin_dir):
     """brand/palette.py, the plugin's own palette reader, loaded from its path."""
-    path = plugin_dir / "brand" / "palette.py"
+    path = plugin_dir / LAYERS / "brand" / "palette.py"
     if not path.exists():
         return None
     spec = importlib.util.spec_from_file_location("palette", path)
@@ -211,7 +215,7 @@ def check_palette(plugin_name, plugin_dir):
 
     # tokens.css is the single source of brand values. Every color it defines
     # is, by definition, the palette.
-    palette = palette_mod.tokens(plugin_dir / "brand")
+    palette = palette_mod.tokens(plugin_dir / LAYERS / "brand")
     if not palette:
         fail(f"{plugin_name}/{TOKENS}: no color values found, so the palette is empty")
         return
@@ -228,7 +232,7 @@ def check_palette(plugin_name, plugin_dir):
         if not re.search(rf"--series-{n}\s*:", tokens):
             fail(f"{plugin_name}/{TOKENS}: missing chart series step '--series-{n}'")
 
-    deviations_path = plugin_dir / "brand" / "DEVIATIONS.md"
+    deviations_path = plugin_dir / LAYERS / "brand" / "DEVIATIONS.md"
     if not deviations_path.exists():
         fail(f"{plugin_name}: brand/DEVIATIONS.md is missing, so off-palette "
              f"values have nowhere to be recorded")
@@ -236,7 +240,7 @@ def check_palette(plugin_name, plugin_dir):
     # Approval is structural, not textual. Only the fenced ```approved blocks
     # count, so a hex named in prose, in a "was" column, or in a paragraph about a
     # value that was removed does not silently pass.
-    recorded, has_blocks = palette_mod.approved(plugin_dir / "brand")
+    recorded, has_blocks = palette_mod.approved(plugin_dir / LAYERS / "brand")
     if not has_blocks:
         fail(f"{plugin_name}/DEVIATIONS.md: no ```approved blocks found. Off-palette "
              f"values are approved by listing them in one, not by mentioning them.")
@@ -245,8 +249,7 @@ def check_palette(plugin_name, plugin_dir):
     for path in sorted(plugin_dir.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in {".css", ".html", ".svg", ".json", ".md", ".py"}:
             continue
-        # The skills carry copies of DEVIATIONS.md and palette.py; skip those too.
-        if path.name in ("DEVIATIONS.md", "palette.py"):
+        if path == deviations_path or path.name == "palette.py":
             continue
         for value in palette_mod.colors_in(path.read_text(errors="ignore")):
             if value not in palette and value not in recorded:
@@ -281,15 +284,14 @@ def root_tokens(path):
 
 def stylesheets(plugin_dir):
     """Every stylesheet other than tokens.css itself."""
-    for folder in STYLESHEETS:
-        for sheet in sorted((plugin_dir / folder).rglob("*.css")):
-            if sheet.name != TOKENS:
-                yield sheet
+    for sheet in sorted((plugin_dir / "skills").rglob("*.css")):
+        if sheet.name != TOKENS:
+            yield sheet
 
 
 def check_single_source(plugin_name, plugin_dir):
     """Check 6."""
-    brand = root_tokens(plugin_dir / "brand" / TOKENS)
+    brand = root_tokens(plugin_dir / LAYERS / "brand" / TOKENS)
     if not brand:
         return
     for sheet in stylesheets(plugin_dir):
@@ -340,7 +342,7 @@ NAMED_TOKEN = re.compile(r"`(--[\w-]+)`")
 
 def check_guideline_states_no_values(plugin_name, plugin_dir):
     """Check 7."""
-    brand_md = plugin_dir / "brand" / "BRAND.md"
+    brand_md = plugin_dir / LAYERS / "brand" / "BRAND.md"
     tokens, _ = brand_css(plugin_dir)
     if tokens is None or not brand_md.exists():
         return
@@ -352,22 +354,11 @@ def check_guideline_states_no_values(plugin_name, plugin_dir):
              f"{TOKENS}; name the token instead, so there is one copy of the value.")
 
     # A token the guideline names must exist, or the pointer dangles.
-    defined = root_tokens(plugin_dir / "brand" / TOKENS)
+    defined = root_tokens(plugin_dir / LAYERS / "brand" / TOKENS)
     for m in NAMED_TOKEN.finditer(text):
         if m.group(1) not in defined:
             fail(f"{plugin_name}/BRAND.md: names '{m.group(1)}', which {TOKENS} "
                  f"does not define.")
-
-
-def check_layer_copies():
-    """Check 10, the copies half, through scripts/sync-layers.py."""
-    spec = importlib.util.spec_from_file_location("sync_layers", Path(__file__).with_name("sync-layers.py"))
-    sync = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(sync)
-    sync.check()
-    for skill in sync.skills():
-        sync.verify(skill)
-    FAILURES.extend(sync.FAILURES)
 
 
 def main():
@@ -379,7 +370,6 @@ def main():
         check_guideline_states_no_values(plugin_name, plugin_dir)
         check_literals(plugin_name, plugin_dir)
     check_no_em_dash()
-    check_layer_copies()
 
     for msg in NOTES:
         print(f"note: {msg}")

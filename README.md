@@ -11,7 +11,7 @@ two shared reference layers. Built from Aperia Brand Guidelines v1.0.
 | Create slides | `/aperia:create-slides` | Self-contained HTML deck that runs in the browser |
 
 Each skill reads two shared layers before producing anything:
-`brand/` (palette, typography, logo rules, the parallelogram element) and
+`skills/references/brand/` (palette, typography, logo rules, the parallelogram element) and
 `ui-components/` (cards, badges, callouts, tables, a full chart toolkit, an
 icon set, and milestone/status timelines), so the same piece looks and
 behaves the same way whether it lands in a report or a deck. Neither layer

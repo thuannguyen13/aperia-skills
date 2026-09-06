@@ -25,8 +25,8 @@ except ImportError:
 HERE = os.path.dirname(os.path.abspath(__file__))
 # The palette is read from the brand layer, not copied here: tokens.css plus
 # the approved blocks in DEVIATIONS.md, through the same module validate.py
-# uses. See brand/palette.py.
-BRAND_DIR = os.path.join(HERE, "..", "brand")
+# uses. See ../references/brand/palette.py.
+BRAND_DIR = os.path.join(HERE, "..", "..", "references", "brand")
 _spec = importlib.util.spec_from_file_location("palette", os.path.join(BRAND_DIR, "palette.py"))
 palette = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(palette)

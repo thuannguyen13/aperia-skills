@@ -7,17 +7,7 @@ metadata:
 
 # Aperia Report
 
-Produces a single self-contained HTML strategic report in the Aperia brand
-identity. A report is built in two layers: the **base component library**
-(cards, badges, callouts, tables, charts, timelines, everything a report
-shares with any other Aperia UI surface) lives once, in the shared
-**`../apply-branding/components/`** folder alongside `../apply-branding/brand/`, and is not
-duplicated here. This skill adds only what a full report needs on top of it:
-the page chrome (nav, hero, footer), the phased-roadmap timeline, and the
-data-driven delivery-plan subsystem (sgantt). If you find yourself about to
-invent markup or CSS for a card, a chart, or a timeline that isn't documented
-in this file, it almost certainly belongs in `../apply-branding/components/` already,
-check there before improvising.
+Produces a single self-contained HTML strategic report in the Aperia brand identity. A report is built in two layers: the **base component library** (cards, badges, callouts, tables, charts, timelines, everything a report shares with any other Aperia UI surface) lives once, in the shared **`../apply-branding/components/`** folder alongside `../apply-branding/brand/`, and is not duplicated here. This skill adds only what a full report needs on top of it: the page chrome (nav, hero, footer), the phased-roadmap timeline, and the data-driven delivery-plan subsystem (sgantt). If you find yourself about to invent markup or CSS for a card, a chart, or a timeline that isn't documented in this file, it almost certainly belongs in `../apply-branding/components/` already, check there before improvising.
 
 ## Step 0: Read the brand and component layers first (required)
 
@@ -56,10 +46,7 @@ If the user gives minimal content, scaffold intelligently and flag what to repla
 
 ## Visualization thinking specific to reports
 
-Component selection, chart-type selection, bar-chart consistency, and the
-full anti-pattern list live in `../apply-branding/components/COMPONENTS.md`, read
-that first. Two decisions exist only in the context of a full report,
-because they involve components that only this skill has:
+Component selection, chart-type selection, bar-chart consistency, and the full anti-pattern list live in `../apply-branding/components/COMPONENTS.md`, read that first. Two decisions exist only in the context of a full report, because they involve components that only this skill has:
 
 - **A schedule of a few phases on a continuous axis** is the shared `gantt` component. **A schedule of many work items over named sprints or stages, grouped and searchable** is `sgantt`, which exists only here, decided under "Choosing between `gantt` and `sgantt`" below, never from a generic chart-selection table.
 - **A sequential, multi-week phase of work with a duration and a deliverables list** (not a dated checkpoint, not a chart) is the `phases` component below, distinct from the shared `flow` (a short conceptual pipeline) and from the shared milestone timelines (dated checkpoints, not durations).
@@ -68,52 +55,28 @@ because they involve components that only this skill has:
 
 ### The phased roadmap (`phases`)
 
-A dot-and-line rail narrating **sequential phases of work**, each with a
-duration pill and a bulleted deliverables list, see
-`references/snippets.html` for the markup and `references/styles.css` for
-`.phases`/`.p-item`/`.p-dot`/`.pd-*`/`.p-line`/`.p-duration`/`.delivs`/`.dlv`.
-Use it when the content is the *work itself* (what happens in each phase and
-what it produces), not dated checkpoints (that's the shared
-`vtimeline`/`mstone-row`) and not a short conceptual pipeline (that's the
-shared `flow`). Node color cycles `pd-blue` → `pd-sapphire` → `pd-dark`,
-repeating for a 4th-plus phase.
+A dot-and-line rail narrating **sequential phases of work**, each with a duration pill and a bulleted deliverables list, see `references/snippets.html` for the markup and `references/styles.css` for `.phases`/`.p-item`/`.p-dot`/`.pd-*`/`.p-line`/`.p-duration`/`.delivs`/`.dlv`. Use it when the content is the *work itself* (what happens in each phase and what it produces), not dated checkpoints (that's the shared `vtimeline`/`mstone-row`) and not a short conceptual pipeline (that's the shared `flow`). Node color cycles `pd-blue` → `pd-sapphire` → `pd-dark`, repeating for a 4th-plus phase.
 
 ---
 
 ## Delivery-plan components (data-driven)
 
-Use these when the report is a delivery, release or roadmap plan. Markup and the
-full render script are in `references/interactive.html`; styles are in this
-skill's `references/styles.css` (sgantt), the milestone cards, vertical
-timeline, environment chain and A/R/D block it renders use the CSS classes
-defined in `../apply-branding/components/base/styles.css`, since a rendered plan is a
-DATA-driven instance of those same components, not a different visual design.
+Use these when the report is a delivery, release or roadmap plan. Markup and the full render script are in `references/interactive.html`; styles are in this skill's `references/styles.css` (sgantt), the milestone cards, vertical timeline, environment chain and A/R/D block it renders use the CSS classes defined in `../apply-branding/components/base/styles.css`, since a rendered plan is a DATA-driven instance of those same components, not a different visual design.
 
 ### The DATA-object pattern
 
-These are the script conventions for the whole skill. Follow them exactly; a report
-that invents its own naming is wrong even if it renders.
+These are the script conventions for the whole skill. Follow them exactly; a report that invents its own naming is wrong even if it renders.
 
-**1. The markup is never hand-written.** You write one `DATA` object and the script
-renders the milestones, the environment chain, the grouped Gantt, the count line and
-the A/R/D block from it. The search index, the status counts and the tooltip all read
-that same object, so a hand-written row is invisible to search, missing from the
-counts and silent on hover. In the source HTML all five are empty mount points and
-nothing else.
+**1. The markup is never hand-written.** You write one `DATA` object and the script renders the milestones, the environment chain, the grouped Gantt, the count line and the A/R/D block from it. The search index, the status counts and the tooltip all read that same object, so a hand-written row is invisible to search, missing from the counts and silent on hover. In the source HTML all five are empty mount points and nothing else.
 
-**2. `DATA` lives at the top of the last `<script>` in the file**, immediately above
-the render script pasted from `references/interactive.html`. One `DATA` object per
-report, never one per section, and never inside the render script itself. It is the
-only part of that script you edit.
+**2. `DATA` lives at the top of the last `<script>` in the file**, immediately above the render script pasted from `references/interactive.html`. One `DATA` object per report, never one per section, and never inside the render script itself. It is the only part of that script you edit.
 
 ```js
 const DATA = { <key>: { unit, sortByCompletion, editable, milestoneForm, milestones,
                         envForm, environments, cols, ends, rows, ard } };
 ```
 
-**3. One key per plan, and the key is the id suffix.** A report with two parts uses
-two keys and one copy of the render script. Every mount point for a plan is its
-prefix plus that key, with no other id naming used anywhere:
+**3. One key per plan, and the key is the id suffix.** A report with two parts uses two keys and one copy of the render script. Every mount point for a plan is its prefix plus that key, with no other id naming used anywhere:
 
 | Id | Element | Filled by |
 |---|---|---|
@@ -125,43 +88,22 @@ prefix plus that key, with no other id naming used anywhere:
 | `env-<key>` | `div.envchain` or `div.vtimeline` | `renderEnvs()` |
 | `ard-<key>` | `div.ard` | `renderARD()` |
 
-Expand and collapse buttons carry the key in `data-expand` / `data-collapse` rather
-than an id. Edit-mode controls use `data-edit`, `data-addopen`, `data-addcancel`,
-`data-undo`, `data-export` and `data-addform`, each set to the key; the add form's
-fields are `nf-<key>-name`, `-group`, `-desc`, `-from`, `-to`, `-status`, `-tags`,
-with `groups-<key>` for the datalist and `err-<key>` for the error line.
+Expand and collapse buttons carry the key in `data-expand` / `data-collapse` rather than an id. Edit-mode controls use `data-edit`, `data-addopen`, `data-addcancel`, `data-undo`, `data-export` and `data-addform`, each set to the key; the add form's fields are `nf-<key>-name`, `-group`, `-desc`, `-from`, `-to`, `-status`, `-tags`, with `groups-<key>` for the datalist and `err-<key>` for the error line.
 
-**4. `milestoneForm` picks the milestone rendering.** `"cards"` (the default) gives
-`.mstone-row`, `"timeline"` gives `.vtimeline`. The mount point is `m-<key>` for
-both, and the script sets the container class from this key, so the DATA always
-wins over whatever class the markup carries. The entries themselves do not change.
-The cards-or-timeline threshold is the same one `../apply-branding/components/COMPONENTS.md`
-documents under "Choosing a timeline form" (4 or fewer → cards, more → timeline),
-this is that same decision, just DATA-driven instead of hand-authored.
+**4. `milestoneForm` picks the milestone rendering.** `"cards"` (the default) gives `.mstone-row`, `"timeline"` gives `.vtimeline`. The mount point is `m-<key>` for both, and the script sets the container class from this key, so the DATA always wins over whatever class the markup carries. The entries themselves do not change. The cards-or-timeline threshold is the same one `../apply-branding/components/COMPONENTS.md` documents under "Choosing a timeline form" (4 or fewer → cards, more → timeline), this is that same decision, just DATA-driven instead of hand-authored.
 
-**5. `envForm` picks the environment rendering**, exactly as `milestoneForm` does:
-`"cards"` gives `.envchain`, `"timeline"` gives a `.vtimeline` of `envc` entries.
-The mount is `env-<key>` for both. Same threshold, same source rule.
+**5. `envForm` picks the environment rendering**, exactly as `milestoneForm` does: `"cards"` gives `.envchain`, `"timeline"` gives a `.vtimeline` of `envc` entries. The mount is `env-<key>` for both. Same threshold, same source rule.
 
-**6. Every `vtimeline` entry uses the shared four-field entry contract**
-(`lead`/`chip`/`title`/`note`/`cls`, see `../apply-branding/components/COMPONENTS.md`),
-whatever it describes. The renderer places them identically, so a new content
-type adapts by filling the same fields and needs no new CSS.
+**6. Every `vtimeline` entry uses the shared four-field entry contract** (`lead`/`chip`/`title`/`note`/`cls`, see `../apply-branding/components/COMPONENTS.md`), whatever it describes. The renderer places them identically, so a new content type adapts by filling the same fields and needs no new CSS.
 
-An entry may declare those names directly. The built-in mappers translate the
-friendlier `milestones` and `environments` shapes onto them, so existing DATA keeps
-working: a milestone's `d` fills `lead`, its `flag` fills `chip`; an environment's
-`name` fills `lead`, its `badge` fills `chip`.
+An entry may declare those names directly. The built-in mappers translate the friendlier `milestones` and `environments` shapes onto them, so existing DATA keeps working: a milestone's `d` fills `lead`, its `flag` fills `chip`; an environment's `name` fills `lead`, its `badge` fills `chip`.
 
 **7. Two rules the shape does not enforce:**
 
-- `cols[].s` and `cols[].e` are ISO dates and are **required**. The tooltip computes
-  start, end and elapsed weeks from them.
-- `rows[].st` must be exactly `Done`, `In progress`, `Planned` or `At risk`. The
-  count line and the tooltip chip match on the string.
+- `cols[].s` and `cols[].e` are ISO dates and are **required**. The tooltip computes start, end and elapsed weeks from them.
+- `rows[].st` must be exactly `Done`, `In progress`, `Planned` or `At risk`. The count line and the tooltip chip match on the string.
 
-The field-by-field contract for every key is documented in the header comment of
-`references/interactive.html`. Read it there rather than guessing.
+The field-by-field contract for every key is documented in the header comment of `references/interactive.html`. Read it there rather than guessing.
 
 ### What each component is for
 
@@ -179,46 +121,22 @@ The field-by-field contract for every key is documented in the header comment of
 
 ### The `sgantt` header sticks to the page
 
-`.sgantt` has **no height cap and no scrollport of its own by default**. The full
-grid always shows and the page is the vertical scroller. `.sg-head` is
-`position:sticky; top:56px`, so the column header pins just under the sticky nav
-as the reader scrolls the page.
+`.sgantt` has **no height cap and no scrollport of its own by default**. The full grid always shows and the page is the vertical scroller. `.sg-head` is `position:sticky; top:56px`, so the column header pins just under the sticky nav as the reader scrolls the page.
 
-That only holds while no overflow ancestor sits between the header and the page,
-because `position:sticky` resolves against the nearest scrollport. So the
-horizontal scrollbox is **conditional**: after each render, and on resize,
-`syncScrollbox()` measures the grid against its container and adds `.scrolls`
-(which applies `overflow-x:auto`) only when it genuinely overflows. On a wide
-`.wrap.full` desktop the grid fits, the class stays off, and the header sticks. On
-a narrow viewport the class goes on, the box scrolls sideways so the page never
-does, and the header stops sticking: `.sgantt.scrolls .sg-head` resets to
-`position:static`, because inside that scrollport `top:56px` would otherwise
-read as a dead band above the header. That is the accepted tradeoff, and it is the
-same one mobile already made.
+That only holds while no overflow ancestor sits between the header and the page, because `position:sticky` resolves against the nearest scrollport. So the horizontal scrollbox is **conditional**: after each render, and on resize, `syncScrollbox()` measures the grid against its container and adds `.scrolls` (which applies `overflow-x:auto`) only when it genuinely overflows. On a wide `.wrap.full` desktop the grid fits, the class stays off, and the header sticks. On a narrow viewport the class goes on, the box scrolls sideways so the page never does, and the header stops sticking: `.sgantt.scrolls .sg-head` resets to `position:static`, because inside that scrollport `top:56px` would otherwise read as a dead band above the header. That is the accepted tradeoff, and it is the same one mobile already made.
 
 Three details, all handled in `references/styles.css`:
 
-- Default overflow is `clip`, not `hidden` or `auto`. It still rounds the flush
-  header and band backgrounds at the corners, but does **not** create a scrollport,
-  which the other two would.
-- The header carries an opaque `background` and a `z-index` above the bars, which
-  sit in `position:relative` cells. It stays below the nav's z-index, so it slides
-  under the nav rather than over it.
+- Default overflow is `clip`, not `hidden` or `auto`. It still rounds the flush header and band backgrounds at the corners, but does **not** create a scrollport, which the other two would.
+- The header carries an opaque `background` and a `z-index` above the bars, which sit in `position:relative` cells. It stays below the nav's z-index, so it slides under the nav rather than over it.
 - Print unpins the header and drops `.scrolls`, so the full grid prints.
-- **The group bands do not stick.** Pinning them needs a second sticky layer offset
-  by the header's height, which is not fixed once a column label wraps to two
-  lines. Collapse-all and search handle long lists instead.
+- **The group bands do not stick.** Pinning them needs a second sticky layer offset by the header's height, which is not fixed once a column label wraps to two lines. Collapse-all and search handle long lists instead.
 
-**Coupling warning:** `top:56px` on `.sg-head` must match the nav height, and the
-conditional `.scrolls` class must keep its measurement. Give `.sgantt` an
-unconditional `overflow` or a `max-height` and the header silently stops sticking,
-because the box becomes the scrollport again.
+**Coupling warning:** `top:56px` on `.sg-head` must match the nav height, and the conditional `.scrolls` class must keep its measurement. Give `.sgantt` an unconditional `overflow` or a `max-height` and the header silently stops sticking, because the box becomes the scrollport again.
 
 ### Choosing between `gantt` and `sgantt`
 
-**This is the only place that decision is made.** Both are schedules over time, so
-"it is a timeline" does not settle it. `gantt` is defined in `../apply-branding/components/`;
-`sgantt` exists only here. Answer these instead:
+**This is the only place that decision is made.** Both are schedules over time, so "it is a timeline" does not settle it. `gantt` is defined in `../apply-branding/components/`; `sgantt` exists only here. Answer these instead:
 
 | Question | `gantt` | `sgantt` |
 |---|---|---|
@@ -228,17 +146,13 @@ because the box becomes the scrollport again.
 | Does one row span several units? | Rarely, one bar per row | Often, and adjacent cells merge into one bar |
 | Where does the markup come from? | Hand-written | Rendered from the DATA object |
 
-A phased delivery roadmap with four workstreams is `gantt`. A sprint plan with
-thirty features grouped by capability is `sgantt`.
+A phased delivery roadmap with four workstreams is `gantt`. A sprint plan with thirty features grouped by capability is `sgantt`.
 
 Do not put both in one report. Pick the one the content is.
 
 ### Milestones and environment chains: cards or timeline
 
-**This is the only place that decision is made for a delivery plan.** It is the
-same rule `../apply-branding/components/COMPONENTS.md` documents under "Choosing a
-timeline form" for hand-authored content, here it is DATA-driven via
-`milestoneForm`/`envForm` instead of picked by which markup you paste.
+**This is the only place that decision is made for a delivery plan.** It is the same rule `../apply-branding/components/COMPONENTS.md` documents under "Choosing a timeline form" for hand-authored content, here it is DATA-driven via `milestoneForm`/`envForm` instead of picked by which markup you paste.
 
 | Content | Entries | `milestoneForm` / `envForm` |
 |---|---|---|
@@ -247,21 +161,13 @@ timeline form" for hand-authored content, here it is DATA-driven via
 | Environments | 4 or fewer | `"cards"` (default) → `.envchain` |
 | Environments | More than 4 | `"timeline"` → `.vtimeline` with `envc e-*` entries |
 
-The cut is at 4 for the same reason in both cases: `.mstone-row` is an auto-fit
-grid with a 190px minimum and `.envcard` a 150px minimum, both inside the 920px
-`.wrap`, so a 5th entry wraps to a ragged second row or a lone banner card.
-**Never let either wrap.** If a set grows past 4, change the `Form` value, do not
-widen the container, and there is no vertical variant of `.envchain` specifically;
-past 4 it renders as the same `.vtimeline` the milestones use, environment colour
-riding the chip only.
+The cut is at 4 for the same reason in both cases: `.mstone-row` is an auto-fit grid with a 190px minimum and `.envcard` a 150px minimum, both inside the 920px `.wrap`, so a 5th entry wraps to a ragged second row or a lone banner card. **Never let either wrap.** If a set grows past 4, change the `Form` value, do not widen the container, and there is no vertical variant of `.envchain` specifically; past 4 it renders as the same `.vtimeline` the milestones use, environment colour riding the chip only.
 
-Both stay in the 920px `.wrap` in every form. Only the timeline block breaks out
-to `.wrap.full`, per "Container width" below.
+Both stay in the 920px `.wrap` in every form. Only the timeline block breaks out to `.wrap.full`, per "Container width" below.
 
 ### Edit mode honesty
 
-Edit mode changes nothing outside the browser tab. Say that in the edit note, and
-keep Export reachable whenever editing is on. Do not imply changes are saved.
+Edit mode changes nothing outside the browser tab. Say that in the edit note, and keep Export reachable whenever editing is on. Do not imply changes are saved.
 
 ---
 
@@ -270,62 +176,29 @@ keep Export reachable whenever editing is on. Do not imply changes are saved.
 Produce a single self-contained file with, in order:
 
 1. Google Fonts link (Inter only). Labels use the `--label` token, which maps to Inter: no mono typeface is sanctioned by the brand
-2. The style marker, `<style>/* @aperia report charts icons */</style>`,
-   with `charts` and `icons` present only when the report uses them. The
-   assemble script replaces it with `../apply-branding/brand/tokens.css`, then
-   `../apply-branding/components/base/styles.css`, then the optional toolkits, then
-   this skill's `references/styles.css`, last. Order matters throughout: each
-   later block wins on any name it shares with an earlier one, which is what
-   every component is written against. This skill's file supplies only
-   chrome, sgantt and `phases`, it does not redefine anything the base layer
-   already owns
+2. The style marker, `<style>/* @aperia report charts icons */</style>`, with `charts` and `icons` present only when the report uses them. The assemble script replaces it with `../apply-branding/brand/tokens.css`, then `../apply-branding/components/base/styles.css`, then the optional toolkits, then this skill's `references/styles.css`, last. Order matters throughout: each later block wins on any name it shares with an earlier one, which is what every component is written against. This skill's file supplies only chrome, sgantt and `phases`, it does not redefine anything the base layer already owns
 3. Sticky `nav`, exactly `56px` tall: inlined logo (left, Aperia Blue), desktop scroll-link strip (right), hamburger button (mobile)
 4. Mobile `nav-drawer` immediately after `</nav>`, set `position:fixed; top:56px`, hidden by default
 5. Gradient `hero`: eyebrow, title, subtitle, optional meta row, and the inlined `pattern-double` top-right. The hero `<em>` subtitle inside `<h1>` must **omit the em dash** and be in Title Case. Its size comes from the theme's `.hero h1 em` rule, not an inline style
 6. Content sections, each opening with a `sec-label` eyebrow naming the section, never numbered, then the `h2`
 7. A `dark-panel` and/or `cta-box` (both from `../apply-branding/components/`) for the recommendation and the ask, each with `pattern-single` top-right
 8. Footer on Aperia Blue with the white logo + `Report Title · Subtitle · Month Year`
-9. At the end of `<body>`, only the scripts the report actually needs: the
-   accordion script from `../apply-branding/components/base/emphasis.html` **if** it carries
-   a `concerns` accordion, the mobile nav drawer script from this skill's
-   `snippets.html` **if** it carries the drawer (it always should, paste only
-   one of these two, never both, since the shared script does not include the
-   drawer toggle and this skill's does not include the accordion toggle), and
-   for a delivery plan one final `<script>` holding your `DATA` object
-   followed by the render script pasted from `references/interactive.html`.
-   Do not ship a script for a component the report does not use
+9. At the end of `<body>`, only the scripts the report actually needs: the accordion script from `../apply-branding/components/base/emphasis.html` **if** it carries a `concerns` accordion, the mobile nav drawer script from this skill's `snippets.html` **if** it carries the drawer (it always should, paste only one of these two, never both, since the shared script does not include the drawer toggle and this skill's does not include the accordion toggle), and for a delivery plan one final `<script>` holding your `DATA` object followed by the render script pasted from `references/interactive.html`. Do not ship a script for a component the report does not use
 
-A skip link (`<a href="#main" class="skip-link">`) is the first element inside
-`<body>`, and the content wrapper carries `id="main"`.
+A skip link (`<a href="#main" class="skip-link">`) is the first element inside `<body>`, and the content wrapper carries `id="main"`.
 
 ### Container width
 
-Every section sits in `.wrap`, which caps content at 920px. That is the default,
-and it is right for prose, cards, stat rows, charts and ordinary tables. This is
-the only place the width decision is made.
+Every section sits in `.wrap`, which caps content at 920px. That is the default, and it is right for prose, cards, stat rows, charts and ordinary tables. This is the only place the width decision is made.
 
-The breakout is per component, never per section. A section keeps its heading,
-eyebrow, intro, milestones and every other block inside `.wrap`; only the wide
-component moves into a sibling `<div class="wrap full">` (full viewport width,
-same side padding) inside the same section, together with the chrome that
-belongs to it (its `sub-h`, toolbar, legend, counts and caption for an
-`sgantt`). Close the default `.wrap`, open `.wrap full` for the wide block,
-then reopen `.wrap` for what follows.
+The breakout is per component, never per section. A section keeps its heading, eyebrow, intro, milestones and every other block inside `.wrap`; only the wide component moves into a sibling `<div class="wrap full">` (full viewport width, same side padding) inside the same section, together with the chrome that belongs to it (its `sub-h`, toolbar, legend, counts and caption for an `sgantt`). Close the default `.wrap`, open `.wrap full` for the wide block, then reopen `.wrap` for what follows.
 
-A component earns the breakout only when its intrinsic minimum width does not
-fit the 848px of usable space inside `.wrap`, and that width comes from named
-columns that cannot be dropped. Decide by arithmetic, not by feel:
+A component earns the breakout only when its intrinsic minimum width does not fit the 848px of usable space inside `.wrap`, and that width comes from named columns that cannot be dropped. Decide by arithmetic, not by feel:
 
-- `sgantt`: minimum width is `--sg-labelw` (256) + `--sg-endw` (92) + `--sg-colw`
-  (104) per data column. That is `348 + 104n`, and `.wrap` leaves 848px usable, so
-  **5 or more columns needs `wrap full`**; 4 or fewer fits the default.
-- A comparison table wide enough to overflow 848px, or any component that would
-  otherwise scroll horizontally inside its own box on a desktop screen.
+- `sgantt`: minimum width is `--sg-labelw` (256) + `--sg-endw` (92) + `--sg-colw` (104) per data column. That is `348 + 104n`, and `.wrap` leaves 848px usable, so **5 or more columns needs `wrap full`**; 4 or fewer fits the default.
+- A comparison table wide enough to overflow 848px, or any component that would otherwise scroll horizontally inside its own box on a desktop screen.
 
-Never widen anything because it merely looks like it could use the room, and
-never put prose or a section heading in `wrap full`. At any width the wide
-component owns its own horizontal overflow; the page body never scrolls
-horizontally.
+Never widen anything because it merely looks like it could use the room, and never put prose or a section heading in `wrap full`. At any width the wide component owns its own horizontal overflow; the page body never scrolls horizontally.
 
 ### Mobile nav rules
 
@@ -336,64 +209,38 @@ horizontally.
 
 ### Type sizes come from the scale
 
-Sizes are the `--text-*` tokens in the pasted `:root`, taken from the Aperia Figma
-design system, ten steps: `xs` 12/16, `sm` 14/20, `base` 16/24, `md` 18/28,
-`lg` 20/32, `xl` 24/36, `2xl` 28/40, `3xl` 32/48, `4xl` 36/52, `5xl` 40/56.
-Use each with its paired `--leading-*`.
+Sizes are the `--text-*` tokens in the pasted `:root`, taken from the Aperia Figma design system, ten steps: `xs` 12/16, `sm` 14/20, `base` 16/24, `md` 18/28, `lg` 20/32, `xl` 24/36, `2xl` 28/40, `3xl` 32/48, `4xl` 36/52, `5xl` 40/56. Use each with its paired `--leading-*`.
 
 Three rules, all of them hard:
 
-- **Only tokens.** Never a raw px `font-size`, and never a new step. The ramp is
-  sanctioned in `../apply-branding/brand/BRAND.md`, so a new size is a change to that document.
-- **No tag-tied sizes.** A bare `h1`..`h6` rule sets weight, tracking and spacing,
-  never `font-size`. Size comes from the use site: a `.text-*` utility on the
-  element, or a component rule that references a token. Write
-  `<h2 class="text-2xl">`, not a global `h2 { font-size: ... }`.
-- **Nothing below `xs`.** Figma also holds 10/12 and 11/16; both are below the
-  12px floor and are print and Figma only.
+- **Only tokens.** Never a raw px `font-size`, and never a new step. The ramp is sanctioned in `../apply-branding/brand/BRAND.md`, so a new size is a change to that document.
+- **No tag-tied sizes.** A bare `h1`..`h6` rule sets weight, tracking and spacing, never `font-size`. Size comes from the use site: a `.text-*` utility on the element, or a component rule that references a token. Write `<h2 class="text-2xl">`, not a global `h2 { font-size: ... }`.
+- **Nothing below `xs`.** Figma also holds 10/12 and 11/16; both are below the 12px floor and are print and Figma only.
 
-If a role feels between two steps, take the nearer one and build the difference
-from weight, letter-spacing, case or color. The two display steps are responsive
-by `clamp()` built from step pairs, with the Figma mobile variants as the floors:
-`2xl` runs `clamp(lg, 3vw, 2xl)` and `5xl` runs `clamp(2xl, 4.4vw, 5xl)`, each named
-for its ceiling. Both ends are ramp steps, so a clamp never lands off-scale.
+If a role feels between two steps, take the nearer one and build the difference from weight, letter-spacing, case or color. The two display steps are responsive by `clamp()` built from step pairs, with the Figma mobile variants as the floors: `2xl` runs `clamp(lg, 3vw, 2xl)` and `5xl` runs `clamp(2xl, 4.4vw, 5xl)`, each named for its ceiling. Both ends are ramp steps, so a clamp never lands off-scale.
 
 ### Required structure rules
 
-- Every section opens with a `sec-label` eyebrow, plain text with no numbering;
-  nav links match every section `id`.
-- **No divider lines anywhere.** No `::after` hairline on the eyebrow, no rule
-  above a `part-head`, and no border between sections. Sections separate by
-  whitespace alone, on screen and in print.
-- Logical flow, default: Summary → Problem/Context → Options/Evidence → Decision
-  → Plan → Ask. The middle two stages exist to weigh options, so include them only
-  when there are options to weigh. A report that documents a decision already made
-  has nothing to put there.
-- Logical flow, delivery plan: Summary → the plans, one section each → Recommendation
-  → Ask. Use this whenever the content is a schedule rather than a proposal.
+- Every section opens with a `sec-label` eyebrow, plain text with no numbering; nav links match every section `id`.
+- **No divider lines anywhere.** No `::after` hairline on the eyebrow, no rule above a `part-head`, and no border between sections. Sections separate by whitespace alone, on screen and in print.
+- Logical flow, default: Summary → Problem/Context → Options/Evidence → Decision → Plan → Ask. The middle two stages exist to weigh options, so include them only when there are options to weigh. A report that documents a decision already made has nothing to put there.
+- Logical flow, delivery plan: Summary → the plans, one section each → Recommendation → Ask. Use this whenever the content is a schedule rather than a proposal.
 - No empty cards or lorem. Write real content from what the user gave you.
 - All `h2` and `h3` headings in Title Case.
 - Give every inlined `<linearGradient>` and `clipPath` a **unique `id`**.
 
-Component-level rules (badge/callout sentiment colors, comparison-table `.hl`,
-accordion body background, and every other component convention) live in
-`../apply-branding/components/COMPONENTS.md` and are not repeated here.
+Component-level rules (badge/callout sentiment colors, comparison-table `.hl`, accordion body background, and every other component convention) live in `../apply-branding/components/COMPONENTS.md` and are not repeated here.
 
 ### Fixed design decisions specific to this skill
 
-`../apply-branding/components/COMPONENTS.md` covers the shared fixed decisions (no
-colored border accents, `--radius`/`--radius-pill` only, eyebrow-vs-heading
-hierarchy). Two more apply only to the sgantt subsystem, which exists only here:
+`../apply-branding/components/COMPONENTS.md` covers the shared fixed decisions (no colored border accents, `--radius`/`--radius-pill` only, eyebrow-vs-heading hierarchy). Two more apply only to the sgantt subsystem, which exists only here:
 
-- The `.sgantt` box has **no padding**: the header row and group bands sit flush
-  with the box edges, and the edge inset lives on the first and last cells.
+- The `.sgantt` box has **no padding**: the header row and group bands sit flush with the box edges, and the edge inset lives on the first and last cells.
 - Timeline bars (`.sg-blk`) are **14px** tall.
 
 ### Responsive breakpoint (≤700px)
 
-Every component the shared layer owns collapses per its own responsive block
-(see `../apply-branding/components/COMPONENTS.md` and `../apply-branding/components/base/styles.css`/`charts.css`).
-This skill adds three of its own, plus the one documented exception:
+Every component the shared layer owns collapses per its own responsive block (see `../apply-branding/components/COMPONENTS.md` and `../apply-branding/components/base/styles.css`/`charts.css`). This skill adds three of its own, plus the one documented exception:
 
 | Component | Mobile behaviour |
 |---|---|
@@ -406,24 +253,11 @@ This skill adds three of its own, plus the one documented exception:
 
 ### Printing
 
-`../apply-branding/components/COMPONENTS.md`'s print rules already cover every
-component it owns (dark surfaces repaint solid, cards/callouts/rows avoid
-breaking inside). This skill adds the page setup and its own chrome/sgantt
-specifics:
+`../apply-branding/components/COMPONENTS.md`'s print rules already cover every component it owns (dark surfaces repaint solid, cards/callouts/rows avoid breaking inside). This skill adds the page setup and its own chrome/sgantt specifics:
 
-- **`@page` sizing**: A4 portrait by default, with a named `wide` landscape
-  page for `.wrap.full` blocks (an `sgantt` at 5+ columns). Browsers that
-  ignore named pages fall back to portrait, where the print stylesheet's
-  tightened `--sg-*` geometry still fits. Do not reach for `transform:scale`:
-  it shrinks the painted box but not the page it paginates into, so a scaled
-  grid still breaks and clips.
-- **Hero and footer print as solid Aperia Blue**, the same `print-color-adjust:exact`
-  treatment `dark-panel`/`cta-box` use, since gradients are the fragile part,
-  not flat fills.
-- **Every sgantt row prints.** A `beforeprint` handler (in `references/interactive.html`)
-  clears each plan's search box and expands its collapsed groups; `afterprint`
-  restores both, so a printed plan never silently omits filtered or collapsed
-  rows while the reader's on-screen state survives.
+- **`@page` sizing**: A4 portrait by default, with a named `wide` landscape page for `.wrap.full` blocks (an `sgantt` at 5+ columns). Browsers that ignore named pages fall back to portrait, where the print stylesheet's tightened `--sg-*` geometry still fits. Do not reach for `transform:scale`: it shrinks the painted box but not the page it paginates into, so a scaled grid still breaks and clips.
+- **Hero and footer print as solid Aperia Blue**, the same `print-color-adjust:exact` treatment `dark-panel`/`cta-box` use, since gradients are the fragile part, not flat fills.
+- **Every sgantt row prints.** A `beforeprint` handler (in `references/interactive.html`) clears each plan's search box and expands its collapsed groups; `afterprint` restores both, so a printed plan never silently omits filtered or collapsed rows while the reader's on-screen state survives.
 
 ### Reference files
 
@@ -437,9 +271,7 @@ specifics:
 
 ## Checklist before delivering
 
-Run **all three**: this list, `../apply-branding/components/COMPONENTS.md`'s own
-checklist for every component you used from it, and the Application
-Checklist in `../apply-branding/brand/BRAND.md`.
+Run **all three**: this list, `../apply-branding/components/COMPONENTS.md`'s own checklist for every component you used from it, and the Application Checklist in `../apply-branding/brand/BRAND.md`.
 
 ### Chrome and page-level, always applies
 
@@ -477,8 +309,4 @@ Checklist in `../apply-branding/brand/BRAND.md`.
 - [ ] `sgantt` has no `max-height` and no unconditional `overflow`; `.scrolls` is applied by measurement only, and `.sg-head` `top` matches the nav height
 - [ ] Milestone sets of more than 4 use `vtimeline`; no `mstone-row` wraps to a second row
 - [ ] Environment chains of more than 4 render as a `vtimeline`, not a wrapped or vertical `envchain`
-- [ ] The `wrap full` threshold was recomputed against the current `--sg-colw`,
-      not assumed: an `sgantt` needs `wrap full` when
-      `--sg-labelw + --sg-endw + (--sg-colw × columns) > 848`. At today's
-      256 + 92 + 104 that is `348 + 104n > 848`, so 5 or more columns. Change the
-      token and redo the sum.
+- [ ] The `wrap full` threshold was recomputed against the current `--sg-colw`, not assumed: an `sgantt` needs `wrap full` when `--sg-labelw + --sg-endw + (--sg-colw × columns) > 848`. At today's 256 + 92 + 104 that is `348 + 104n > 848`, so 5 or more columns. Change the token and redo the sum.

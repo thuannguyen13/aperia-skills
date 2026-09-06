@@ -2,8 +2,7 @@
 
 ## Overview
 
-A Claude plugin with three skills that produce on-brand Aperia output, built on
-one shared brand and component layer. Built from Aperia Brand Guidelines v1.0.
+A Claude plugin with three skills that produce on-brand Aperia output, built on one shared brand and component layer. Built from Aperia Brand Guidelines v1.0.
 
 | Skill | Invoke as | Output |
 |---|---|---|
@@ -11,11 +10,7 @@ one shared brand and component layer. Built from Aperia Brand Guidelines v1.0.
 | Create slides | `/aperia:create-slides` | Self-contained HTML deck that runs in the browser |
 | Apply branding | `/aperia:apply-branding` | Anything else in the Aperia look: a page, an email, a dashboard, a graphic |
 
-The brand layer (palette, typography, logo rules, the parallelogram element) and
-the component layer (cards, badges, callouts, tables, a chart toolkit, icons,
-milestone and status timelines) live inside the `apply-branding` skill, and the
-other two read them from there, so the same piece looks the same in a report,
-a deck or a page.
+The brand layer (palette, typography, logo rules, the parallelogram element) and the component layer (cards, badges, callouts, tables, a chart toolkit, icons, milestone and status timelines) live inside the `apply-branding` skill, and the other two read them from there, so the same piece looks the same in a report, a deck or a page.
 
 ## How to install
 
@@ -45,5 +40,4 @@ Invoke a skill by name, then describe what you want:
 
 ## Maintaining
 
-Changing the brand, the validation rules, and the repo conventions are covered
-in [MAINTAINING.md](MAINTAINING.md).
+Changing the brand, the validation rules, and the repo conventions are covered in [MAINTAINING.md](MAINTAINING.md).

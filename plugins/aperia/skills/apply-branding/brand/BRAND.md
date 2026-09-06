@@ -15,9 +15,7 @@
 > - `assets/aperia-logo.svg`, `assets/pattern-single.svg`, `assets/pattern-double.svg`
 > - `DEVIATIONS.md`: audited gaps between this guideline and what ships here
 
-Apply Aperia's visual identity to any artifact: presentations, documents, spreadsheets,
-HTML pages, charts, and social/banner assets. This document is the **brand layer**. It
-defines what things look like. The skill that invoked it defines how the artifact is built.
+Apply Aperia's visual identity to any artifact: presentations, documents, spreadsheets, HTML pages, charts, and social/banner assets. This document is the **brand layer**. It defines what things look like. The skill that invoked it defines how the artifact is built.
 
 
 ---
@@ -28,8 +26,7 @@ Pantone and CMYK are for print and promotional items. **RGB/HEX are for web and 
 
 ### Core palette
 
-**Digital values live in `tokens.css`, not here.** This table carries what a
-stylesheet cannot: the print equivalents and the role each color plays.
+**Digital values live in `tokens.css`, not here.** This table carries what a stylesheet cannot: the print equivalents and the role each color plays.
 
 | Name | Token | Pantone | CMYK | Role |
 |---|---|---|---|---|
@@ -65,11 +62,7 @@ Ensure high contrast between type and its background in every composition. Do no
 
 - Gradients use **only** palette colors (e.g. Aperia Blue → Dark Blue, White → Light Blue).
 - Charts: build series from Aperia Blue → Dark Blue → Sapphire Blue → Sky Blue → Light Blue, then neutrals. Never introduce red/green/amber except for genuine semantic status, and keep those minimal.
-- **No colored border accents on cards or panels.** A card keeps its neutral
-  hairline edge. Status and identity ride markers, chips and type: a status dot,
-  a labelled chip, a colored heading. A tinted or colored border edge reads as
-  templated decoration rather than as information, and it duplicates a signal
-  the content already carries.
+- **No colored border accents on cards or panels.** A card keeps its neutral hairline edge. Status and identity ride markers, chips and type: a status dot, a labelled chip, a colored heading. A tinted or colored border edge reads as templated decoration rather than as information, and it duplicates a signal the content already carries.
 - In `python-pptx` / `openpyxl`, convert HEX to `RGBColor(0x00, 0x2F, 0x67)` form.
 
 ---
@@ -85,45 +78,25 @@ Ensure high contrast between type and its background in every composition. Do no
 - **Never underline** text or headlines.
 - Build hierarchy with different **sizes/scales and weights**: big, strong headlines against smaller type. Inter Medium suits pull quotes and large paragraphs.
 - Print minimum type size: **5pt**.
-- **Minimum on-screen type size: `--min-size`.** Nothing renders below it, including
-  micro-labels, badges, tag pills, chart legends, axis ticks, captions and footnotes.
-  Where a label needs to read as subordinate at that size, build that from weight,
-  letter-spacing, case and color, never by going smaller.
+- **Minimum on-screen type size: `--min-size`.** Nothing renders below it, including micro-labels, badges, tag pills, chart legends, axis ticks, captions and footnotes. Where a label needs to read as subordinate at that size, build that from weight, letter-spacing, case and color, never by going smaller.
 
 ### Type scale
 
-The ramp below is the Aperia Figma design system scale and is the sanctioned set of
-sizes. Adding a step is a change to this document, not a local decision.
+The ramp below is the Aperia Figma design system scale and is the sanctioned set of sizes. Adding a step is a change to this document, not a local decision.
 
-Token names are **size-semantic, never role names**, and no size is tied to an
-`h1`..`h6` tag. A heading gets its size from a token applied at the use site, so the
-same step can serve a heading in one place and a number in another.
+Token names are **size-semantic, never role names**, and no size is tied to an `h1`..`h6` tag. A heading gets its size from a token applied at the use site, so the same step can serve a heading in one place and a number in another.
 
-**The sizes live in `tokens.css`, not here.** Ten steps, `--text-xs` through
-`--text-5xl`, each with the paired `--leading-*`. Use them together; a size
-without its leading is a bug, not a choice.
+**The sizes live in `tokens.css`, not here.** Ten steps, `--text-xs` through `--text-5xl`, each with the paired `--leading-*`. Use them together; a size without its leading is a bug, not a choice.
 
-The ramp rises in roughly 1.1x to 1.2x steps and is deliberately fine-grained
-rather than merged, because it is the shared reference for every skill and has
-to cover editorial, data and display type without pushing a component onto a
-step that does not fit it.
+The ramp rises in roughly 1.1x to 1.2x steps and is deliberately fine-grained rather than merged, because it is the shared reference for every skill and has to cover editorial, data and display type without pushing a component onto a step that does not fit it.
 
-**Two Figma steps are not in the web ramp.** The design system also holds 10/12 and
-11/16. Both fall below the on-screen minimum above, so they stay print and
-Figma only and the web ramp starts at `xs`.
+**Two Figma steps are not in the web ramp.** The design system also holds 10/12 and 11/16. Both fall below the on-screen minimum above, so they stay print and Figma only and the web ramp starts at `xs`.
 
-**The 36 and 40 leadings are derived**, not taken from Figma, which stops at 32/48.
-They continue the ramp's +4 leading progression. Confirm them with the designer
-before treating them as final.
+**The 36 and 40 leadings are derived**, not taken from Figma, which stops at 32/48. They continue the ramp's +4 leading progression. Confirm them with the designer before treating them as final.
 
-**Responsive headings** are clamped between two ramp steps, never off-scale values.
-The two display utilities clamp between ramp steps and are named for their
-ceiling: `2xl` runs 20/32 to 28/40, and `5xl` runs 28/40 to 40/56.
+**Responsive headings** are clamped between two ramp steps, never off-scale values. The two display utilities clamp between ramp steps and are named for their ceiling: `2xl` runs 20/32 to 28/40, and `5xl` runs 28/40 to 40/56.
 
-The `create-slides` skill is the exception: its slide faces are measured in canvas units on
-a 1920x1080 box that is scaled to fit the viewport, so it maps this ramp onto that
-canvas with 19.5px as its own floor, which holds the on-screen minimum down to a 1180px
-viewport.
+The `create-slides` skill is the exception: its slide faces are measured in canvas units on a 1920x1080 box that is scaled to fit the viewport, so it maps this ramp onto that canvas with 19.5px as its own floor, which holds the on-screen minimum down to a 1180px viewport.
 
 ### Case
 

@@ -13,13 +13,7 @@
 > - `charts/styles.css` plus `charts/trend.html`, `compare.html`, `proportion.html`, `intensity.html`, load only if used. Same **File** column.
 > - `icons/styles.css` / `icons/index.html` / `icons/icon.py`: Lucide icons (MIT), 2,000+ available, fetched from the Lucide CDN on demand, see "Icon toolkit" below.
 
-Everything here is static, hand-authored markup plus CSS, with one
-exception: icons are generated on demand by a small script
-(`icons/icon.py`) rather than pasted from a fixed list, see "Icon
-toolkit" below. Nothing here is a DATA object or has anything to keep in
-sync. It carries no page chrome (nav, hero, footer) and no data-driven
-grouped-Gantt subsystem (sgantt), those are `create-report`-specific and
-documented in that skill's own files.
+Everything here is static, hand-authored markup plus CSS, with one exception: icons are generated on demand by a small script (`icons/icon.py`) rather than pasted from a fixed list, see "Icon toolkit" below. Nothing here is a DATA object or has anything to keep in sync. It carries no page chrome (nav, hero, footer) and no data-driven grouped-Gantt subsystem (sgantt), those are `create-report`-specific and documented in that skill's own files.
 
 ## How a skill consumes this layer
 
@@ -64,25 +58,11 @@ documented in that skill's own files.
 
 ## Icon toolkit (`icons/`)
 
-**[Lucide](https://lucide.dev)** (MIT license, free to use and redistribute,
-no restriction to work around), the same icon set `create-slides` uses. Not
-a fixed catalog: nothing is bundled. `icons/icon.py` fetches any of the
-2,000+ icons from the Lucide CDN on first use, pinned to one release and
-cached locally, and emits inline SVG by name,
-`python3 icons/icon.py shield-check`, or `--search alert` to find a slug.
-`create-slides/scripts/icon.py` is a thin wrapper over this script, so both
-skills draw from one icon set. Without network the script says so and exits;
-leave the icon out, it is never the only signal.
+**[Lucide](https://lucide.dev)** (MIT license, free to use and redistribute, no restriction to work around), the same icon set `create-slides` uses. Not a fixed catalog: nothing is bundled. `icons/icon.py` fetches any of the 2,000+ icons from the Lucide CDN on first use, pinned to one release and cached locally, and emits inline SVG by name, `python3 icons/icon.py shield-check`, or `--search alert` to find a slug. `create-slides/scripts/icon.py` is a thin wrapper over this script, so both skills draw from one icon set. Without network the script says so and exits; leave the icon out, it is never the only signal.
 
-Every icon is stroke-based (`fill="none" stroke="currentColor"`) and sizes
-at `1em`, so it inherits color and size from wherever it sits (see the usage
-examples at the top of `icons/index.html`); recolor it the way you'd recolor text,
-never by editing the path data or adding a fill.
+Every icon is stroke-based (`fill="none" stroke="currentColor"`) and sizes at `1em`, so it inherits color and size from wherever it sits (see the usage examples at the top of `icons/index.html`); recolor it the way you'd recolor text, never by editing the path data or adding a fill.
 
-`icons/index.html` lists a short set of commonly useful slugs as a starting point
-(status/feedback, navigation, objects, people, data/trend), it is not the
-full set. Run the script's `--search` for anything not listed there before
-concluding Lucide doesn't have it; with 2,000+ icons it almost always does.
+`icons/index.html` lists a short set of commonly useful slugs as a starting point (status/feedback, navigation, objects, people, data/trend), it is not the full set. Run the script's `--search` for anything not listed there before concluding Lucide doesn't have it; with 2,000+ icons it almost always does.
 
 - **An icon is a supplement to a color/label, never a replacement for one.** Status still rides the badge/callout/marker color system already documented elsewhere in this file; an icon just adds a recognizable shape next to it (see the `callout amber` example in `icons/index.html`, which keeps `.amber`'s color and adds `triangle-alert` beside it, rather than the icon carrying the meaning alone).
 - **Don't hand-write or guess at path data.** Always generate the SVG from the script. A hand-drawn "close enough" icon won't match Lucide's grid or stroke weight.
@@ -90,14 +70,7 @@ concluding Lucide doesn't have it; with 2,000+ icons it almost always does.
 
 ## Chart toolkit
 
-One category, whatever the underlying geometry, a bar, a curve, an arc and a
-grid square are all still just a chart. Everything through `bchart`/`stack`/
-`tier-wrap` lives in `base/styles.css` (already loaded in step 2 above).
-Everything whose File column names a `charts/` file also needs `charts/styles.css`,
-loaded per step 7 before use. That
-split is a file-loading convenience only (no report needs a radar chart, so
-it isn't force-loaded into every one); it is not a second category, and
-nothing below treats it as one.
+One category, whatever the underlying geometry, a bar, a curve, an arc and a grid square are all still just a chart. Everything through `bchart`/`stack`/ `tier-wrap` lives in `base/styles.css` (already loaded in step 2 above). Everything whose File column names a `charts/` file also needs `charts/styles.css`, loaded per step 7 before use. That split is a file-loading convenience only (no report needs a radar chart, so it isn't force-loaded into every one); it is not a second category, and nothing below treats it as one.
 
 | Content type | Component | File |
 |---|---|---|
@@ -124,20 +97,9 @@ nothing below treats it as one.
 | A single number plus its recent trend | `spark-card` | `charts/trend.html` |
 | Intensity across two categorical axes (e.g., time × day) | `heatmap` | `charts/intensity.html` |
 
-**Pie and donut are sanctioned, but for a narrow job**: a part-to-whole story
-with at most 5 slices, where a circle is what the audience expects (an
-exec-summary "here's the mix" moment), not a place precise comparison
-matters. Past 5 categories, or whenever two slices are close enough in size
-that the reader needs to compare them precisely, angles stop being legible,
-group the long tail into one "Other" slice (see the donut example in
-`charts/proportion.html`) or reach for `stack`/`bchart` instead, both of which compare
-more precisely than a pie ever will. `gauge-card` is a different job
-entirely and is not a pie/donut substitute: it shows one value against its
-own min-max range, never a categorical breakdown.
+**Pie and donut are sanctioned, but for a narrow job**: a part-to-whole story with at most 5 slices, where a circle is what the audience expects (an exec-summary "here's the mix" moment), not a place precise comparison matters. Past 5 categories, or whenever two slices are close enough in size that the reader needs to compare them precisely, angles stop being legible, group the long tail into one "Other" slice (see the donut example in `charts/proportion.html`) or reach for `stack`/`bchart` instead, both of which compare more precisely than a pie ever will. `gauge-card` is a different job entirely and is not a pie/donut substitute: it shows one value against its own min-max range, never a categorical breakdown.
 
-**Skills may narrow this further.** `create-report` bans pie charts outright
-(see that skill's own rules), this toolkit's ≤5-slice allowance is the
-permissive default, not a floor every consumer must offer.
+**Skills may narrow this further.** `create-report` bans pie charts outright (see that skill's own rules), this toolkit's ≤5-slice allowance is the permissive default, not a floor every consumer must offer.
 
 ### Chart rules
 
@@ -158,8 +120,7 @@ permissive default, not a floor every consumer must offer.
 
 ## The entry contract (mstone-row / vtimeline / htimeline / envchain)
 
-`mstone-row`, `vtimeline` and `htimeline` all render the same conceptual
-entry, whatever it describes, a milestone, an environment, a step:
+`mstone-row`, `vtimeline` and `htimeline` all render the same conceptual entry, whatever it describes, a milestone, an environment, a step:
 
 | Field | Holds |
 |---|---|
@@ -169,14 +130,7 @@ entry, whatever it describes, a milestone, an environment, a step:
 | note / m-note / vt-note / ht-note | The body line |
 | cls | Status: `done` `risk` `est` (nothing = "ahead", the default blue), plus `envc e-dev`/`e-qa`/`e-uat`/`e-stag`/`e-prod` for an environment entry |
 
-Status rides a three-state marker so no legend is needed: blue for anything
-ahead, amber for risk or an estimated date (`est` also hollows the marker and
-dashes the connecting line), green for done or the final live environment.
-An environment's identity rides its chip only, never the marker, never a
-colored card edge. Every skill that renders one of these, including
-`create-report`'s DATA-driven delivery plans, which render the same classes
-from a `DATA` object instead of hand-authored markup, uses this exact same
-contract, so content written for one drops into the other without reshaping.
+Status rides a three-state marker so no legend is needed: blue for anything ahead, amber for risk or an estimated date (`est` also hollows the marker and dashes the connecting line), green for done or the final live environment. An environment's identity rides its chip only, never the marker, never a colored card edge. Every skill that renders one of these, including `create-report`'s DATA-driven delivery plans, which render the same classes from a `DATA` object instead of hand-authored markup, uses this exact same contract, so content written for one drops into the other without reshaping.
 
 ## Choosing a timeline form
 
@@ -190,17 +144,9 @@ This is the only place this decision is made, every row above defers here.
 | DEV→PROD promotion path, ≤4 environments? | `envchain` |
 | DEV→PROD promotion path, 5+ environments? | `vtimeline` or `htimeline` with `envc e-*` entries, never a wrapped or vertical `envchain` |
 
-`mstone-row` wraps to a ragged second row past 4 entries (it's an auto-fit
-grid with a 190px minimum inside a 920px `.wrap`), that wrap is the defect
-these rules exist to prevent. If a set grows past its form's limit, change
-the component, never widen the container.
+`mstone-row` wraps to a ragged second row past 4 entries (it's an auto-fit grid with a 190px minimum inside a 920px `.wrap`), that wrap is the defect these rules exist to prevent. If a set grows past its form's limit, change the component, never widen the container.
 
-`htimeline` is the sideways form: each `.ht-item` takes an equal flex share
-of the row, so more than about 6 entries or entries carrying real body text
-crowd each other under `.wrap`'s 920px cap. When in doubt, prefer
-`vtimeline`, it degrades gracefully at any length, `htimeline` does not.
-`htimeline` needs no separate mobile markup: at ≤700px it collapses onto the
-same vertical rail `vtimeline` uses, handled entirely by `base/styles.css`.
+`htimeline` is the sideways form: each `.ht-item` takes an equal flex share of the row, so more than about 6 entries or entries carrying real body text crowd each other under `.wrap`'s 920px cap. When in doubt, prefer `vtimeline`, it degrades gracefully at any length, `htimeline` does not. `htimeline` needs no separate mobile markup: at ≤700px it collapses onto the same vertical rail `vtimeline` uses, handled entirely by `base/styles.css`.
 
 ## Timeline / process rules (not charts, but the same "never fake it" spirit)
 

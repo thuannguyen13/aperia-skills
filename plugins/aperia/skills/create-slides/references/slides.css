@@ -1,6 +1,6 @@
 /* =====================================================================
    APERIA HTML SLIDES: THEME
-   Injected by ../references/ui-components/assemble.py after ../references/brand/tokens.css,
+   Injected by ../apply-branding/ui-components/assemble.py after ../apply-branding/brand/tokens.css,
    which it reads for every palette, weight and type value. Nothing here
    restates a brand value; the deck marker is a style element holding the
    comment `@aperia slides`.
@@ -20,9 +20,9 @@
    ===================================================================== */
 
 :root {
-  /* The palette comes from ../references/brand/tokens.css and is not repeated here.
+  /* The palette comes from ../apply-branding/brand/tokens.css and is not repeated here.
      Two aliases for names the brand layer spells differently, same as
-     ../references/ui-components/base/styles.css. */
+     ../apply-branding/ui-components/base/styles.css. */
   --sapphire:var(--sapphire-blue); --med-gray:var(--medium-gray);
   --sans:var(--font-sans); --label:var(--sans); /* no mono typeface: BRAND.md sanctions Inter only */
   /* mapped roles (light slide). --fg is the one deliberate override of the
@@ -37,7 +37,7 @@
   --ov:0.1733;        /* thumbnail scale in overview mode */
   /* Shape in canvas units. Both override the screen-px brand radii on purpose:
      15 canvas units is 8px at the scale a 1920 canvas shows on a laptop.
-     Recorded in validate.py OVERRIDES. --radius-pill stays the brand value. */
+     Recorded as an override in the repo validator. --radius-pill stays the brand value. */
   --radius:15px;        /* cards, panels, stat cards, chart blocks */
   --radius-sm:7.5px;    /* bars, swatches, small chips             */
 
@@ -63,10 +63,10 @@
      Leadings stay unitless ratios at the use site. A ratio already scales with
      the canvas, where a px leading would have to be mapped a second time.
 
-     The brand steps themselves come from ../references/brand/tokens.css. Each tier
+     The brand steps themselves come from ../apply-branding/brand/tokens.css. Each tier
      below defines only the steps this theme uses. A step that is missing here
      maps by the same factor, it is not a new size: adding a step to the ramp
-     itself is a change to ../references/brand/BRAND.md, never a local decision. */
+     itself is a change to ../apply-branding/brand/BRAND.md, never a local decision. */
   --canvas-k:  1.625;   /* slide face: brand step x 1.625 */
   --canvas-kd: 3.25;    /* display:    brand step x 3.25  */
 

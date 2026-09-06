@@ -13,23 +13,23 @@ Builds a presentation as **one self-contained HTML file**.
 
 Before writing a line of HTML:
 
-1. Read **`../references/brand/BRAND.md`** in full, especially Color, Typography, Logo,
+1. Read **`../apply-branding/brand/BRAND.md`** in full, especially Color, Typography, Logo,
    Graphic Element, and Format Notes.
 2. Read **`references/snippets.html`** (the layouts and the deck script) and
    skim **`references/slides.css`** for the class names and the type tokens.
    Do not paste either stylesheet. The deck carries one marker,
    `<style>/* @aperia slides */</style>`, and
-   `../references/ui-components/assemble.py` fills it with `../references/brand/tokens.css`
+   `../apply-branding/ui-components/assemble.py` fills it with `../apply-branding/brand/tokens.css`
    and `slides.css`, in that order, byte for byte. `slides.css` reads the
    palette and the type ramp from the tokens and maps them onto the canvas.
 
 **Do not work from memory of the palette or the type rules.** If a value is not
 in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
 
-Brand assets are at `../references/brand/assets/`. The rules below cover what is
+Brand assets are at `../apply-branding/brand/assets/`. The rules below cover what is
 specific to slides; everything about the identity itself lives in `BRAND.md`.
 
-**Design language follows `../references/ui-components/COMPONENTS.md`.** That shared
+**Design language follows `../apply-branding/ui-components/COMPONENTS.md`.** That shared
 reference layer is the canonical source for how a component *means*
 something, independent of the canvas-unit vs. screen-px difference: which
 color a badge or callout carries for which sentiment, that status rides
@@ -38,10 +38,10 @@ chart-series order (aperia-blue, dark-blue, sapphire, sky-blue, light-blue),
 and the chart-selection logic (a bar chart needs a real quantitative axis, a
 part-to-whole story stays within a slice budget, never invent a percentage
 to force a chart). `slides.css` already implements all of this in canvas
-units, reading the same brand tokens `../references/ui-components/base/styles.css`
+units, reading the same brand tokens `../apply-branding/ui-components/base/styles.css`
 reads on screen, not a reinterpretation.
 When the two diverge (this deck caps a donut at 3 segments where
-`../references/ui-components/COMPONENTS.md` allows 5, since a slide is read from
+`../apply-branding/ui-components/COMPONENTS.md` allows 5, since a slide is read from
 across a room in a few seconds), that is a deliberate, more conservative
 choice for the presentation context, not a gap to close.
 
@@ -197,7 +197,7 @@ that is why they are separate.
 
 ### Palette: how the brand colors are used on a slide
 
-The values live in `../references/brand/BRAND.md` and `tokens.css`. Take them from
+The values live in `../apply-branding/brand/BRAND.md` and `tokens.css`. Take them from
 there. What is specific to slides is the role each one plays:
 
 | Token | Role on a slide |
@@ -250,16 +250,16 @@ exclamation marks.
 
 ## Brand assets
 
-Three real SVGs live in `../references/brand/assets/`. They are **defined once in a sprite** at the
+Three real SVGs live in `../apply-branding/brand/assets/`. They are **defined once in a sprite** at the
 top of `<body>` and referenced with `<use>` on each slide, so the path data
 appears once, and there is no gradient-id collision anywhere in the file. The
 sprite is in `references/snippets.html`; paste it as-is.
 
 | Symbol | Source | Where |
 |---|---|---|
-| `#ap-shape-double` | `../references/brand/assets/pattern-double.svg` | Cover and closing slides |
-| `#ap-shape-single` | `../references/brand/assets/pattern-single-portrait.svg` | Sections, statements, dark in-body slides |
-| `#ap-logo` | `../references/brand/assets/aperia-logo.svg` | Cover (white) and every content slide footer |
+| `#ap-shape-double` | `../apply-branding/brand/assets/pattern-double.svg` | Cover and closing slides |
+| `#ap-shape-single` | `../apply-branding/brand/assets/pattern-single-portrait.svg` | Sections, statements, dark in-body slides |
+| `#ap-logo` | `../apply-branding/brand/assets/aperia-logo.svg` | Cover (white) and every content slide footer |
 
 `pattern-single-portrait.svg` is the full-bleed portrait rendition of the single
 parallelogram. It is not the same file as `pattern-single.svg`, which is the
@@ -299,7 +299,7 @@ other way, never distort, rotate, or add effects.
 ## Icons
 
 Lucide line icons, fetched from the Lucide CDN on demand by the shared
-`../references/ui-components/icons/icon.py`; nothing is bundled. If the fetch fails,
+`../apply-branding/ui-components/icons/icon.py`; nothing is bundled. If the fetch fails,
 leave the icon out. Browse at https://lucide.dev/icons/
 and use the exact slug.
 
@@ -354,7 +354,7 @@ file. Pick the form that matches the data.
   gets the same single `.insight` line, saying which of the numbers is the
   argument. `qa.py` does not check this one, so it is on you.
 - **No pie charts.** A pie is only legible with 2 to 3 near-equal slices; use the
-  donut for that case and the stacked bar for everything else. (`../references/ui-components/COMPONENTS.md`
+  donut for that case and the stacked bar for everything else. (`../apply-branding/ui-components/COMPONENTS.md`
   allows a plain pie too, capped at 5 slices, for freeform pages read up close;
   a slide is read from across a room, so this deck stays with the donut-only,
   3-segment ceiling `qa.py` enforces, narrower, not a different rule.)
@@ -435,9 +435,9 @@ a collision with the footer, or an icon crowding a heading. Check in particular:
   sprite, every layout, every chart, and the deck script. Read this first,
   copy from it.
 - `references/slides.css`: the complete slide theme. Injected by the assemble
-  script after `../references/brand/tokens.css`; skim it for class names, never paste it.
-- `../references/ui-components/assemble.py`: fills the marker. Required step.
-- `../references/brand/assets/`: `aperia-logo.svg`, `pattern-single-portrait.svg`,
+  script after `../apply-branding/brand/tokens.css`; skim it for class names, never paste it.
+- `../apply-branding/ui-components/assemble.py`: fills the marker. Required step.
+- `../apply-branding/brand/assets/`: `aperia-logo.svg`, `pattern-single-portrait.svg`,
   `pattern-double.svg` if you need raw path data.
 - `scripts/icon.py`: emit inline icon markup, a wrapper over the shared fetcher.
 - `scripts/qa.py`: the required checker.
@@ -451,13 +451,13 @@ covers what it cannot see.
 - [ ] `assemble.py` was run after the last edit; nothing was typed or edited
       inside the injected `<style data-aperia>` block
 - [ ] Every color traces to `tokens.css`, or to a recorded entry in
-      `../references/brand/DEVIATIONS.md`
+      `../apply-branding/brand/DEVIATIONS.md`
 - [ ] Inter with Arial fallback; nothing underlined; no justified text
 - [ ] Every `font-size` comes from a token in the `slides.css` Type scale
       block, no raw px anywhere
 - [ ] No `font-size` below 12px: `--slide-text-xs` (19.5px in canvas units) is
       the floor on a slide face, `--text-xs` (12px) for `.ui-*` deck chrome
-- [ ] Contrast pairs from the approved combinations in `../references/brand/BRAND.md`
+- [ ] Contrast pairs from the approved combinations in `../apply-branding/brand/BRAND.md`
       on every dark slide
 - [ ] Logo Aperia Blue on light, white on dark, nothing else; undistorted;
       clear space respected
@@ -467,7 +467,7 @@ covers what it cannot see.
 - [ ] Ctrl/Cmd+P gives one slide per page, no blanks, no clipped edges
 - [ ] Presenter notes on every slide, not a restatement of the bullets
 - [ ] Every chart carries its insight line
-- [ ] The Application Checklist in `../references/brand/BRAND.md` passes
+- [ ] The Application Checklist in `../apply-branding/brand/BRAND.md` passes
 
 ## When this is the wrong skill
 

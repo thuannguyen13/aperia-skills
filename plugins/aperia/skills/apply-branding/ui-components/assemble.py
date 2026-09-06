@@ -13,6 +13,7 @@ The marker names a recipe and any optional layers:
     <style>/* @aperia report */</style>
     <style>/* @aperia report charts icons */</style>
     <style>/* @aperia slides */</style>
+    <style>/* @aperia page charts */</style>
 
 Running again is safe: the injected block carries the same words in a
 data-aperia attribute, and the script replaces that block from the same
@@ -24,16 +25,19 @@ Recipes, in paste order:
     report   brand/tokens.css, ui-components/base/styles.css,
              [charts/styles.css], [icons/styles.css], the create-report theme
     slides   brand/tokens.css, the create-slides theme
+    page     brand/tokens.css, ui-components/base/styles.css,
+             [charts/styles.css], [icons/styles.css], no skill theme
 
-The layers live in skills/references/, beside the skill folders, so a client
-that mounts the plugin's skills/ directory sees them at ../references/.
+The layers live inside the apply-branding skill, beside the other skill
+folders, so a client that mounts a plugin's skills side by side sees them
+at ../apply-branding/.
 """
 import re
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent     # skills/references/ui-components
-LAYERS = HERE.parent                         # skills/references
+HERE = Path(__file__).resolve().parent     # skills/apply-branding/ui-components
+LAYERS = HERE.parent                         # skills/apply-branding
 SKILLS = LAYERS.parent                       # skills
 
 RECIPES = {
@@ -47,6 +51,12 @@ RECIPES = {
         "layers": ["brand/tokens.css"],
         "optional": {},
         "theme": ("create-slides", "slides.css"),
+    },
+    "page": {
+        "layers": ["brand/tokens.css", "ui-components/base/styles.css"],
+        "optional": {"charts": "ui-components/charts/styles.css",
+                     "icons": "ui-components/icons/styles.css"},
+        "theme": None,
     },
 }
 
@@ -78,7 +88,8 @@ def css_for(words):
 
     files = [LAYERS / p for p in recipe["layers"]]
     files += [LAYERS / recipe["optional"][f] for f in recipe["optional"] if f in flags]
-    files.append(theme_path(*recipe["theme"]))
+    if recipe["theme"]:
+        files.append(theme_path(*recipe["theme"]))
 
     parts = []
     for path in files:
@@ -88,7 +99,7 @@ def css_for(words):
             # The browser ends the style element at that text, comment or not.
             sys.exit(f"assemble: {path.name} contains '</style', which would cut the block short")
         parts.append(f"/* ---- {path.name} ({path.parent.name}) ---- */\n{path.read_text().strip()}")
-    head = ("/* Assembled by references/ui-components/assemble.py from the words in data-aperia.\n"
+    head = ("/* Assembled by apply-branding/ui-components/assemble.py from the words in data-aperia.\n"
             "   Do not edit inside this block: it is replaced on every run. Put\n"
             "   document-specific rules in a separate <style> after it. */")
     return head + "\n\n" + "\n\n".join(parts) + "\n"

@@ -28,10 +28,11 @@ Checks:
  10. Every SKILL.md carries metadata.version equal to plugin.json, so a
      mounted copy can say which release it is.
 
-The two shared layers live at plugins/aperia/skills/references/, beside the
-skill folders, so a client that mounts skills/ carries them along.
+The two shared layers live inside plugins/aperia/skills/apply-branding/,
+a real skill, so every client that mounts a plugin's skills side by side
+carries them along for the other two.
 
-The palette itself is read by skills/references/brand/palette.py, which the
+The palette itself is read by skills/apply-branding/brand/palette.py, which the
 deck QA script shares, so neither holds a copy of it.
 
 Usage: python3 scripts/validate.py
@@ -129,8 +130,6 @@ def check_skills(plugin_name, plugin_dir):
     for skill in found:
         rel = skill.relative_to(ROOT)
         md = skill / "SKILL.md"
-        if skill.name == "references":
-            continue  # the shared layers, not a skill
         if not md.exists():
             fail(f"{rel}: no SKILL.md, so this directory will not load as a skill")
             continue
@@ -177,9 +176,9 @@ HEX = re.compile(r"#([0-9a-fA-F]{6})\b")
 # tokens.css is the single source of brand values, guideline and system alike.
 TOKENS = "tokens.css"
 
-# Where the shared layers live, relative to the plugin. skills/ holds them
-# and every skill theme, so one walk covers all stylesheets.
-LAYERS = Path("skills") / "references"
+# Where the shared layers live, relative to the plugin. They sit inside a
+# skill, so one walk of skills/ covers every stylesheet.
+LAYERS = Path("skills") / "apply-branding"
 
 
 def brand_css(plugin_dir):

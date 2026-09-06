@@ -24,10 +24,14 @@ except ImportError:
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # The palette is read from the brand layer, not copied here: tokens.css plus
-# the approved blocks in DEVIATIONS.md, through the same module validate.py
-# uses. See ../references/brand/palette.py.
-BRAND_DIR = os.path.join(HERE, "..", "..", "references", "brand")
-_spec = importlib.util.spec_from_file_location("palette", os.path.join(BRAND_DIR, "palette.py"))
+# the approved blocks in DEVIATIONS.md, through brand/palette.py in the
+# apply-branding skill beside this one.
+BRAND_DIR = os.path.join(HERE, "..", "..", "apply-branding", "brand")
+_PALETTE = os.path.join(BRAND_DIR, "palette.py")
+if not os.path.exists(_PALETTE):
+    sys.exit(f"qa.py: cannot find {os.path.normpath(_PALETTE)}. The apply-branding skill, which "
+             f"holds the brand layer, is not installed beside create-slides.")
+_spec = importlib.util.spec_from_file_location("palette", _PALETTE)
 palette = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(palette)
 

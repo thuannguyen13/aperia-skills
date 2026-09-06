@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Emit inline Lucide SVG markup for Aperia HTML slides.
 
-A thin wrapper over the shared ../references/ui-components/icons/icon.py, which fetches
+A thin wrapper over the shared ../apply-branding/ui-components/icons/icon.py, which fetches
 each icon from the Lucide CDN on demand. This adds the slide-specific
 stroke width and the .iblock helper, nothing else.
 
@@ -18,8 +18,11 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SHARED = os.path.join(HERE, "..", "..", "references", "ui-components", "icons", "icon.py")
+SHARED = os.path.join(HERE, "..", "..", "apply-branding", "ui-components", "icons", "icon.py")
 
+if not os.path.exists(SHARED):
+    sys.exit(f"icon.py: cannot find {os.path.normpath(SHARED)}. The apply-branding skill, which "
+             f"holds the shared icon script, is not installed beside create-slides.")
 _spec = importlib.util.spec_from_file_location("shared_icon", SHARED)
 shared = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(shared)

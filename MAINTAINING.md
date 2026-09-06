@@ -4,7 +4,7 @@ For people editing this repo. To install and use the plugin, see [README.md](REA
 
 ## Change the brand
 
-1. Edit `plugins/aperia/skills/references/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only.
+1. Edit `plugins/aperia/skills/apply-branding/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only.
 2. Bump `version` in `plugins/aperia/.claude-plugin/plugin.json`.
 3. Add a `CHANGELOG.md` entry.
 4. Run `python3 scripts/validate.py`, then `claude plugin validate .`.
@@ -42,7 +42,7 @@ Approval is structural: only hexes inside a fenced ```approved block count. Ment
 ## assemble.py
 
 ```bash
-python3 plugins/aperia/skills/references/ui-components/assemble.py <file.html>
+python3 plugins/aperia/skills/apply-branding/ui-components/assemble.py <file.html>
 ```
 
 Fills a document's style marker, `<style>/* @aperia report [charts] [icons] */</style>` or `<style>/* @aperia slides */</style>`, with the stylesheets in the order the recipe names. The model never reads or types the CSS; the script copies the files in. Re-running replaces the injected block from the same words, so it is safe after every content edit. `--print report charts` writes the CSS to stdout for inspection.
@@ -57,22 +57,18 @@ A layer file must never contain a closing style tag, even inside a comment, beca
 
 ## Where the shared layers live
 
-`brand/` and `ui-components/` sit at `plugins/aperia/skills/references/`, beside the two skill folders, and every skill reads them as `../references/brand/` and `../references/ui-components/`. One copy, no build step.
+`brand/` and `ui-components/` sit inside `plugins/aperia/skills/apply-branding/`, and the other two skills read them as `../apply-branding/brand/` and `../apply-branding/ui-components/`. One copy, no build step.
 
-The reason for that spot is Claude Desktop. It mounts the plugin's `skills/` directory as `/mnt/skills/plugins/` and nothing above it, so a layer at the plugin root never arrived and both skills were broken there from 0.3.0 to 0.8.0. Inside `skills/` the layers travel with the skills. `skills/references/` has no `SKILL.md`, so no client treats it as a skill; `validate.py` skips it for the same reason.
+The reason for that spot is Claude Desktop. It mounts each folder under `skills/` that contains a `SKILL.md`, side by side at `/mnt/skills/plugins/<skill>/`, and nothing else: not the plugin root, not a folder without a `SKILL.md`. Layers at the plugin root never arrived, and both skills were broken there from 0.3.0 to 0.8.0. A folder that is a skill arrives, so the layers live in one. `apply-branding` is a real skill, the freeform branding entry point, and the carrier of the layers at the same time.
 
-Two consequences. A skill folder on its own is not complete, so the Claude Desktop skill uploader, which takes one folder, is not a supported install path; use the marketplace. And whether Desktop copies every folder under `skills/` or only the ones with a `SKILL.md` is not documented; 0.9.0 is the first release to rely on it, so install it on Desktop and confirm the skill sees `../references/brand/` before telling teammates to update.
+This relies on both clients mounting a plugin's skills beside each other, which is observed on Claude Code and Desktop and promised by neither. If a client ever isolated skills from one another, the fallback is a committed copy of the layers inside each skill, which commit `9b51f83` on the 0.9.0 branch implemented before this layout replaced it.
+
+A skill folder on its own is not complete, so the Claude Desktop skill uploader, which takes one folder, is not an install path. Install through the marketplace, or upload the whole plugin as a zip with `.claude-plugin/plugin.json` at the archive root.
 
 ## Icons
 
-Nothing is bundled. `skills/references/ui-components/icons/icon.py` fetches each icon from the Lucide CDN (`cdn.jsdelivr.net/npm/lucide-static`) on first use, pinned to the release named at the top of the script, and caches it under `~/.cache/aperia-icons/`. Bump the version there on purpose. A sandbox that blocks that host cannot produce icons; the script says so and the skill leaves the icon out.
+Nothing is bundled. `skills/apply-branding/ui-components/icons/icon.py` fetches each icon from the Lucide CDN (`cdn.jsdelivr.net/npm/lucide-static`) on first use, pinned to the release named at the top of the script, and caches it under `~/.cache/aperia-icons/`. Bump the version there on purpose. A sandbox that blocks that host cannot produce icons; the script says so and the skill leaves the icon out.
 
 ## Ad-hoc branding
 
-There is currently no skill for a freeform request that fits neither
-`create-report` nor `create-slides` (a landing page, an email, a one-off
-graphic). If that need comes back, either add a thin skill whose only job is
-to load `brand/` (and `ui-components/`, if the output needs any of its
-pieces) and let the model build the requested format on top, or extend one
-of the two existing skills, don't duplicate the reference layers into a new
-copy either way.
+`apply-branding` covers a freeform request that fits neither `create-report` nor `create-slides`: a landing page, an email, a one-off graphic. Its `SKILL.md` loads the layers it holds and lets the model build the requested format on top, with the `page` recipe in `assemble.py` for HTML. Do not add a fourth skill for a new format; extend `apply-branding` or one of the two existing skills.

@@ -25,6 +25,10 @@ Checks:
      --radius-sm, --radius-pill, 50% or 0.
   9. No em dash anywhere in the plugin or the repo docs. The model reads
      these files as its writing example.
+ 10. Every skill's copy of brand/ and ui-components/ matches the source at
+     the plugin root, and every SKILL.md carries metadata.version equal to
+     plugin.json. Clients mount a skill folder on its own, so the copies are
+     what ships; scripts/sync-layers.py writes them.
 
 The palette itself is read by plugins/aperia/brand/palette.py, which the
 deck QA script shares, so neither holds a copy of it.
@@ -110,7 +114,8 @@ FRONTMATTER = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)
 
 
 def check_skills(plugin_name, plugin_dir):
-    """Check 3."""
+    """Checks 3 and 10 (the version half)."""
+    plugin_version = str(load_json(plugin_dir / ".claude-plugin" / "plugin.json", "plugin.json").get("version", ""))
     skills_dir = plugin_dir / "skills"
     if not skills_dir.is_dir():
         fail(f"{plugin_name}: no skills/ directory")
@@ -148,6 +153,14 @@ def check_skills(plugin_name, plugin_dir):
                 f"{rel}/SKILL.md: name '{name}' does not match directory '{skill.name}'. "
                 f"Users invoke the directory name."
             )
+
+        version = re.search(r"^\s+version:\s*\"?([^\"\n]+)\"?\s*$", match.group(1), re.M)
+        if not version:
+            fail(f"{rel}/SKILL.md: frontmatter has no metadata.version, so a mounted "
+                 f"copy cannot say which release it is")
+        elif version.group(1).strip() != plugin_version:
+            fail(f"{rel}/SKILL.md: metadata.version is {version.group(1).strip()}, "
+                 f"plugin.json says {plugin_version}")
 
         if not description:
             fail(f"{rel}/SKILL.md: frontmatter has no 'description'")
@@ -232,7 +245,8 @@ def check_palette(plugin_name, plugin_dir):
     for path in sorted(plugin_dir.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in {".css", ".html", ".svg", ".json", ".md", ".py"}:
             continue
-        if path == deviations_path or path.name == "palette.py":
+        # The skills carry copies of DEVIATIONS.md and palette.py; skip those too.
+        if path.name in ("DEVIATIONS.md", "palette.py"):
             continue
         for value in palette_mod.colors_in(path.read_text(errors="ignore")):
             if value not in palette and value not in recorded:
@@ -345,6 +359,17 @@ def check_guideline_states_no_values(plugin_name, plugin_dir):
                  f"does not define.")
 
 
+def check_layer_copies():
+    """Check 10, the copies half, through scripts/sync-layers.py."""
+    spec = importlib.util.spec_from_file_location("sync_layers", Path(__file__).with_name("sync-layers.py"))
+    sync = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(sync)
+    sync.check()
+    for skill in sync.skills():
+        sync.verify(skill)
+    FAILURES.extend(sync.FAILURES)
+
+
 def main():
     plugins = check_manifests()
     for plugin_name, plugin_dir in plugins:
@@ -354,6 +379,7 @@ def main():
         check_guideline_states_no_values(plugin_name, plugin_dir)
         check_literals(plugin_name, plugin_dir)
     check_no_em_dash()
+    check_layer_copies()
 
     for msg in NOTES:
         print(f"note: {msg}")

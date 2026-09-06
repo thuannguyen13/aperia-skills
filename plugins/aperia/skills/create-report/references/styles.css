@@ -1,16 +1,16 @@
 /* ===== APERIA REPORT THEME (chrome + sgantt + phases only) =====
    This file no longer carries the base component library, cards, badges,
    callouts, tables, timelines, charts, and everything else a report shares
-   with any other Aperia UI surface now lives once, in ../../ui-components/
+   with any other Aperia UI surface now lives once, in ui-components/
    references/styles.css (plus charts.css and icons.css where used).
-   ../../ui-components/assemble.py injects the whole stack into the report's
+   ui-components/assemble.py injects the whole stack into the report's
    marker (a style element holding the comment `@aperia report`, plus the
    words `charts` and `icons` when used), in this order:
 
-     1. ../../brand/tokens.css        (the brand token file)
-     2. ../../ui-components/base/styles.css
-     3. ../../ui-components/charts/styles.css    (only with the `charts` word)
-     4. ../../ui-components/icons/styles.css      (only with the `icons` word)
+     1. brand/tokens.css        (the brand token file)
+     2. ui-components/base/styles.css
+     3. ui-components/charts/styles.css    (only with the `charts` word)
+     4. ui-components/icons/styles.css      (only with the `icons` word)
      5. THIS FILE                     (always, it supplies the nav/hero/footer
                                         chrome, the sgantt subsystem, and the phases
                                         timeline, none of which exist anywhere else)
@@ -33,7 +33,7 @@
 
 /* Chrome-only page mechanics: smooth in-page scrolling for nav-link jumps,
    and the section rhythm every report section shares. Neither exists in the
-   base layer, since ../../ui-components/ makes no assumption about a full
+   base layer, since ui-components/ makes no assumption about a full
    scrolling document of <section> elements. */
 html { scroll-behavior:smooth }
 section { padding:72px 0; position:relative }
@@ -83,7 +83,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 
 /* =====================================================
    PHASED ROADMAP (dot-and-line rail): the one component here with no
-   equivalent in ../../ui-components/. Distinct from that library's
+   equivalent in ui-components/. Distinct from that library's
    milestone/status timelines (mstone-row/vtimeline/htimeline): those plot
    dated checkpoints with a three-state status marker, this one narrates
    sequential PHASES of work, each with a duration pill and a bulleted list
@@ -281,7 +281,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 /* =====================================================
    RESPONSIVE: ≤700px, chrome, sgantt and phases only. Every component the
    base layer already owns collapses via its own responsive block in
-   ../../ui-components/base/styles.css and charts.css; nothing here repeats that.
+   ui-components/base/styles.css and charts.css; nothing here repeats that.
    ===================================================== */
 @media(max-width:700px) {
   .nav-inner { padding:0 16px }
@@ -324,7 +324,7 @@ footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
      real fragility is gradients, which engines drop far more often than flat
      fills, so every dark surface is repainted as a solid Aperia Blue here.
      dark-panel/cta-box get the same treatment from the shared layer's print
-     block already (../../ui-components/base/styles.css); hero and footer are
+     block already (ui-components/base/styles.css); hero and footer are
      chrome, so they get it here. */
   .hero, footer {
     -webkit-print-color-adjust:exact; print-color-adjust:exact;

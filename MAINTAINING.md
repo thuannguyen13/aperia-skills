@@ -4,7 +4,7 @@ For people editing this repo. To install and use the plugin, see [README.md](REA
 
 ## Change the brand
 
-1. Edit `plugins/aperia/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only.
+1. Edit `plugins/aperia/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only. Then run `python3 scripts/sync-layers.py` to refresh the copy each skill carries; never edit those copies.
 2. Bump `version` in `plugins/aperia/.claude-plugin/plugin.json`.
 3. Add a `CHANGELOG.md` entry.
 4. Run `python3 scripts/validate.py`, then `claude plugin validate .`.
@@ -55,28 +55,19 @@ A layer file must never contain a closing style tag, even inside a comment, beca
 
 `examples/` holds one assembled output per skill, built from a bare marker with the script. Rebuild them after a theme change so they keep showing what the skills produce.
 
-## bundle-skills.py
+## sync-layers.py
 
 ```bash
-python3 scripts/bundle-skills.py
+python3 scripts/sync-layers.py           # refresh the copies
+python3 scripts/sync-layers.py --check   # what CI runs
+python3 scripts/sync-layers.py --zip     # dist/<skill>.zip for the Desktop uploader
 ```
 
-Builds `dist/<skill>/` and `dist/<skill>.zip`, one standalone bundle per skill, for the Claude Desktop skill uploader. Neither is committed.
+Every client mounts a skill folder on its own. Claude Desktop puts it at `/mnt/skills/plugins/<skill>/` with nothing above it, and the Agent Skills specification says a skill may not reach outside its own directory. So `brand/` and `ui-components/` at the plugin root are the single source, and each skill carries a committed copy of both, written by this script. Skill files reference the layers from the skill root, `brand/tokens.css` and `ui-components/assemble.py`, on every client. A Claude Code install carries the layers three times, root plus two copies; only the copies are read.
 
-The plugin install and the uploader lay files out differently. An install copies the whole of `plugins/aperia/`, so `brand/` and `ui-components/` sit beside `skills/` and `../../brand/BRAND.md` resolves. The uploader takes one folder per skill with nothing above it, so the same reference resolves to nothing. `create-slides` survives that because its theme is self-contained; `create-report` does not, because its base components live in `ui-components/` and its own `references/styles.css` defines one variable and reads 36 from elsewhere.
+The copies are never edited by hand. `validate.py` fails when a copy is behind the source, so a brand change committed without a sync fails CI with this script's name in the message. The repo grows by about 1.4 MB for the two copies, most of it the icon set.
 
-So the script copies each layer a skill reads into a copy of that skill and rewrites the references to match. The repo still keeps one copy of each layer; the duplication happens at build time. It fails if a reference escapes a bundle or points at a file the bundle does not contain, which is the packaging break it exists to catch, and CI runs it on every push and pull request for that reason.
-
-Run it before uploading, and after moving anything between the layers and the skills.
-
-## Conventions
-
-- `brand/` and `ui-components/` hold reference files only, with no frontmatter, so neither loads as a skill alongside the two real ones. `brand/` is the visual identity (palette, type, logo, the graphic element); `ui-components/` is the component library built on top of it (cards, badges, callouts, tables, the chart toolkit, the icon set, milestone/status timelines), see `ui-components/COMPONENTS.md`.
-- Skills reach both by relative path: `../../brand/BRAND.md` and `../../brand/assets/`, `../../ui-components/base/styles.css` and friends. A skill never keeps its own copy of either layer, if you're about to paste component CSS into a skill's own `references/`, it almost certainly belongs in `ui-components/` instead.
-- `create-slides` is the one exception: its canvas-unit coordinate system can't literally share `ui-components/base/styles.css` (screen px vs. a fixed 1920×1080 canvas), so it keeps its own `slides.css` implementation, translated to match the same design language (`ui-components/COMPONENTS.md`'s color/sentiment/chart rules) rather than sharing the file.
-- Each `SKILL.md` opens with a gate requiring the brand-layer read (and the component-layer read, for skills that build HTML) and closes with a checklist that includes the guideline's Application Checklist.
-- Reference paths are written two ways, and `bundle-skills.py` depends on the difference. Prose and comments name a layer from the **skill root**, `../../brand/tokens.css`, whatever file they sit in, because the skill root is where a reader starts. Code under `scripts/` resolves against its own file instead, so it climbs the real number of levels. Keep new references in whichever form matches, or the bundles fail to build.
-- If a color or type value isn't in `BRAND.md` or `tokens.*`, it isn't an Aperia value.
+After copying, the script verifies that every relative reference in a skill resolves to a file inside that skill. A reference that escapes the skill is the Desktop break this exists to prevent. This was broken from 0.3.0, when the layers moved out of the skills, until 0.9.0.
 
 ## Ad-hoc branding
 

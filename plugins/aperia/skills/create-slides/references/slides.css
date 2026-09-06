@@ -1,6 +1,6 @@
 /* =====================================================================
    APERIA HTML SLIDES: THEME
-   Injected by ../../ui-components/assemble.py after ../../brand/tokens.css,
+   Injected by ui-components/assemble.py after brand/tokens.css,
    which it reads for every palette, weight and type value. Nothing here
    restates a brand value; the deck marker is a style element holding the
    comment `@aperia slides`.
@@ -20,9 +20,9 @@
    ===================================================================== */
 
 :root {
-  /* The palette comes from ../../brand/tokens.css and is not repeated here.
+  /* The palette comes from brand/tokens.css and is not repeated here.
      Two aliases for names the brand layer spells differently, same as
-     ../../ui-components/base/styles.css. */
+     ui-components/base/styles.css. */
   --sapphire:var(--sapphire-blue); --med-gray:var(--medium-gray);
   --sans:var(--font-sans); --label:var(--sans); /* no mono typeface: BRAND.md sanctions Inter only */
   /* mapped roles (light slide). --fg is the one deliberate override of the
@@ -63,10 +63,10 @@
      Leadings stay unitless ratios at the use site. A ratio already scales with
      the canvas, where a px leading would have to be mapped a second time.
 
-     The brand steps themselves come from ../../brand/tokens.css. Each tier
+     The brand steps themselves come from brand/tokens.css. Each tier
      below defines only the steps this theme uses. A step that is missing here
      maps by the same factor, it is not a new size: adding a step to the ramp
-     itself is a change to ../../brand/BRAND.md, never a local decision. */
+     itself is a change to brand/BRAND.md, never a local decision. */
   --canvas-k:  1.625;   /* slide face: brand step x 1.625 */
   --canvas-kd: 3.25;    /* display:    brand step x 3.25  */
 

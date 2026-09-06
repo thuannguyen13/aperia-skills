@@ -3,3 +3,6 @@
 plugins/aperia/brand/**
 plugins/aperia/ui-components/**
 plugins/aperia/skills/**/references/**
+# Generated copies of the two layers above, written by scripts/sync-layers.py.
+plugins/aperia/skills/*/brand/**
+plugins/aperia/skills/*/ui-components/**

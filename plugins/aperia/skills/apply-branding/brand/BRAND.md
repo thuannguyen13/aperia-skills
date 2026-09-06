@@ -84,19 +84,13 @@ Ensure high contrast between type and its background in every composition. Do no
 
 The ramp below is the Aperia Figma design system scale and is the sanctioned set of sizes. Adding a step is a change to this document, not a local decision.
 
-Token names are **size-semantic, never role names**, and no size is tied to an `h1`..`h6` tag. A heading gets its size from a token applied at the use site, so the same step can serve a heading in one place and a number in another.
-
-**The sizes live in `tokens.css`, not here.** Ten steps, `--text-xs` through `--text-5xl`, each with the paired `--leading-*`. Use them together; a size without its leading is a bug, not a choice.
-
-The ramp rises in roughly 1.1x to 1.2x steps and is deliberately fine-grained rather than merged, because it is the shared reference for every skill and has to cover editorial, data and display type without pushing a component onto a step that does not fit it.
-
-**Two Figma steps are not in the web ramp.** The design system also holds 10/12 and 11/16. Both fall below the on-screen minimum above, so they stay print and Figma only and the web ramp starts at `xs`.
-
-**The 36 and 40 leadings are derived**, not taken from Figma, which stops at 32/48. They continue the ramp's +4 leading progression. Confirm them with the designer before treating them as final.
-
-**Responsive headings** are clamped between two ramp steps, never off-scale values. The two display utilities clamp between ramp steps and are named for their ceiling: `2xl` runs 20/32 to 28/40, and `5xl` runs 28/40 to 40/56.
-
-The `create-slides` skill is the exception: its slide faces are measured in canvas units on a 1920x1080 box that is scaled to fit the viewport, so it maps this ramp onto that canvas with 19.5px as its own floor, which holds the on-screen minimum down to a 1180px viewport.
+- Token names are **size-semantic, never role names**, and no size is tied to an `h1`..`h6` tag. A heading gets its size from a token applied at the use site, so the same step can serve a heading in one place and a number in another.
+- **The sizes live in `tokens.css`, not here.** Ten steps, `--text-xs` through `--text-5xl`, each with the paired `--leading-*`. Use them together; a size without its leading is a bug, not a choice.
+- The ramp rises in roughly 1.1x to 1.2x steps and is deliberately fine-grained rather than merged, because it is the shared reference for every skill and has to cover editorial, data and display type without pushing a component onto a step that does not fit it.
+- **Two Figma steps are not in the web ramp.** The design system also holds 10/12 and 11/16. Both fall below the on-screen minimum above, so they stay print and Figma only and the web ramp starts at `xs`.
+- **The 36 and 40 leadings are derived**, not taken from Figma, which stops at 32/48. They continue the ramp's +4 leading progression. Confirm them with the designer before treating them as final.
+- **Responsive headings** are clamped between two ramp steps, never off-scale values. The two display utilities clamp between ramp steps and are named for their ceiling: `2xl` runs 20/32 to 28/40, and `5xl` runs 28/40 to 40/56.
+- The `create-slides` skill is the exception: its slide faces are measured in canvas units on a 1920x1080 box that is scaled to fit the viewport, so it maps this ramp onto that canvas with 19.5px as its own floor, which holds the on-screen minimum down to a 1180px viewport.
 
 ### Case
 

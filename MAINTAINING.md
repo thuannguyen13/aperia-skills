@@ -69,6 +69,12 @@ It globs the snippet files in `base/`, `charts/` and `icons/` rather than listin
 
 The script stays outside `plugins/` on purpose: a Desktop install mounts the skills, and the gallery is for whoever is working on them, not for the model. The generated file is gitignored.
 
+## Why apply-branding is hidden from the picker
+
+`apply-branding/SKILL.md` carries `user-invocable: false`, so it does not appear in the slash-command list. Claude still loads it on its own from the description, which is what the freeform branding path needs.
+
+Do not remove its `SKILL.md` to hide it further. Claude Desktop mounts only the folders under `skills/` that have one, so without it `brand/` and `components/` never reach an install and every marker fills empty. That is the bug #11 fixed.
+
 ## Where the shared layers live
 
 `brand/` and `components/` sit inside `plugins/aperia/skills/apply-branding/`, and the other two skills read them as `../apply-branding/brand/` and `../apply-branding/components/`. One copy, no build step.

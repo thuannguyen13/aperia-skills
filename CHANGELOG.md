@@ -17,6 +17,7 @@
 - `examples/` and `dist/` removed. The sample report was built against the old component names; `gallery.py` replaces it.
 - De-duplicated: the nine snippet files carried an identical header restating `COMPONENTS.md` and `charts/styles.css`, now a pointer; the per-file component lists in `COMPONENTS.md` and the chart-family list in `create-report/SKILL.md` duplicated the File column and are gone; `gallery.py` globs the snippet files instead of listing them. New validate check 11 fails if the File column and the files on disk drift apart.
 - `ui-components/` renamed to `components/`. The folder and its doc now share a name, matching `brand/BRAND.md`.
+- `apply-branding` carries `user-invocable: false`. It stays available to the model for freeform branding but no longer appears in the user's skill picker, where it read as a third document type rather than the layer holder.
 
 ## 0.8.0
 

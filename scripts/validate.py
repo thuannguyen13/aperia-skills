@@ -27,6 +27,9 @@ Checks:
      these files as its writing example.
  10. Every SKILL.md carries metadata.version equal to plugin.json, so a
      mounted copy can say which release it is.
+ 11. COMPONENTS.md's File column, the one map from a component to the file
+     holding its markup, names only files that exist, and every snippet
+     file is named by it. Neither side can drift without failing here.
 
 The two shared layers live inside plugins/aperia/skills/apply-branding/,
 a real skill, so every client that mounts a plugin's skills side by side
@@ -323,6 +326,26 @@ def check_literals(plugin_name, plugin_dir):
                      f"Use --radius, --radius-sm or --radius-pill.")
 
 
+def check_snippet_routing(plugin_name, plugin_dir):
+    """Check 11. COMPONENTS.md's File column is the only map from a component
+    to the file holding its markup, so it has to stay level with the disk."""
+    ui = plugin_dir / LAYERS / "ui-components"
+    doc = ui / "COMPONENTS.md"
+    if not doc.exists():
+        fail(f"{plugin_name}: no COMPONENTS.md at {doc.relative_to(ROOT)}")
+        return
+    cited = set(re.findall(r"\| `((?:base|charts)/[\w.-]+\.html)` \|", doc.read_text()))
+    if not cited:
+        fail(f"{plugin_name}: COMPONENTS.md has no File column; components cannot be found")
+        return
+    ondisk = {f"{d}/{p.name}" for d in ("base", "charts") for p in (ui / d).glob("*.html")}
+    for rel in sorted(cited - ondisk):
+        fail(f"{plugin_name}: COMPONENTS.md routes to {rel}, which does not exist")
+    for rel in sorted(ondisk - cited):
+        fail(f"{plugin_name}: {rel} is not named by any File column row, "
+             f"so nothing can find what is in it")
+
+
 def check_no_em_dash():
     """Check 9. Repo docs and everything in plugins/."""
     paths = [p for p in ROOT.glob("*.md")]
@@ -368,6 +391,7 @@ def main():
         check_single_source(plugin_name, plugin_dir)
         check_guideline_states_no_values(plugin_name, plugin_dir)
         check_literals(plugin_name, plugin_dir)
+        check_snippet_routing(plugin_name, plugin_dir)
     check_no_em_dash()
 
     for msg in NOTES:

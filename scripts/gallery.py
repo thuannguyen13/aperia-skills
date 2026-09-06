@@ -48,19 +48,26 @@ UI = PLUGIN / LAYERS / "ui-components"
 SECTION = re.compile(r"<!--\s*={5,}\s*([^\n=]+?)\s*={5,}\s*(?:-->|\n(.*?)-->)", re.S)
 CLASSES = re.compile(r'class="([^"]+)"')
 
-# Source file, the marker word that injects its stylesheet, and when it applies.
-SOURCES = [
-    ("base/structure.html", None, "Always injected"),
-    ("base/emphasis.html", None, "Always injected"),
-    ("base/tables.html", None, "Always injected"),
-    ("base/charts.html", None, "Always injected"),
-    ("base/timelines.html", None, "Always injected"),
-    ("charts/trend.html", "charts", "Add `charts` to the marker"),
-    ("charts/compare.html", "charts", "Add `charts` to the marker"),
-    ("charts/proportion.html", "charts", "Add `charts` to the marker"),
-    ("charts/intensity.html", "charts", "Add `charts` to the marker"),
-    ("icons/index.html", "icons", "Add `icons` to the marker"),
+# Folder, the marker word that injects its stylesheet, and when it applies. The
+# files inside are globbed, not listed: adding a group to a folder puts it in
+# the gallery with no edit here. Order is by name within a folder, so it is
+# stable across machines.
+FOLDERS = [
+    ("base", None, "Always injected"),
+    ("charts", "charts", "Add `charts` to the marker"),
+    ("icons", "icons", "Add `icons` to the marker"),
 ]
+
+
+def snippet_files():
+    """[(relative path, marker word, note)] for every snippet file on disk."""
+    out = []
+    for folder, flag, note in FOLDERS:
+        found = sorted((UI / folder).glob("*.html"))
+        if not found:
+            sys.exit(f"gallery: no .html snippet files in {folder}/")
+        out += [(f"{folder}/{p.name}", flag, note) for p in found]
+    return out
 
 CHROME = """
 <style>
@@ -146,7 +153,7 @@ def slug(name):
 def build():
     """(nav html, body html, marker words, per-file counts)."""
     nav, body, words, counts = [], [], ["page"], []
-    for rel, flag, note in SOURCES:
+    for rel, flag, note in snippet_files():
         path = UI / rel
         if not path.exists():
             sys.exit(f"gallery: missing {path.relative_to(ROOT)}")

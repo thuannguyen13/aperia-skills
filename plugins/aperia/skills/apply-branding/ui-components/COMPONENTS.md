@@ -9,8 +9,8 @@
 > **Companion files** (one folder per toolkit, beside this file):
 > - `assemble.py`: fills a document's style marker with the stylesheets below, in order. The one way styles reach an output; nothing is pasted by hand.
 > - `base/styles.css`: the base component theme. Injected after `../brand/tokens.css`, which it reads for every palette, type and radius value.
-> - `base/`: ready-to-paste markup, one file per group. `structure.html` (card grid, stat row, principle cards, part header), `emphasis.html` (badge, callout, accordion, dark panel, CTA box), `tables.html` (comparison, stack, outcome, tier cards, swatch grid), `charts.html` (ranked bars, proportion bar, scenario bars, estimate range), `timelines.html` (gantt, effort bars, step flow, risk block, and the four dated-checkpoint components).
-> - `charts/styles.css` plus `charts/trend.html` (line, area, combo, sparkline), `compare.html` (grouped bars, stacked bars, scatter, bubble, radar), `proportion.html` (pie, donut, treemap, funnel) and `intensity.html` (heatmap, radial gauge), load only if used.
+> - `base/`: ready-to-paste markup, one file per group: `structure.html`, `emphasis.html`, `tables.html`, `charts.html`, `timelines.html`. The **File** column in the toolkit tables below says which one holds a given component; that column is the only place that mapping is written.
+> - `charts/styles.css` plus `charts/trend.html`, `compare.html`, `proportion.html`, `intensity.html`, load only if used. Same **File** column.
 > - `icons/styles.css` / `icons/index.html` / `icons/icon.py`: Lucide icons (MIT), 2,000+ available, fetched from the Lucide CDN on demand, see "Icon toolkit" below.
 
 Everything here is static, hand-authored markup plus CSS, with one

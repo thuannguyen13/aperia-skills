@@ -15,6 +15,7 @@
 - Column-chart bars sit on their baseline. `.col-lbl` carried a `margin-top` that pushed the axis rule 21px below the bars.
 - New `scripts/gallery.py` renders the snippet libraries as one labelled page, assembled with the real layers. Maintainer tool, outside `plugins/`.
 - `examples/` and `dist/` removed. The sample report was built against the old component names; `gallery.py` replaces it.
+- De-duplicated: the nine snippet files carried an identical header restating `COMPONENTS.md` and `charts/styles.css`, now a pointer; the per-file component lists in `COMPONENTS.md` and the chart-family list in `create-report/SKILL.md` duplicated the File column and are gone; `gallery.py` globs the snippet files instead of listing them. New validate check 11 fails if the File column and the files on disk drift apart.
 
 ## 0.8.0
 

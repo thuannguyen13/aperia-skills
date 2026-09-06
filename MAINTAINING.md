@@ -34,6 +34,7 @@ No dependencies beyond Python 3. CI runs the same script on every push and pull 
 - No stylesheet sets a raw px `font-size` or a `border-radius` outside `--radius`, `--radius-sm`, `--radius-pill` and `50%`.
 - Skill descriptions are at least 80 characters. The description is the only text Claude reads when deciding to load a skill on its own.
 - No em dash in any file. The model reads these files as its writing example.
+- `COMPONENTS.md`'s File column names only snippet files that exist, and every snippet file is named by it. That column is the one map from a component to its markup, so neither side can drift without failing here.
 
 Off-palette values are a decision, not an accident. Anything the check flags gets fixed or written into `plugins/aperia/brand/DEVIATIONS.md` with a reason. That file is both the audit trail and the allowlist. It currently covers the semantic status colors, the report theme's light tint ramp, the deck theme's dark chart ramp, the PowerPoint template accent alternates, and the `#004583` vs `#004785` mismatch between the supplied SVG assets and the guideline table.
 
@@ -64,7 +65,7 @@ Renders the three snippet libraries as one page so the components can be reviewe
 
 The page is generated, never hand-edited, so it cannot drift from what the skills actually copy. Nothing under `plugins/` is written, and the snippet libraries are read exactly as the skills read them.
 
-It reads the nine grouped snippet files, `base/structure.html`, `emphasis.html`, `tables.html`, `charts.html`, `timelines.html` and `charts/trend.html`, `compare.html`, `proportion.html`, `intensity.html`, plus `icons/index.html`, and parses the `<!-- ===== NAME ===== -->` comments they already use. A comment whose name line is followed by prose and a plain `-->` is a group heading and renders as one; each file's banner header, a bare run of `=`, is not a component and does not appear. Add a component to a library and it appears here with no change to this script.
+It globs the snippet files in `base/`, `charts/` and `icons/` rather than listing them, so a new group file appears in the gallery with no edit to the script, and parses the `<!-- ===== NAME ===== -->` comments they already use. A comment whose name line is followed by prose and a plain `-->` is a group heading and renders as one; each file's banner header, a bare run of `=`, is not a component and does not appear. Add a component to a library and it appears here with no change to this script.
 
 The script stays outside `plugins/` on purpose: a Desktop install mounts the skills, and the gallery is for whoever is working on them, not for the model. The generated file is gitignored.
 

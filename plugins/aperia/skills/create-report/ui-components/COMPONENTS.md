@@ -11,7 +11,7 @@
 > - `base/styles.css`: the base component theme. Injected after `../brand/tokens.css`, which it reads for every palette, type and radius value.
 > - `base/index.html`: ready-to-paste markup for every component below.
 > - `charts/styles.css` / `charts/index.html`: the extended chart family (line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, heatmap), load only if used.
-> - `icons/styles.css` / `icons/index.html` / `icons/icon.py` / `icons/lucide-icons.json`: Lucide icons (MIT), 2000+ available, generated on demand, see "Icon toolkit" below.
+> - `icons/styles.css` / `icons/index.html` / `icons/icon.py`: Lucide icons (MIT), 2,000+ available, fetched from the Lucide CDN on demand, see "Icon toolkit" below.
 
 Everything here is static, hand-authored markup plus CSS, with one
 exception: icons are generated on demand by a small script
@@ -66,11 +66,13 @@ documented in that skill's own files.
 
 **[Lucide](https://lucide.dev)** (MIT license, free to use and redistribute,
 no restriction to work around), the same icon set `create-slides` uses. Not
-a fixed catalog: `icons/lucide-icons.json` bundles 2000+ icons, and
-`icons/icon.py` emits inline SVG for any of them by name,
+a fixed catalog: nothing is bundled. `icons/icon.py` fetches any of the
+2,000+ icons from the Lucide CDN on first use, pinned to one release and
+cached locally, and emits inline SVG by name,
 `python3 icons/icon.py shield-check`, or `--search alert` to find a slug.
-`create-slides/scripts/icon.py` points at this same JSON file rather than
-keeping its own copy, so both skills draw from one icon set.
+`create-slides/scripts/icon.py` is a thin wrapper over this script, so both
+skills draw from one icon set. Without network the script says so and exits;
+leave the icon out, it is never the only signal.
 
 Every icon is stroke-based (`fill="none" stroke="currentColor"`) and sizes
 at `1em`, so it inherits color and size from wherever it sits (see the usage
@@ -80,7 +82,7 @@ never by editing the path data or adding a fill.
 `icons/index.html` lists a short set of commonly useful slugs as a starting point
 (status/feedback, navigation, objects, people, data/trend), it is not the
 full set. Run the script's `--search` for anything not listed there before
-concluding Lucide doesn't have it; with 2000+ icons it almost always does.
+concluding Lucide doesn't have it; with 2,000+ icons it almost always does.
 
 - **An icon is a supplement to a color/label, never a replacement for one.** Status still rides the badge/callout/marker color system already documented elsewhere in this file; an icon just adds a recognizable shape next to it (see the `callout amber` example in `icons/index.html`, which keeps `.amber`'s color and adds `triangle-alert` beside it, rather than the icon carrying the meaning alone).
 - **Don't hand-write or guess at path data.** Always generate the SVG from the script. A hand-drawn "close enough" icon won't match Lucide's grid or stroke weight.

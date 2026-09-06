@@ -2,7 +2,7 @@
    Injected after base/styles.css by ../assemble.py when the marker carries
    the `icons` word, see COMPONENTS.md. Covers only the icon sizing/
    alignment rules; the icons themselves are Lucide (MIT), emitted on demand
-   by icon.py from lucide-icons.json, there is no fixed
+   by icon.py from the Lucide CDN on demand, there is no fixed
    catalog to paste from and no sprite/<symbol>/<use> to link.
 
    Lucide icons are STROKE-based: fill="none" stroke="currentColor". The

@@ -65,9 +65,13 @@ python3 scripts/sync-layers.py --zip     # dist/<skill>.zip for the Desktop uplo
 
 Every client mounts a skill folder on its own. Claude Desktop puts it at `/mnt/skills/plugins/<skill>/` with nothing above it, and the Agent Skills specification says a skill may not reach outside its own directory. So `brand/` and `ui-components/` at the plugin root are the single source, and each skill carries a committed copy of both, written by this script. Skill files reference the layers from the skill root, `brand/tokens.css` and `ui-components/assemble.py`, on every client. A Claude Code install carries the layers three times, root plus two copies; only the copies are read.
 
-The copies are never edited by hand. `validate.py` fails when a copy is behind the source, so a brand change committed without a sync fails CI with this script's name in the message. The repo grows by about 1.4 MB for the two copies, most of it the icon set.
+The copies are never edited by hand. `validate.py` fails when a copy is behind the source, so a brand change committed without a sync fails CI with this script's name in the message. The two copies add about 600 KB to the repo.
 
 After copying, the script verifies that every relative reference in a skill resolves to a file inside that skill. A reference that escapes the skill is the Desktop break this exists to prevent. This was broken from 0.3.0, when the layers moved out of the skills, until 0.9.0.
+
+## Icons
+
+Nothing is bundled. `ui-components/icons/icon.py` fetches each icon from the Lucide CDN (`cdn.jsdelivr.net/npm/lucide-static`) on first use, pinned to the release named at the top of the script, and caches it under `~/.cache/aperia-icons/`. Bump the version there on purpose. A sandbox that blocks that host cannot produce icons; the script says so and the skill leaves the icon out.
 
 ## Ad-hoc branding
 

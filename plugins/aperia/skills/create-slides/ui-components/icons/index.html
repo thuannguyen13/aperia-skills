@@ -2,8 +2,8 @@
      APERIA ICONS: LUCIDE, ON DEMAND
      Source: Lucide (MIT license, https://lucide.dev), free to use and
      redistribute, attribution appreciated but not required. Not a fixed
-     37-icon catalog: lucide-icons.json bundles 2000+ icons, and
-     icon.py emits inline SVG for any of them by name.
+     fixed catalog: icon.py fetches any of the 2,000+ Lucide icons from
+     the Lucide CDN on first use, pinned to one release, and caches it.
 
          python3 icons/icon.py shield-check
          python3 icons/icon.py --search alert

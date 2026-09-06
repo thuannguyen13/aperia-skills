@@ -298,9 +298,9 @@ other way, never distort, rotate, or add effects.
 
 ## Icons
 
-Lucide line icons, the full set bundled offline in
-`ui-components/icons/lucide-icons.json`, shared with
-`ui-components/`, not a local copy. Browse at https://lucide.dev/icons/
+Lucide line icons, fetched from the Lucide CDN on demand by the shared
+`ui-components/icons/icon.py`; nothing is bundled. If the fetch fails,
+leave the icon out. Browse at https://lucide.dev/icons/
 and use the exact slug.
 
 ```bash
@@ -439,8 +439,7 @@ a collision with the footer, or an icon crowding a heading. Check in particular:
 - `ui-components/assemble.py`: fills the marker. Required step.
 - `brand/assets/`: `aperia-logo.svg`, `pattern-single-portrait.svg`,
   `pattern-double.svg` if you need raw path data.
-- `ui-components/icons/lucide-icons.json`: all 2,025 Lucide icons as path data, shared with `ui-components/`.
-- `scripts/icon.py`: emit inline icon markup.
+- `scripts/icon.py`: emit inline icon markup, a wrapper over the shared fetcher.
 - `scripts/qa.py`: the required checker.
 
 ## Checklist before delivering

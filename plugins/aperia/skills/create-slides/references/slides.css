@@ -349,8 +349,11 @@ ul.s-list li small { display:block; font-size:var(--slide-text-sm); color:var(--
 .col-val { position:absolute; top:-45px; left:0; right:0; text-align:center; font-family:var(--label);
            font-size:var(--slide-text-base); font-weight:600; color:var(--aperia-blue) }
 .s-dark .col-val { color:var(--white) }
-.col-lbl { font-size:var(--slide-text-sm); line-height:1.35; text-align:center; margin-top:21px; color:var(--muted-fg);
-           padding-top:18px; border-top:1.5px solid var(--border); width:100% }
+/* No margin-top: this border-top IS the chart's baseline, so it has to meet the
+   bottom of .col-bar. The old 21px margin floated the rule below the columns.
+   That 21px moved into padding-top, so the label text sits where it always did. */
+.col-lbl { font-size:var(--slide-text-sm); line-height:1.35; text-align:center; color:var(--muted-fg);
+           padding-top:39px; border-top:1.5px solid var(--border); width:100% }
 .s-dark .col-lbl { color:#cfe0f0; border-top-color:rgba(255,255,255,.2) }
 
 /* --- horizontal ranked bars --- */

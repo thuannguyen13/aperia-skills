@@ -22,10 +22,10 @@ separate <style> block after the marker, never inside the injected one.
 
 Recipes, in paste order:
 
-    report   brand/tokens.css, ui-components/base/styles.css,
+    report   brand/tokens.css, components/base/styles.css,
              [charts/styles.css], [icons/styles.css], the create-report theme
     slides   brand/tokens.css, the create-slides theme
-    page     brand/tokens.css, ui-components/base/styles.css,
+    page     brand/tokens.css, components/base/styles.css,
              [charts/styles.css], [icons/styles.css], no skill theme
 
 The layers live inside the apply-branding skill, beside the other skill
@@ -37,15 +37,15 @@ import re
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent     # skills/apply-branding/ui-components
+HERE = Path(__file__).resolve().parent     # skills/apply-branding/components
 LAYERS = HERE.parent                         # skills/apply-branding
 SKILLS = LAYERS.parent                       # skills
 
 RECIPES = {
     "report": {
-        "layers": ["brand/tokens.css", "ui-components/base/styles.css"],
-        "optional": {"charts": "ui-components/charts/styles.css",
-                     "icons": "ui-components/icons/styles.css"},
+        "layers": ["brand/tokens.css", "components/base/styles.css"],
+        "optional": {"charts": "components/charts/styles.css",
+                     "icons": "components/icons/styles.css"},
         "theme": ("create-report", "styles.css"),
     },
     "slides": {
@@ -54,9 +54,9 @@ RECIPES = {
         "theme": ("create-slides", "slides.css"),
     },
     "page": {
-        "layers": ["brand/tokens.css", "ui-components/base/styles.css"],
-        "optional": {"charts": "ui-components/charts/styles.css",
-                     "icons": "ui-components/icons/styles.css"},
+        "layers": ["brand/tokens.css", "components/base/styles.css"],
+        "optional": {"charts": "components/charts/styles.css",
+                     "icons": "components/icons/styles.css"},
         "theme": None,
     },
 }
@@ -108,7 +108,7 @@ def css_for(words):
             # The browser ends the style element at that text, comment or not.
             sys.exit(f"assemble: {path.name} contains '</style', which would cut the block short")
         parts.append(f"/* ---- {path.name} ({path.parent.name}) ---- */\n{path.read_text().strip()}")
-    head = ("/* Assembled by apply-branding/ui-components/assemble.py from the words in data-aperia.\n"
+    head = ("/* Assembled by apply-branding/components/assemble.py from the words in data-aperia.\n"
             "   Do not edit inside this block: it is replaced on every run. Put\n"
             "   document-specific rules in a separate <style> after it. */")
     return head + "\n\n" + "\n\n".join(parts) + "\n"

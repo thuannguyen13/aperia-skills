@@ -329,7 +329,7 @@ def check_literals(plugin_name, plugin_dir):
 def check_snippet_routing(plugin_name, plugin_dir):
     """Check 11. COMPONENTS.md's File column is the only map from a component
     to the file holding its markup, so it has to stay level with the disk."""
-    ui = plugin_dir / LAYERS / "ui-components"
+    ui = plugin_dir / LAYERS / "components"
     doc = ui / "COMPONENTS.md"
     if not doc.exists():
         fail(f"{plugin_name}: no COMPONENTS.md at {doc.relative_to(ROOT)}")

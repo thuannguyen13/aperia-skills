@@ -36,7 +36,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PLUGIN = ROOT / "plugins" / "aperia"
 LAYERS = Path("skills") / "apply-branding"
-UI = PLUGIN / LAYERS / "ui-components"
+UI = PLUGIN / LAYERS / "components"
 
 # Section names are written as they should read, so they are used verbatim.
 # A component is introduced by <!-- ===== NAME ===== -->, and a group heading

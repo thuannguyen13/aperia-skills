@@ -11,7 +11,7 @@ Builds a presentation as **one self-contained HTML file**.
 
 ## Step 0: Read the brand layer first (required)
 
-**Where the shared layer is.** `brand/` and `ui-components/` live in the sibling skill `apply-branding`. Every path below writes that folder as `../apply-branding/`, which is its name in Claude Code; on Claude Desktop the same folder is `../aperia:apply-branding/`. Run `ls ..` from this skill folder once and use the name you find. The scripts resolve it on their own.
+**Where the shared layer is.** `brand/` and `components/` live in the sibling skill `apply-branding`. Every path below writes that folder as `../apply-branding/`, which is its name in Claude Code; on Claude Desktop the same folder is `../aperia:apply-branding/`. Run `ls ..` from this skill folder once and use the name you find. The scripts resolve it on their own.
 
 Before writing a line of HTML:
 
@@ -21,7 +21,7 @@ Before writing a line of HTML:
    skim **`references/slides.css`** for the class names and the type tokens.
    Do not paste either stylesheet. The deck carries one marker,
    `<style>/* @aperia slides */</style>`, and
-   `../apply-branding/ui-components/assemble.py` fills it with `../apply-branding/brand/tokens.css`
+   `../apply-branding/components/assemble.py` fills it with `../apply-branding/brand/tokens.css`
    and `slides.css`, in that order, byte for byte. `slides.css` reads the
    palette and the type ramp from the tokens and maps them onto the canvas.
 
@@ -31,7 +31,7 @@ in `BRAND.md` or `tokens.css`, it is not an Aperia value. Do not invent it.
 Brand assets are at `../apply-branding/brand/assets/`. The rules below cover what is
 specific to slides; everything about the identity itself lives in `BRAND.md`.
 
-**Design language follows `../apply-branding/ui-components/COMPONENTS.md`.** That shared
+**Design language follows `../apply-branding/components/COMPONENTS.md`.** That shared
 reference layer is the canonical source for how a component *means*
 something, independent of the canvas-unit vs. screen-px difference: which
 color a badge or callout carries for which sentiment, that status rides
@@ -40,10 +40,10 @@ chart-series order (aperia-blue, dark-blue, sapphire, sky-blue, light-blue),
 and the chart-selection logic (a bar chart needs a real quantitative axis, a
 part-to-whole story stays within a slice budget, never invent a percentage
 to force a chart). `slides.css` already implements all of this in canvas
-units, reading the same brand tokens `../apply-branding/ui-components/base/styles.css`
+units, reading the same brand tokens `../apply-branding/components/base/styles.css`
 reads on screen, not a reinterpretation.
 When the two diverge (this deck caps a donut at 3 segments where
-`../apply-branding/ui-components/COMPONENTS.md` allows 5, since a slide is read from
+`../apply-branding/components/COMPONENTS.md` allows 5, since a slide is read from
 across a room in a few seconds), that is a deliberate, more conservative
 choice for the presentation context, not a gap to close.
 
@@ -73,7 +73,7 @@ What the output does:
    layout markup and replace the copy, not the structure.
 5. **Build** the single HTML file with the style marker from the skeleton in
    place of any stylesheet.
-6. **Assemble**: run `python3 <plugin dir>/ui-components/assemble.py <file>`,
+6. **Assemble**: run `python3 <plugin dir>/components/assemble.py <file>`,
    required. It fills the marker with the theme. Re-run it after any later
    edit that touched the marker block; it replaces its own output.
 7. **QA**: run `python3 <this skill dir>/scripts/qa.py <file>`, required, then
@@ -301,7 +301,7 @@ other way, never distort, rotate, or add effects.
 ## Icons
 
 Lucide line icons, fetched from the Lucide CDN on demand by the shared
-`../apply-branding/ui-components/icons/icon.py`; nothing is bundled. If the fetch fails,
+`../apply-branding/components/icons/icon.py`; nothing is bundled. If the fetch fails,
 leave the icon out. Browse at https://lucide.dev/icons/
 and use the exact slug.
 
@@ -356,7 +356,7 @@ file. Pick the form that matches the data.
   gets the same single `.insight` line, saying which of the numbers is the
   argument. `qa.py` does not check this one, so it is on you.
 - **No pie charts.** A pie is only legible with 2 to 3 near-equal slices; use the
-  donut for that case and the stacked bar for everything else. (`../apply-branding/ui-components/COMPONENTS.md`
+  donut for that case and the stacked bar for everything else. (`../apply-branding/components/COMPONENTS.md`
   allows a plain pie too, capped at 5 slices, for freeform pages read up close;
   a slide is read from across a room, so this deck stays with the donut-only,
   3-segment ceiling `qa.py` enforces, narrower, not a different rule.)
@@ -438,7 +438,7 @@ a collision with the footer, or an icon crowding a heading. Check in particular:
   copy from it.
 - `references/slides.css`: the complete slide theme. Injected by the assemble
   script after `../apply-branding/brand/tokens.css`; skim it for class names, never paste it.
-- `../apply-branding/ui-components/assemble.py`: fills the marker. Required step.
+- `../apply-branding/components/assemble.py`: fills the marker. Required step.
 - `../apply-branding/brand/assets/`: `aperia-logo.svg`, `pattern-single-portrait.svg`,
   `pattern-double.svg` if you need raw path data.
 - `scripts/icon.py`: emit inline icon markup, a wrapper over the shared fetcher.

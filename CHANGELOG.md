@@ -2,7 +2,7 @@
 
 ## 0.9.0
 
-- `brand/` and `ui-components/` moved into a third skill, `apply-branding`. Desktop mounts only folders under `skills/` that have a `SKILL.md`, so layers at the plugin root never arrived. Broken since 0.3.0. The other skills read them as `../apply-branding/`. `bundle-skills.py` and `dist/` are gone.
+- `brand/` and `components/` moved into a third skill, `apply-branding`. Desktop mounts only folders under `skills/` that have a `SKILL.md`, so layers at the plugin root never arrived. Broken since 0.3.0. The other skills read them as `../apply-branding/`. `bundle-skills.py` and `dist/` are gone.
 - `apply-branding` is a skill again, for anything that is not a report or a deck. New `page` recipe in `assemble.py`: tokens and base components, optional charts and icons, no theme.
 - Icons are fetched, not bundled. `icons/icon.py` pulls from the Lucide CDN on first use, pinned to 1.41.0, and caches. The 430 KB JSON is gone. The slides copy is now a thin wrapper.
 - Every `SKILL.md` carries `metadata.version`, checked against `plugin.json`.
@@ -16,6 +16,7 @@
 - New `scripts/gallery.py` renders the snippet libraries as one labelled page, assembled with the real layers. Maintainer tool, outside `plugins/`.
 - `examples/` and `dist/` removed. The sample report was built against the old component names; `gallery.py` replaces it.
 - De-duplicated: the nine snippet files carried an identical header restating `COMPONENTS.md` and `charts/styles.css`, now a pointer; the per-file component lists in `COMPONENTS.md` and the chart-family list in `create-report/SKILL.md` duplicated the File column and are gone; `gallery.py` globs the snippet files instead of listing them. New validate check 11 fails if the File column and the files on disk drift apart.
+- `ui-components/` renamed to `components/`. The folder and its doc now share a name, matching `brand/BRAND.md`.
 
 ## 0.8.0
 

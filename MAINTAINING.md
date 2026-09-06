@@ -43,7 +43,7 @@ Approval is structural: only hexes inside a fenced ```approved block count. Ment
 ## assemble.py
 
 ```bash
-python3 plugins/aperia/skills/apply-branding/ui-components/assemble.py <file.html>
+python3 plugins/aperia/skills/apply-branding/components/assemble.py <file.html>
 ```
 
 Fills a document's style marker, `<style>/* @aperia report [charts] [icons] */</style>` or `<style>/* @aperia slides */</style>`, with the stylesheets in the order the recipe names. The model never reads or types the CSS; the script copies the files in. Re-running replaces the injected block from the same words, so it is safe after every content edit. `--print report charts` writes the CSS to stdout for inspection.
@@ -71,7 +71,7 @@ The script stays outside `plugins/` on purpose: a Desktop install mounts the ski
 
 ## Where the shared layers live
 
-`brand/` and `ui-components/` sit inside `plugins/aperia/skills/apply-branding/`, and the other two skills read them as `../apply-branding/brand/` and `../apply-branding/ui-components/`. One copy, no build step.
+`brand/` and `components/` sit inside `plugins/aperia/skills/apply-branding/`, and the other two skills read them as `../apply-branding/brand/` and `../apply-branding/components/`. One copy, no build step.
 
 The reason for that spot is Claude Desktop. It mounts each folder under `skills/` that contains a `SKILL.md`, side by side at `/mnt/skills/plugins/<plugin>:<skill>/`, and nothing else: not the plugin root, not a folder without a `SKILL.md`. Layers at the plugin root never arrived, and both skills were broken there from 0.3.0 to 0.8.0. A folder that is a skill arrives, so the layers live in one. `apply-branding` is a real skill, the freeform branding entry point, and the carrier of the layers at the same time.
 
@@ -81,7 +81,7 @@ A skill folder on its own is not complete, so the Claude Desktop skill uploader,
 
 ## Icons
 
-Nothing is bundled. `skills/apply-branding/ui-components/icons/icon.py` fetches each icon from the Lucide CDN (`cdn.jsdelivr.net/npm/lucide-static`) on first use, pinned to the release named at the top of the script, and caches it under `~/.cache/aperia-icons/`. Bump the version there on purpose. A sandbox that blocks that host cannot produce icons; the script says so and the skill leaves the icon out.
+Nothing is bundled. `skills/apply-branding/components/icons/icon.py` fetches each icon from the Lucide CDN (`cdn.jsdelivr.net/npm/lucide-static`) on first use, pinned to the release named at the top of the script, and caches it under `~/.cache/aperia-icons/`. Bump the version there on purpose. A sandbox that blocks that host cannot produce icons; the script says so and the skill leaves the icon out.
 
 ## Ad-hoc branding
 

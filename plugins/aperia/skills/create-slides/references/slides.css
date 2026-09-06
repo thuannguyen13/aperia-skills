@@ -1,6 +1,6 @@
 /* =====================================================================
    APERIA HTML SLIDES: THEME
-   Injected by ../apply-branding/ui-components/assemble.py after ../apply-branding/brand/tokens.css,
+   Injected by ../apply-branding/components/assemble.py after ../apply-branding/brand/tokens.css,
    which it reads for every palette, weight and type value. Nothing here
    restates a brand value; the deck marker is a style element holding the
    comment `@aperia slides`.
@@ -22,7 +22,7 @@
 :root {
   /* The palette comes from ../apply-branding/brand/tokens.css and is not repeated here.
      Two aliases for names the brand layer spells differently, same as
-     ../apply-branding/ui-components/base/styles.css. */
+     ../apply-branding/components/base/styles.css. */
   --sapphire:var(--sapphire-blue); --med-gray:var(--medium-gray);
   --sans:var(--font-sans); --label:var(--sans); /* no mono typeface: BRAND.md sanctions Inter only */
   /* mapped roles (light slide). --fg is the one deliberate override of the

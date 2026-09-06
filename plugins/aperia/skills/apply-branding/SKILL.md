@@ -12,7 +12,7 @@ Builds any artifact that is not a scrolling report or a slide deck in the Aperia
 ## Step 0: Read the brand layer first (required)
 
 1. Read **`brand/BRAND.md`** in full. It carries the rules: palette roles, type, logo, the graphic element, photography, voice, and the format notes for Office, Excel, HTML and diagrams.
-2. Read **`ui-components/COMPONENTS.md`** for the component and chart toolkits and the rules that govern them, then the `ui-components/base/` file for the group you need (`structure.html`, `emphasis.html`, `tables.html`, `charts.html`, `timelines.html`) for the markup of any component you use. Charts beyond the base set are in `ui-components/charts/` (`trend.html`, `compare.html`, `proportion.html`, `intensity.html`); icons in `ui-components/icons/index.html`.
+2. Read **`ui-components/COMPONENTS.md`** for the component and chart toolkits and the rules that govern them, then then only the snippet files the components you picked actually need. `COMPONENTS.md`'s toolkit tables carry a **File** column naming the one file each component's markup is in: `ui-components/base/` holds `structure.html`, `emphasis.html`, `tables.html`, `charts.html` and `timelines.html`, and `ui-components/charts/` holds `trend.html`, `compare.html`, `proportion.html` and `intensity.html`. Icons are in `ui-components/icons/index.html`. Do not read all nine.
 
 **Do not work from memory of the palette or the type rules.** The values live in `brand/tokens.css`. If a value is not there, it is not an Aperia value.
 

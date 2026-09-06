@@ -27,9 +27,9 @@ documented in that skill's own files.
 2. Put one marker where the styles go, `<style>/* @aperia report */</style>` (a deck uses `slides`), and run **`assemble.py <file>`** from this folder once the document is written. It injects `tokens.css`, then **`base/styles.css`**, then any optional toolkit, then the skill's own theme, byte for byte, and replaces its own block on every re-run. Nothing is pasted by hand and nothing is edited inside the injected block; document-specific rules go in a second `<style>` after it. `base/styles.css` reads the tokens rather than repeating them and adds the surface roles, the status ramp, the environment colors, and two aliases for names the brand layer spells differently (`--sapphire` for `--sapphire-blue`, `--med-gray` for `--medium-gray`). One token, `--fg`, deliberately overrides the brand value; it says so in place and is recorded in `../brand/DEVIATIONS.md` section 4.
 3. Load Inter with weight 600 included (`https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap`) with a `<link>` in `<head>`; Arial fallback via the `--sans` token. Body text is Regular, never Bold.
 4. Wrap components in `<div class="wrap">...</div>` unless they already sit inside a container with its own width constraint, `.wrap` caps content at 920px, which every component here is designed against.
-5. Copy the matching block(s) from the **`base/`** file for that group, fill in real content. Never ship an empty card or lorem ipsum.
+5. Pick the component from the toolkit tables below and read its **File** column, which names the one file its markup is in. Read that file, copy the block, fill in real content. Never ship an empty card or lorem ipsum. Read only the files the components you picked name; there is no reason to read all nine.
 6. If you use the `concerns` accordion, ship its toggle script (in `base/emphasis.html`, right after the accordion markup) once per page.
-7. If the chart you need is a line, area, combo, scatter, bubble, grouped/stacked bars, pie, donut, radial gauge, treemap, radar, funnel, sparkline, or heatmap (see the Chart toolkit below), add the word `charts` to the marker so **`charts/styles.css`** is injected, and copy markup from the matching **`charts/`** file.
+7. If the File column for anything you picked names a `charts/` file, add the word `charts` to the marker so **`charts/styles.css`** is injected as well.
 8. If the content needs an inline icon, add the word `icons` to the marker so **`icons/styles.css`** is injected, and copy markup from **`icons/index.html`**, see the Icon toolkit below, including the licensing note, before using them.
 9. Run the checklist at the bottom of this file and the Application Checklist in `../brand/BRAND.md`.
 
@@ -37,30 +37,30 @@ documented in that skill's own files.
 
 ## Component toolkit
 
-| Content type | Component |
-|---|---|
-| 4 top-line points / exec summary | 2×2 `card` grid (`.g2`/`.g3`/`.g4`) with badges |
-| Inline status/category tag | `badge` (b-blue/b-sky/b-green/b-amber/b-gray/b-red) |
-| 2 to 4 standalone key numbers | `stat-row`, never `bchart` |
-| Inline note | `callout` (blue=neutral, green=positive, amber=warning, red=critical) |
-| A labelled warning or provenance note | `callout tagged` (add `.soft` for neutral) |
-| A small set of named colors | `swatch-grid` |
-| Comparison of options | `cmp-table` with ✓/✗/~ (recommended column gets `.hl`) |
-| Categorical list with role/type/focus tags | `stack-table` with badge columns, never `bchart` |
-| Role-based before/after outcomes | `outcome-grid` with ↓/↑ |
-| Concerns / FAQs | `concerns` accordion (interactive, ships a tiny script) |
-| Parallel / unordered principles | `principles` grid, never for a sequence |
-| Summary / recommendation | `dark-panel` (Aperia Blue + single graphic element) |
-| The ask | `cta-box` (Aperia Blue + single graphic element) |
-| Effort distributed across phases (size only, not a schedule) | `tline-bars` (flex:N widths) |
-| A schedule of a few phases on a continuous time axis | `gantt`, staggered rows |
-| A sequential process / method pipeline | `flow`, numbered nodes + rail, never `principles` |
-| Up to 4 dated milestones | `mstone-row` |
-| More than 4 dated milestones, or entries with more body text than a card can hold | `vtimeline` |
-| A short (≤~6 entry) sequence read left-to-right | `htimeline`, same entries as `vtimeline`, sideways |
-| DEV to PROD promotion path, up to 4 | `envchain` |
-| DEV to PROD promotion path, 5 or more | `vtimeline` or `htimeline` with `envc e-*` entries |
-| Assumptions, risks and dependencies | `ard`, three columns |
+| Content type | Component | File |
+|---|---|---|
+| 4 top-line points / exec summary | 2×2 `card` grid (`.g2`/`.g3`/`.g4`) with badges | `base/structure.html` |
+| Inline status/category tag | `badge` (b-blue/b-sky/b-green/b-amber/b-gray/b-red) | `base/emphasis.html` |
+| 2 to 4 standalone key numbers | `stat-row`, never `bchart` | `base/structure.html` |
+| Inline note | `callout` (blue=neutral, green=positive, amber=warning, red=critical) | `base/emphasis.html` |
+| A labelled warning or provenance note | `callout tagged` (add `.soft` for neutral) | `base/emphasis.html` |
+| A small set of named colors | `swatch-grid` | `base/tables.html` |
+| Comparison of options | `cmp-table` with ✓/✗/~ (recommended column gets `.hl`) | `base/tables.html` |
+| Categorical list with role/type/focus tags | `stack-table` with badge columns, never `bchart` | `base/tables.html` |
+| Role-based before/after outcomes | `outcome-grid` with ↓/↑ | `base/tables.html` |
+| Concerns / FAQs | `concerns` accordion (interactive, ships a tiny script) | `base/emphasis.html` |
+| Parallel / unordered principles | `principles` grid, never for a sequence | `base/structure.html` |
+| Summary / recommendation | `dark-panel` (Aperia Blue + single graphic element) | `base/emphasis.html` |
+| The ask | `cta-box` (Aperia Blue + single graphic element) | `base/emphasis.html` |
+| Effort distributed across phases (size only, not a schedule) | `tline-bars` (flex:N widths) | `base/timelines.html` |
+| A schedule of a few phases on a continuous time axis | `gantt`, staggered rows | `base/timelines.html` |
+| A sequential process / method pipeline | `flow`, numbered nodes + rail, never `principles` | `base/timelines.html` |
+| Up to 4 dated milestones | `mstone-row` | `base/timelines.html` |
+| More than 4 dated milestones, or entries with more body text than a card can hold | `vtimeline` | `base/timelines.html` |
+| A short (≤~6 entry) sequence read left-to-right | `htimeline`, same entries as `vtimeline`, sideways | `base/timelines.html` |
+| DEV to PROD promotion path, up to 4 | `envchain` | `base/timelines.html` |
+| DEV to PROD promotion path, 5 or more | `vtimeline` or `htimeline` with `envc e-*` entries | `base/timelines.html` |
+| Assumptions, risks and dependencies | `ard`, three columns | `base/timelines.html` |
 
 ## Icon toolkit (`icons/`)
 
@@ -93,36 +93,36 @@ concluding Lucide doesn't have it; with 2,000+ icons it almost always does.
 One category, whatever the underlying geometry, a bar, a curve, an arc and a
 grid square are all still just a chart. Everything through `bchart`/`stack`/
 `tier-wrap` lives in `base/styles.css` (already loaded in step 2 above).
-Everything from `linechart` down needs `charts/styles.css` and the matching `charts/` file too,
-load them per step 7 before using any row marked **(charts/)**. That
+Everything whose File column names a `charts/` file also needs `charts/styles.css`,
+loaded per step 7 before use. That
 split is a file-loading convenience only (no report needs a radar chart, so
 it isn't force-loaded into every one); it is not a second category, and
 nothing below treats it as one.
 
-| Content type | Component |
-|---|---|
-| Estimate with real uncertainty | `pert-cols` + `pert-bar-track` gradient |
-| Ranked quantities on a real common scale | `bchart`, sorted descending, never for categorical data |
-| Proportions of a whole, ≤6 categories, precise comparison matters | `stack` proportional bar + % in legend |
-| Proportions of a whole, ≤5 slices, a circle is the expected form (an exec "here's the mix" moment) | `piechart` **(charts/)** |
-| Same, plus a meaningful running total to put in the center | `donutchart` **(charts/)** |
-| How scope/scenario choices shift a total | `scn-wrap` (base + hatched addition) |
-| Complexity tiers with item counts | `tier-wrap` 3-column cards |
-| One series over time | `linechart` **(charts/)** |
-| Two or three series over time, one comparable to another | `linechart` with a `.compare` dashed line **(charts/)**, or `gbar` if the x-axis is categorical rather than continuous |
-| Volume under a trend, single series | `areachart` **(charts/)** |
-| Composition of a total changing over time | `areachart`, stacked, two cumulative polygons, never independently-filled series **(charts/)** |
-| Two metrics on different scales over the same timeline | `combochart`, bars + line, dual axis **(charts/)** |
-| Two to three series compared across a handful of categories | `gbar`, grouped bars **(charts/)** |
-| Many categories, each with an internal composition, over time or sequence | `sbar`, stacked category bars, not `stack` above, which is one bar for one whole **(charts/)** |
-| Correlation between two numeric variables | `scatterchart` **(charts/)** |
-| Correlation between two variables plus a third magnitude, or a 4-quadrant classification | `bubblechart` **(charts/)** |
-| One metric against its own min-max range | `gauge-card`, never a pie or donut for this **(charts/)** |
-| Hierarchical or categorical proportions of a whole, more than ~6 categories | `treemap`, area-correct via `flex-grow`, not percentages **(charts/)** |
-| A profile across 5-7 named dimensions, 1-2 subjects | `radar-card` **(charts/)** |
-| A sequential process with drop-off at each stage | `funnel` **(charts/)** |
-| A single number plus its recent trend | `spark-card` **(charts/)** |
-| Intensity across two categorical axes (e.g., time × day) | `heatmap` **(charts/)** |
+| Content type | Component | File |
+|---|---|---|
+| Estimate with real uncertainty | `pert-cols` + `pert-bar-track` gradient | `base/charts.html` |
+| Ranked quantities on a real common scale | `bchart`, sorted descending, never for categorical data | `base/charts.html` |
+| Proportions of a whole, ≤6 categories, precise comparison matters | `stack` proportional bar + % in legend | `base/charts.html` |
+| Proportions of a whole, ≤5 slices, a circle is the expected form (an exec "here's the mix" moment) | `piechart` | `charts/proportion.html` |
+| Same, plus a meaningful running total to put in the center | `donutchart` | `charts/proportion.html` |
+| How scope/scenario choices shift a total | `scn-wrap` (base + hatched addition) | `base/charts.html` |
+| Complexity tiers with item counts | `tier-wrap` 3-column cards | `base/tables.html` |
+| One series over time | `linechart` | `charts/trend.html` |
+| Two or three series over time, one comparable to another | `linechart` with a `.compare` dashed line, or `gbar` if the x-axis is categorical rather than continuous | `charts/trend.html` |
+| Volume under a trend, single series | `areachart` | `charts/trend.html` |
+| Composition of a total changing over time | `areachart`, stacked, two cumulative polygons, never independently-filled series | `charts/trend.html` |
+| Two metrics on different scales over the same timeline | `combochart`, bars + line, dual axis | `charts/trend.html` |
+| Two to three series compared across a handful of categories | `gbar`, grouped bars | `charts/compare.html` |
+| Many categories, each with an internal composition, over time or sequence | `sbar`, stacked category bars, not `stack` above, which is one bar for one whole | `charts/compare.html` |
+| Correlation between two numeric variables | `scatterchart` | `charts/compare.html` |
+| Correlation between two variables plus a third magnitude, or a 4-quadrant classification | `bubblechart` | `charts/compare.html` |
+| One metric against its own min-max range | `gauge-card`, never a pie or donut for this | `charts/intensity.html` |
+| Hierarchical or categorical proportions of a whole, more than ~6 categories | `treemap`, area-correct via `flex-grow`, not percentages | `charts/proportion.html` |
+| A profile across 5-7 named dimensions, 1-2 subjects | `radar-card` | `charts/compare.html` |
+| A sequential process with drop-off at each stage | `funnel` | `charts/proportion.html` |
+| A single number plus its recent trend | `spark-card` | `charts/trend.html` |
+| Intensity across two categorical axes (e.g., time × day) | `heatmap` | `charts/intensity.html` |
 
 **Pie and donut are sanctioned, but for a narrow job**: a part-to-whole story
 with at most 5 slices, where a circle is what the audience expects (an

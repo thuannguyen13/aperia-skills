@@ -9,26 +9,12 @@
      the chart stops being readable, so group the tail into one entry.
      ========================================================== -->
 
-<!-- ========== Pie Chart ========== -->
-<!-- At most ~5 slices, sorted descending from 12 o'clock. -->
-<!-- conic-gradient stops are cumulative %: "color START% END%", each END%
-     equal to the next slice's START%, last slice ending at 100%. No arc math.
-     3 slices here, none tiny, the case a pie is actually good at. -->
-<div class="pie-wrap">
-  <div class="piechart" style="background:conic-gradient(var(--aperia-blue) 0% 45%, var(--dark-blue) 45% 80%, var(--sapphire) 80% 100%)" role="img" aria-label="Chargeback reasons: card present 45%, e-commerce 35%, other 20%"></div>
-  <ul class="pie-legend">
-    <li><i style="background:var(--aperia-blue)"></i>Card present<b>45%</b></li>
-    <li><i style="background:var(--dark-blue)"></i>E-commerce<b>35%</b></li>
-    <li><i style="background:var(--sapphire)"></i>Other<b>20%</b></li>
-  </ul>
-</div>
-
 <!-- ========== Donut Chart ========== -->
-<!-- Same rule, plus a center total. -->
+<!-- The one circular form. At most 5 slices, sorted descending from 12 o'clock, a center total. -->
 <!-- Same fraud-reason data as the treemap example, but capped at the 5-slice
      budget: the treemap's 3 smallest categories (Expired Card, Invalid CVV,
      Other) are grouped into one "Other" slice here. That's the move whenever
-     a part-to-whole set runs past what a pie/donut can hold, group the long
+     a part-to-whole set runs past what a donut can hold, group the long
      tail rather than adding a 6th sliver, or use treemap/stack-table instead
      of forcing every category into the circle. -->
 <div class="pie-wrap">

@@ -225,8 +225,8 @@ def main(path):
     for img in soup.select("img"):
         if img.get("alt") is None:
             warn("doc", "image without an alt attribute")
-    if "pie" in used:
-        err("doc", "pie chart, use a donut for 2 to 3 parts or a stacked bar for more")
+    if "piechart" in used or "pie" in used:
+        err("doc", "pie chart, the library has no pie: use stack, treemap or a donut")
 
     # ---- delivery plan ----
     scripts = " ".join(s.get_text() for s in soup.find_all("script"))

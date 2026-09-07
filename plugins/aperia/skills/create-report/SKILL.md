@@ -36,7 +36,7 @@ Minimal content from the user: scaffold and flag what to replace. Never leave a 
 
 ## Report-only decisions
 
-- **No pie charts in a report.** Proportions use `stack` or, for more categories, `treemap`. This is stricter than `COMPONENTS.md` on purpose; do not loosen it unless the user asks here.
+- **No pie charts in a report.** The library ships none. Proportions use `stack` or, for more categories, `treemap`; `donutchart` only when a circle is the form the reader expects, at most 5 slices.
 - **`gantt` or `sgantt`**: see the table under Delivery-plan components. A phased roadmap with four workstreams is `gantt`; a sprint plan with thirty features grouped by capability is `sgantt`. Never both in one report.
 - **`phases`**: sequential phases of work, each with a duration pill and a deliverables list. For the work itself, not dated checkpoints (`vtimeline` / `mstone-row`) and not a short conceptual pipeline (`flow`). Markup in `references/snippets.html`; node color cycles `pd-blue`, `pd-sapphire`, `pd-dark`, repeating.
 

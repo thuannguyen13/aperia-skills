@@ -64,15 +64,15 @@ Lucide (MIT), fetched on demand: `python3 icons/icon.py shield-check` emits inli
 | Estimate with real uncertainty | `pert-cols` + `pert-bar-track` gradient | `base/charts.html` |
 | Ranked quantities on a real common scale | `bchart`, sorted descending, never for categorical data | `base/charts.html` |
 | Proportions of a whole, ≤6 categories, precise comparison matters | `stack` proportional bar + % in legend | `base/charts.html` |
-| Proportions of a whole, ≤5 slices, a circle is the expected form (an exec "here's the mix" moment) | `piechart` | `charts/proportion.html` |
+| Proportions of a whole, ≤5 slices, a circle is the expected form (an exec "here's the mix" moment) | `donutchart` | `charts/proportion.html` |
 | Same, plus a meaningful running total to put in the center | `donutchart` | `charts/proportion.html` |
 | How scope/scenario choices shift a total | `bchart` with a `bfill add` segment and a `bdelta` line, ordered by scope not size | `base/charts.html` |
 | Complexity tiers with item counts | `tier-wrap` 3-column cards | `base/tables.html` |
-| One series over time | `linechart` | `charts/trend.html` |
-| Two or three series over time, one comparable to another | `linechart` with a `.compare` dashed line, or `gbar` if the x-axis is categorical rather than continuous | `charts/trend.html` |
-| Volume under a trend, single series | `areachart` | `charts/trend.html` |
-| Composition of a total changing over time | `areachart`, stacked, two cumulative polygons, never independently-filled series | `charts/trend.html` |
-| Two metrics on different scales over the same timeline | `combochart`, bars + line, dual axis | `charts/trend.html` |
+| One series over time | trend chart, line form (`cf-line`) | `charts/trend.html` |
+| Two or three series over time, one comparable to another | trend chart, line form with a `.compare` dashed line, or `gbar` if the x-axis is categorical rather than continuous | `charts/trend.html` |
+| Volume under a trend, single series | trend chart, area form (`cf-area`) | `charts/trend.html` |
+| Composition of a total changing over time | trend chart, area form stacked as cumulative polygons, never independently-filled series | `charts/trend.html` |
+| Two metrics on different scales over the same timeline | trend chart, combo form (`cf-bar` plus `cf-line`), dual axis | `charts/trend.html` |
 | Two to three series compared across a handful of categories | `gbar`, grouped bars | `charts/compare.html` |
 | Many categories, each with an internal composition, over time or sequence | `sbar`, stacked category bars, not `stack` above, which is one bar for one whole | `charts/compare.html` |
 | Correlation between two numeric variables | `scatterchart` | `charts/compare.html` |
@@ -91,11 +91,11 @@ Lucide (MIT), fetched on demand: `python3 icons/icon.py shield-check` emits inli
 - **No absolute-positioned labels over a bar track and no z-index stacking inside one.** Segments sit side by side under `display:flex; overflow:hidden`.
 - **Series color order is fixed**: `s1` aperia-blue, `s2` dark-blue, `s3` sapphire, `s4` sky-blue (dark text on an area fill), `s5` light-blue, `s6` dark-gray, `s7` neutral for a long tail or "other". Assign from `s1` outward in order of importance; never skip ahead.
 - **A comparison series is dashed**: a prior period, baseline or benchmark uses `.compare` (line/combo) or `.radar-poly.compare`. Solid stroke is the focal series only.
-- **`linechart`, `areachart`, `combochart`, `scatterchart`, `bubblechart` share one 640×300 `viewBox` and the plot geometry in `charts/styles.css`'s header comment.** Compute point positions with those formulas; never eyeball, never change the viewBox for one chart.
-- **`combochart` labels both axes on the chart.**
+- **The trend chart in all three forms, the scatter plot and the bubble chart share one 640×300 `viewBox` and the plot geometry in `charts/styles.css`'s header comment.** Compute point positions with those formulas; never eyeball, never change the viewBox for one chart.
+- **The combo form labels both axes on the chart.**
 - **`bubblechart` radius scales by √value.**
-- **`piechart`/`donutchart`: at most 5 slices**, sorted descending from 12 o'clock clockwise, the long tail grouped into one "Other", every slice with a `.pie-legend` entry stating its %. Stops are cumulative conic-gradient percentages (`color START% END%`), each END equal to the next START, the last at exactly 100%. Only for a part-to-whole story where a circle is expected; where precise comparison matters, `stack` or `bchart`. Never as a substitute for `gauge-card`.
-- **`treemap`, `sbar` and stacked `areachart` proportions come from `flex-grow` ratios or true cumulative sums**, never hand-typed percentages.
+- **`donutchart`: at most 5 slices**, sorted descending from 12 o'clock clockwise, the long tail grouped into one "Other", every slice with a `.pie-legend` entry stating its %. Stops are cumulative conic-gradient percentages (`color START% END%`), each END equal to the next START, the last at exactly 100%. Only for a part-to-whole story where a circle is expected; where precise comparison matters, `stack` or `bchart`. Never as a substitute for `gauge-card`.
+- **`treemap`, `sbar` and stacked area proportions come from `flex-grow` ratios or true cumulative sums**, never hand-typed percentages.
 - **`heatmap` ships a legend bar and a `title` on every cell.** Its row-label gutter is `--hm-labelw` on `.heatmap` (56px, 40px at ≤700px); widen it for word labels, never override `grid-template-columns`.
 - **`gauge-card` fill is a status token**, `.ahead`/`.risk`/`.done`, chosen for what the number means.
 

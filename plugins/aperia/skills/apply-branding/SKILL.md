@@ -3,7 +3,7 @@ name: apply-branding
 description: Apply the Aperia brand to anything that is not a report or a slide deck, such as a landing page, an email, a dashboard, a diagram, a form, or a one-off graphic, or build one from scratch in the Aperia look. Holds the brand and component layers the other Aperia skills read.
 user-invocable: false
 metadata:
-  version: "0.9.0"
+  version: "0.9.1"
 ---
 
 # Apply Aperia Branding

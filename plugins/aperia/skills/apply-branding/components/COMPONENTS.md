@@ -52,7 +52,7 @@ Inline `<code>` is styled by every layer: Inter at Medium weight on a `--muted` 
 
 ## Icon toolkit (`icons/`)
 
-Lucide (MIT), fetched on demand: `python3 icons/icon.py shield-check` emits inline SVG, `--search alert` finds a slug. Nothing is bundled; `icons/index.html` lists common slugs and the usage markup, not the full set. Without network the script says so; leave the icon out.
+Lucide (MIT), fetched on demand: `python3 icons/icon.py shield-check` emits inline SVG, `--search alert` finds a slug. Nothing is bundled; `icons/index.html` lists common slugs and the usage markup, not the full set. The script tries two hosts; where neither is reachable, set `APERIA_ICONS_DIR` to a folder of Lucide SVGs and it reads from there. Otherwise it says so; leave the icon out.
 
 - An icon supplements a badge, callout or marker color. It is never the only signal.
 - Always generate the SVG with the script. Never hand-write or edit path data, never add a fill; icons are `stroke="currentColor"` and recolor like text.

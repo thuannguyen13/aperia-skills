@@ -399,12 +399,19 @@ code { font:inherit; font-weight:500; background:var(--muted); border-radius:var
 
 /* --- line / trend chart (inline SVG) --- */
 .lchart { width:100%; height:435px; display:block; overflow:visible }
-.lchart .ln { fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round }
-.lchart .ln1 { stroke:var(--aperia-blue) } .lchart .ln2 { stroke:var(--sapphire) }
-.s-dark .lchart .ln1 { stroke:var(--sky-blue) } .s-dark .lchart .ln2 { stroke:#3a8fd1 }
-.lchart .dot { fill:var(--aperia-blue) } .s-dark .lchart .dot { fill:var(--sky-blue) }
-.lchart .dlbl { font-family:var(--label); font-size:var(--slide-text-xs); font-weight:600; fill:var(--aperia-blue); text-anchor:middle }
-.s-dark .lchart .dlbl { fill:var(--white) }
+/* A series is a <g class="ln lnN"> holding its polyline, dots, value labels and
+   name; everything inside takes the series color through currentColor. A bare
+   <polyline class="ln ln1"> from an older deck still works. Five series, in
+   the ramp order the bars use. */
+.lchart .ln { fill:none; stroke:currentColor; stroke-width:3; stroke-linecap:round; stroke-linejoin:round }
+.lchart .ln1 { color:var(--aperia-blue) } .lchart .ln2 { color:var(--sapphire) } .lchart .ln3 { color:var(--dark-blue) }
+.lchart .ln4 { color:var(--sky-blue) } .lchart .ln5 { color:var(--med-gray) }
+.s-dark .lchart .ln1 { color:var(--sky-blue) } .s-dark .lchart .ln2 { color:#3a8fd1 } .s-dark .lchart .ln3 { color:var(--light-blue) }
+.s-dark .lchart .ln4 { color:var(--white) } .s-dark .lchart .ln5 { color:#a8c4dd }
+.lchart .dot { fill:var(--aperia-blue) } .s-dark .lchart .dot { fill:var(--sky-blue) } .lchart .ln .dot { fill:currentColor; stroke:none }
+.lchart .dlbl { font-family:var(--label); font-size:var(--slide-text-xs); font-weight:600; fill:var(--aperia-blue); text-anchor:middle; stroke:none }
+.s-dark .lchart .dlbl { fill:var(--white) } .lchart .ln .dlbl { fill:currentColor }
+.lchart .name { font-family:var(--label); font-size:var(--slide-text-xs); font-weight:600; fill:currentColor; stroke:none; text-anchor:start }
 .lchart .axlbl { font-family:var(--label); font-size:var(--slide-text-xs); fill:var(--med-gray); text-anchor:middle }
 .lchart .base { stroke:var(--border); stroke-width:1 }
 .s-dark .lchart .base { stroke:rgba(255,255,255,.25) }

@@ -13,10 +13,13 @@ As a module:
     from icon import svg, search
     html = svg("shield-check")
 
-Nothing is bundled. Each icon is fetched from the Lucide CDN on first use,
+Nothing is bundled. Each icon is fetched from a Lucide CDN on first use,
 pinned to one release so a slug always gives the same paths, and cached
-locally so the next use is free. Without network the script says so and
-exits non-zero; leave the icon out, it is never the only signal.
+locally so the next use is free. Two hosts are tried in order. Where neither
+is reachable, set APERIA_ICONS_DIR to a folder of Lucide SVG files (the
+icons/ folder of a lucide-static package) and icons are read from there.
+Otherwise the script says so and exits non-zero; leave the icon out, it is
+never the only signal.
 """
 import json
 import os
@@ -28,7 +31,10 @@ import urllib.request
 # Pinned so a slug resolves to the same artwork on every machine. Bump on
 # purpose, in one place.
 LUCIDE_VERSION = "1.41.0"
-CDN = f"https://cdn.jsdelivr.net/npm/lucide-static@{LUCIDE_VERSION}"
+CDNS = [f"https://cdn.jsdelivr.net/npm/lucide-static@{LUCIDE_VERSION}",
+        f"https://unpkg.com/lucide-static@{LUCIDE_VERSION}"]
+CDN = CDNS[0]
+LOCAL_DIR = os.environ.get("APERIA_ICONS_DIR")
 CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "aperia-icons", LUCIDE_VERSION)
 TIMEOUT = 8
 
@@ -39,12 +45,26 @@ TPL = ('<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 _names = None  # the full Lucide name list, fetched once per run
 
 
-def _fetch(url):
-    """Body text, or None when the network is unavailable or the file is missing."""
+def _fetch(path):
+    """Body text for a path under the package, from the first host that answers,
+    or None when no host is reachable or the file is missing."""
+    for host in CDNS:
+        try:
+            with urllib.request.urlopen(f"{host}/{path}", timeout=TIMEOUT) as resp:
+                return resp.read().decode("utf-8")
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError):
+            continue
+    return None
+
+
+def _local(slug):
+    """The SVG text from APERIA_ICONS_DIR, or None when unset or the file is missing."""
+    if not LOCAL_DIR:
+        return None
     try:
-        with urllib.request.urlopen(url, timeout=TIMEOUT) as resp:
-            return resp.read().decode("utf-8")
-    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError):
+        with open(os.path.join(LOCAL_DIR, f"{slug}.svg"), encoding="utf-8") as fh:
+            return fh.read()
+    except OSError:
         return None
 
 
@@ -62,7 +82,7 @@ def paths(slug):
     if os.path.exists(cached):
         with open(cached, encoding="utf-8") as fh:
             return fh.read()
-    body = _fetch(f"{CDN}/icons/{slug}.svg")
+    body = _local(slug) or _fetch(f"icons/{slug}.svg")
     inner = _inner(body) if body else None
     if inner:
         os.makedirs(CACHE_DIR, exist_ok=True)
@@ -75,9 +95,10 @@ def svg(slug: str, stroke_width: float = 1.75) -> str:
     """Return inline SVG markup for a Lucide slug (e.g. 'shield-check')."""
     inner = paths(slug)
     if inner is None:
-        raise KeyError(f"Could not fetch Lucide icon '{slug}' from {CDN}. Either the slug "
-                       f"is wrong (check lucide.dev/icons) or the network is unavailable. "
-                       f"Leave the icon out rather than drawing one.")
+        raise KeyError(f"Could not fetch Lucide icon '{slug}' from {' or '.join(CDNS)}. Either "
+                       f"the slug is wrong (check lucide.dev/icons) or no host is reachable; "
+                       f"set APERIA_ICONS_DIR to a folder of Lucide SVGs, or leave the icon "
+                       f"out rather than drawing one.")
     return TPL.format(w=stroke_width, paths=inner)
 
 
@@ -85,7 +106,7 @@ def names():
     """Every Lucide icon name, from the CDN's tag index; None when offline."""
     global _names
     if _names is None:
-        body = _fetch(f"{CDN}/tags.json")
+        body = _fetch("tags.json")
         _names = sorted(json.loads(body)) if body else None
     return _names
 

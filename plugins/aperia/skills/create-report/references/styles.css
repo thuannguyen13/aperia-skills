@@ -44,7 +44,7 @@ section { padding:72px 0; position:relative }
 nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border) }
 .nav-inner { max-width:920px; margin:0 auto; padding:0 36px; display:flex; align-items:center; justify-content:space-between; gap:16px; height:56px }
 .nav-brand { display:inline-flex; align-items:center; line-height:0; flex-shrink:0 }
-.nav-brand svg { display:block; height:28px; width:auto }
+.nav-brand .logo { display:block; height:28px; width:auto; color:var(--aperia-blue) }
 /* Desktop link strip */
 .nav-links { display:flex; gap:2px; list-style:none; flex-wrap:nowrap; overflow-x:auto; min-width:0; scrollbar-width:none; -ms-overflow-style:none; -webkit-overflow-scrolling:touch }
 .nav-links::-webkit-scrollbar { display:none }
@@ -79,7 +79,7 @@ nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,.95); bac
 /* footer (Aperia Blue) */
 footer { padding:44px 0; text-align:center; background:var(--aperia-blue) }
 footer .fbrand { display:flex; justify-content:center; margin-bottom:12px; line-height:0 }
-footer .fbrand svg { display:block; height:32px; width:auto }
+footer .fbrand .logo { display:block; height:32px; width:auto; color:var(--white) }
 footer p { font-size:var(--text-xs); color:#9fbedb; font-family:var(--label) }
 
 /* =====================================================

@@ -2,7 +2,7 @@
 name: create-slides
 description: Build an on-brand Aperia slide deck as one self-contained HTML file that runs in the browser and prints to a 16:9 PDF. Use for presentations, readouts, and pitch decks. It does not produce PowerPoint.
 metadata:
-  version: "0.9.0"
+  version: "0.9.1"
 ---
 
 # Aperia Deck
@@ -119,7 +119,7 @@ Graphic element on a slide, on top of the `BRAND.md` rules: `.shape-cover` (doub
 
 ### Icons
 
-Lucide, fetched on demand. `python3 <this skill dir>/scripts/icon.py shield-check users` emits inline SVG; `--search shield` finds a slug. If the fetch fails, leave the icon out. `stroke="currentColor"`, colored by the theme; never hard-code a stroke. One icon per heading, one stroke weight throughout, never mixed with emoji or filled glyphs.
+Lucide, fetched on demand. `python3 <this skill dir>/scripts/icon.py shield-check users` emits inline SVG; `--search shield` finds a slug. The script tries two hosts; where neither is reachable, set `APERIA_ICONS_DIR` to a folder of Lucide SVGs (the `icons/` folder of a `lucide-static` package) and it reads from there. Otherwise leave the icon out. `stroke="currentColor"`, colored by the theme; never hard-code a stroke. One icon per heading, one stroke weight throughout, never mixed with emoji or filled glyphs.
 
 ---
 
@@ -133,7 +133,7 @@ CSS and SVG only, no chart library.
 | Ranked quantities, one scale | `.bchart` horizontal bars, **sorted descending** | Unsorted list |
 | Part-to-whole, **2 to 3 parts** | `.donut` | none |
 | Part-to-whole, **4+ parts** | `.stack` proportional bar, % in the legend | A pie or a donut |
-| A trend over time | `.lchart` inline SVG line | Columns per period |
+| A trend over time, up to 5 series | `.lchart` inline SVG line, one `<g class="ln lnN">` per series | Columns per period |
 | A schedule progressing over time | `.gantt` rows on a shared axis | Flush proportional bars |
 | Relative effort size, explicitly not a schedule | `.tline-bars` with `flex:N` | Equal-width boxes |
 | 2 to 4 standalone numbers where the number is the message | `.stat-row` on `s-numbers` | Bars encoding the same number twice |
@@ -152,7 +152,7 @@ CSS and SVG only, no chart library.
 
 - Short input (memo, notes, under ~800 words): one slide per point, roughly 5 to 10 slides.
 - Long input (report, full document): the executive narrative, roughly 12 to 24 slides. Detail that does not survive goes into the notes.
-- Aim at 40 words of body copy per slide, table cells included. `qa.py` warns and then errors past its word and bullet limits; an error means the slide was always two slides.
+- Aim at 40 words of body copy per slide. `qa.py` counts table body cells at half weight, so a real comparison table fits without shortening its cells. It warns and then errors past its word and bullet limits; an error means the slide was always two slides.
 
 ## Presenter notes
 

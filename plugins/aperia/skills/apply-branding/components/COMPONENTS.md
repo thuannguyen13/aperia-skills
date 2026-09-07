@@ -66,7 +66,7 @@ Lucide (MIT), fetched on demand: `python3 icons/icon.py shield-check` emits inli
 | Proportions of a whole, ≤6 categories, precise comparison matters | `stack` proportional bar + % in legend | `base/charts.html` |
 | Proportions of a whole, ≤5 slices, a circle is the expected form (an exec "here's the mix" moment) | `piechart` | `charts/proportion.html` |
 | Same, plus a meaningful running total to put in the center | `donutchart` | `charts/proportion.html` |
-| How scope/scenario choices shift a total | `scn-wrap` (base + hatched addition) | `base/charts.html` |
+| How scope/scenario choices shift a total | `bchart` with a `bfill add` segment and a `bdelta` line, ordered by scope not size | `base/charts.html` |
 | Complexity tiers with item counts | `tier-wrap` 3-column cards | `base/tables.html` |
 | One series over time | `linechart` | `charts/trend.html` |
 | Two or three series over time, one comparable to another | `linechart` with a `.compare` dashed line, or `gbar` if the x-axis is categorical rather than continuous | `charts/trend.html` |
@@ -87,7 +87,7 @@ Lucide (MIT), fetched on demand: `python3 icons/icon.py shield-check` emits inli
 ### Chart rules
 
 - **No manufactured percentages.** If a number has to be invented to make a `bchart` or `stack` work, the data is categorical: use `stack-table`.
-- **`bchart`**: no inline `style=` on `.bval`/`.bname`/`.beff`; only row content inside `.bchart`; header row uses the same column divs, count and order as data rows; `.bval` holds a number only. Rows use the flex model, not fixed-px grids.
+- **`bchart`**: no inline `style=` on `.bval`/`.bname`/`.beff`; only row content inside `.bchart`; header row uses the same column divs, count and order as data rows; `.bval` holds a number and at most a `.bdelta` line. Rows use the flex model, not fixed-px grids.
 - **No absolute-positioned labels over a bar track and no z-index stacking inside one.** Segments sit side by side under `display:flex; overflow:hidden`.
 - **Series color order is fixed**: `s1` aperia-blue, `s2` dark-blue, `s3` sapphire, `s4` sky-blue (dark text on an area fill), `s5` light-blue, `s6` dark-gray, `s7` neutral for a long tail or "other". Assign from `s1` outward in order of importance; never skip ahead.
 - **A comparison series is dashed**: a prior period, baseline or benchmark uses `.compare` (line/combo) or `.radar-poly.compare`. Solid stroke is the focal series only.

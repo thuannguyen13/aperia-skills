@@ -16,7 +16,7 @@
   2. NEVER put <p> tags, headings, or non-row content inside .bchart
   3. Header row (.brow-head) must have the SAME divs as data rows
   4. NEVER mix rows with different column counts (all rows omit .beff, or none do)
-  5. .bval holds only a number, never a badge or text label (use stack-table for that)
+  5. .bval holds only a number, plus at most a .bdelta line; never a badge (use stack-table for that)
 
   Use when data has a real quantitative axis and you can sort rows descending.
   Use stat-row instead for 2-4 standalone numbers. Use stack-table instead for
@@ -69,28 +69,36 @@
 </div>
 
 <!-- ========== Scenario Bars ========== -->
-<!-- scn-seg-base width% = (baseline/scale_max)*100; scn-seg-add width% = (addition/scale_max)*100
-     scn-striped = out-of-scope/unknown rows. delta classes: pos, warn, danger, out -->
-<div class="scn-wrap">
-  <div class="scn-row scn-row-head">
-    <div class="scn-name text-xs">Scenario</div>
-    <div class="scn-bar-wrap text-xs">Hours (scale 0 to N)</div>
-    <div class="scn-val text-xs" style="text-align:right">Total</div>
+<!-- The same bchart, for how scope choices shift a total: every row carries the
+     baseline as .bfill.t1 and the addition as .bfill.add, both as width% of one
+     scale max, and the value carries a .bdelta line (pos, warn, danger, or none
+     for the baseline). Rows are ordered by scope, not sorted by size. A row
+     outside scope gets .out on its track and no fill. No .beff column. -->
+<div class="bchart">
+  <div class="brow brow-head">
+    <div class="bname">Scenario</div>
+    <div class="btrack-wrap">Hours (scale 0 to N)</div>
+    <div class="bval">Total</div>
   </div>
-  <div class="scn-row">
-    <div class="scn-name">Baseline (current scope)<small>Single language · design only</small></div>
-    <div class="scn-bar-wrap"><div class="scn-bar-track"><div class="scn-seg-base" style="width:57%"></div></div></div>
-    <div class="scn-val"><span class="scn-val-hr">514 hr</span><span class="scn-val-delta pos">baseline</span></div>
+  <div class="brow">
+    <div class="bname">Baseline (current scope)<small>Single language · design only</small></div>
+    <div class="btrack-wrap"><div class="btrack"><div class="bfill t1" style="width:57%"></div></div></div>
+    <div class="bval">514 hr<span class="bdelta">baseline</span></div>
   </div>
-  <div class="scn-row">
-    <div class="scn-name">+ Factor A<small>Short description</small></div>
-    <div class="scn-bar-wrap"><div class="scn-bar-track"><div class="scn-seg-base" style="width:57%"></div><div class="scn-seg-add" style="width:17%"></div></div></div>
-    <div class="scn-val"><span class="scn-val-hr">668 hr</span><span class="scn-val-delta danger">+154 hr</span></div>
+  <div class="brow">
+    <div class="bname">+ Factor A<small>Short description</small></div>
+    <div class="btrack-wrap"><div class="btrack"><div class="bfill t1" style="width:57%"></div><div class="bfill add" style="width:17%"></div></div></div>
+    <div class="bval">668 hr<span class="bdelta danger">+154 hr</span></div>
   </div>
-  <ul class="scn-legend">
-    <li class="lg-base">Baseline</li>
-    <li class="lg-add">Scenario addition</li>
-  </ul>
+  <div class="brow">
+    <div class="bname">+ Factor B<small>Out of scope, not estimated</small></div>
+    <div class="btrack-wrap"><div class="btrack out"></div></div>
+    <div class="bval">n/a<span class="bdelta">out of scope</span></div>
+  </div>
+  <div class="bchart-foot">
+    <span class="lg-t1">Baseline</span>
+    <span class="lg-add">Scenario addition</span>
+  </div>
 </div>
 
 <!-- ========== Estimate Range ========== -->

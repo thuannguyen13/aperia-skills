@@ -121,13 +121,6 @@ code { font:inherit; font-weight:var(--fw-medium); background:var(--muted); bord
 .callout.tagged.soft .callout-tag { border-color:var(--border); color:var(--muted-fg) }
 .callout.tagged p { margin:0; font-size:var(--text-sm); line-height:1.7 }
 
-/* color swatches: a small set of named colors with hex, e.g. a palette strip */
-.swatch-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:28px 0 }
-.swatch { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow) }
-.swatch-chip { height:84px }
-.swatch-body { padding:12px 14px }
-.swatch-name { font-size:var(--text-sm); font-weight:600; margin-bottom:6px }
-.swatch-hex { font-family:var(--label); font-size:var(--text-xs); color:var(--muted-fg); display:block; line-height:1.7 }
 
 /* comparison table: recommended column gets .hl */
 .cmp-table { width:100%; border-collapse:collapse; font-size:var(--text-sm); margin:26px 0 }

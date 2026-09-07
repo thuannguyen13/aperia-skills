@@ -28,7 +28,6 @@ This layer carries no page chrome (nav, hero, footer) and no data-driven grouped
 | 2 to 4 standalone key numbers | `stat-row`, never `bchart` | `base/structure.html` |
 | Inline note | `callout` (blue=neutral, green=positive, amber=warning, red=critical) | `base/emphasis.html` |
 | A labelled warning or provenance note | `callout tagged` (add `.soft` for neutral) | `base/emphasis.html` |
-| A small set of named colors | `swatch-grid` | `base/tables.html` |
 | Comparison of options | `cmp-table` with ✓/✗/~ (recommended column gets `.hl`) | `base/tables.html` |
 | Categorical list with role/type/focus tags | `stack-table` with badge columns, never `bchart` | `base/tables.html` |
 | Role-based before/after outcomes | `outcome-grid` with ↓/↑ | `base/tables.html` |

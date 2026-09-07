@@ -9,6 +9,7 @@ Fixes from a Claude Desktop run of both skills.
 - `qa.py` counts table body cells at half weight. Cells counted as prose, so any real comparison table tripped the 55-word warning and a run shortened "24 months" to "24m" to pass.
 - `icon.py` tries a second host, unpkg after jsdelivr, and reads from `APERIA_ICONS_DIR` when set to a folder of Lucide SVGs. jsdelivr is blocked in some sandboxes, which left `.iblock` unusable there.
 - New `create-report/scripts/qa.py`, following the slides script: assembled marker naming only the toolkits in use, sprite, skip link, nav links resolving, drawer after nav, footer, section labels, palette, duplicate ids, placeholders, dashes, classes no stylesheet defines, one of `gantt` or `sgantt`, no hand-added `full` or `max-height` on the plan block, `DATA` present when a plan is mounted, no `transform:scale`. Both bench runs and the Desktop run improvised these checks.
+- `swatch-grid` removed from the base layer. It laid out named colors with hex values, which no report or deck in this toolkit needs; no skill named it and no run used it.
 - The report wordmark is one `#ap-logo` sprite referenced by `<use>`, as the deck already did, instead of the path data pasted in the nav and again in the footer. The stylesheet sets its color per surface.
 
 ## 0.9.0

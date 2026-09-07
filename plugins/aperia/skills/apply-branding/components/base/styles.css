@@ -323,15 +323,15 @@ code { font:inherit; font-weight:var(--fw-medium); background:var(--muted); bord
    parallel/unordered items. Node colors auto-cycle for the first 4 steps. */
 .flow { margin:24px 0; display:flex; flex-direction:column; gap:0 }
 .flow-step { display:flex; gap:16px; position:relative }
-.flow-step:not(:last-child) { padding-bottom:22px }
 .flow-rail { flex:0 0 40px; display:flex; flex-direction:column; align-items:center }
-.flow-node { width:40px; height:40px; border-radius:var(--radius); background:var(--aperia-blue); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:var(--label); font-size:var(--text-base); font-weight:700; flex-shrink:0; box-shadow:0 2px 6px rgba(0,47,103,.2) }
+.flow-node { width:40px; height:40px; border-radius:var(--radius); background:var(--aperia-blue); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:var(--label); font-size:var(--text-base); font-weight:700; flex-shrink:0 }
 .flow-step:nth-child(2) .flow-node { background:var(--dark-blue) }
 .flow-step:nth-child(3) .flow-node { background:var(--sapphire) }
 .flow-step:nth-child(4) .flow-node { background:var(--sky-blue); color:var(--aperia-blue) }
-.flow-line { width:2px; flex:1; background:var(--border); margin:4px 0; min-height:14px }
+.flow-line { width:1px; flex:1; background:var(--border); margin-top:4px; min-height:14px }
 .flow-step:last-child .flow-line { display:none }
 .flow-body { flex:1; padding-top:7px; min-width:0 }
+.flow-step:not(:last-child) .flow-body { padding-bottom:22px }
 .flow-title { font-size:var(--text-base); font-weight:600; margin-bottom:3px; display:flex; align-items:center; gap:10px; flex-wrap:wrap }
 .flow-formula { font-family:var(--label); font-size:var(--text-xs); color:var(--sapphire); background:#eafaff; border:1px solid var(--sky-blue); padding:2px 8px; border-radius:var(--radius-sm); font-weight:500 }
 .flow-desc { font-size:var(--text-sm); color:var(--muted-fg); line-height:1.6 }

@@ -14,6 +14,7 @@ Fixes from a Claude Desktop run of both skills.
 - Pie Chart removed. `piechart` and `donutchart` shared every rule, the report skill banned the pie, and the deck never had one; `donutchart` is the one circular form. The report `qa.py` fails a hand-made pie.
 - Line, Area and Combo are one Trend Chart entry with three forms. They already shared the `cf-*` classes and the 640 by 300 frame; only the three headers were separate.
 - One table. `stack-table` and `cmp-table` shared header, borders and hover and differed by 3px of cell padding; both are now `.table`, with `.hl`, the `ic-*` marks, the two-line cell and badges as add-ons. The categorical example sits under the same header. The deck theme and skill use the new name too.
+- Step Flow rail reaches the next node. The gap between steps sat outside the rail, so the line stopped short; it now runs through the body's padding. Node shadow removed, line at 1px like the other rails.
 - The report wordmark is one `#ap-logo` sprite referenced by `<use>`, as the deck already did, instead of the path data pasted in the nav and again in the footer. The stylesheet sets its color per surface.
 
 ## 0.9.0

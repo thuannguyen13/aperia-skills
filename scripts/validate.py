@@ -30,6 +30,14 @@ Checks:
  11. COMPONENTS.md's File column, the one map from a component to the file
      holding its markup, names only files that exist, and every snippet
      file is named by it. Neither side can drift without failing here.
+ 12. Every SKILL.md has a "What to read" section in three parts, Always /
+     Only if / Never; no stylesheet is under Always or Only if, and no
+     snippet is under Never. The read rule is what keeps a run small, so it
+     cannot tell the model to read what the assemble script injects.
+ 13. Every file path written in backticks in any markdown file under the
+     plugin resolves, relative to that file or, for a bare name, anywhere
+     in the plugin. A path is a pointer to the source of truth, and a
+     pointer that dangles is worse than the copy it replaced.
 
 The two shared layers live inside plugins/aperia/skills/apply-branding/,
 a real skill, so every client that mounts a plugin's skills side by side
@@ -346,6 +354,60 @@ def check_snippet_routing(plugin_name, plugin_dir):
              f"so nothing can find what is in it")
 
 
+def check_read_rule(plugin_name, plugin_dir):
+    """Check 12. "What to read" in every SKILL.md is the read rule: three parts, and
+    every path in it resolves. A stale name here sends the model to a file
+    that is gone, and a stylesheet under Always defeats the assemble step."""
+    leads = ("**Always.**", "**Only if", "**Never.**")
+    for skill_md in sorted((plugin_dir / "skills").glob("*/SKILL.md")):
+        rel = skill_md.relative_to(ROOT)
+        text = skill_md.read_text()
+        match = re.search(r"^## What to read.*?$(.*?)(?=^## )", text, re.M | re.S)
+        if not match:
+            fail(f"{rel}: no '## What to read' section, so nothing says what to read")
+            continue
+        step0 = match.group(1)
+        parts = {}
+        for lead in leads:
+            i = step0.find(lead)
+            if i < 0:
+                fail(f"{rel}: What to read has no {lead} part")
+            parts[lead] = i
+        if len([i for i in parts.values() if i >= 0]) < 3:
+            continue
+        order = sorted(parts, key=parts.get)
+        if order != list(leads):
+            fail(f"{rel}: What to read parts are out of order, expected Always, Only if, Never")
+        bounds = [parts[l] for l in leads] + [len(step0)]
+        for n, lead in enumerate(leads):
+            body = step0[bounds[n]:bounds[n + 1]]
+            for name in PATH.findall(body):
+                if lead != "**Never.**" and name.endswith(".css"):
+                    fail(f"{rel}: What to read puts {name} under {lead}, but assemble.py injects stylesheets")
+                if lead == "**Never.**" and name.endswith(".html"):
+                    fail(f"{rel}: What to read puts {name} under Never, but snippets are what the model copies")
+        if "BRAND.md" not in step0[bounds[0]:bounds[1]]:
+            fail(f"{rel}: What to read does not read BRAND.md under Always")
+
+
+PATH = re.compile(r"`([\w./-]+\.(?:md|html|css|py|svg|json))`")
+
+
+def check_paths_resolve(plugin_name, plugin_dir):
+    """Check 13. A backticked path in any markdown file is a pointer; it has
+    to land. Relative to the file's own folder, or for a bare file name,
+    anywhere under the plugin."""
+    for md in sorted(plugin_dir.rglob("*.md")):
+        rel = md.relative_to(ROOT)
+        for name in sorted(set(PATH.findall(md.read_text()))):
+            if "/" in name:
+                exists = (md.parent / name).exists()
+            else:
+                exists = any(plugin_dir.rglob(name))
+            if not exists:
+                fail(f"{rel}: names {name}, which does not exist")
+
+
 def check_no_em_dash():
     """Check 9. Repo docs and everything in plugins/."""
     paths = [p for p in ROOT.glob("*.md")]
@@ -392,6 +454,8 @@ def main():
         check_guideline_states_no_values(plugin_name, plugin_dir)
         check_literals(plugin_name, plugin_dir)
         check_snippet_routing(plugin_name, plugin_dir)
+        check_read_rule(plugin_name, plugin_dir)
+        check_paths_resolve(plugin_name, plugin_dir)
     check_no_em_dash()
 
     for msg in NOTES:

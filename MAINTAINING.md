@@ -29,14 +29,16 @@ No dependencies beyond Python 3. CI runs the same script on every push and pull 
 - Every plugin `source` in `marketplace.json` resolves, the two `name` values agree, and `version` is semver. A name mismatch would make the documented install id wrong.
 - Every skill has a `SKILL.md` with `name` and `description` frontmatter, and the name matches its directory, since the directory is what `/aperia:<name>` uses.
 - `tokens.css` defines the core and neutral palette and the seven chart series steps.
-- Every color in the plugin, as six-digit hex, three-digit hex or `rgb()`/`rgba()`, is either in `tokens.css` or listed in a fenced ```approved block in `brand/DEVIATIONS.md`. The palette is read through `plugins/aperia/brand/palette.py`, which the deck's `qa.py` also uses, so no script holds a copy of it.
+- Every color in the plugin, as six-digit hex, three-digit hex or `rgb()`/`rgba()`, is either in `tokens.css` or listed in a fenced ```approved block in `brand/DEVIATIONS.md`. The palette is read through `plugins/aperia/skills/apply-branding/brand/palette.py`, which the deck's `qa.py` also uses, so no script holds a copy of it.
 - No stylesheet redefines a token `tokens.css` defines, except the overrides listed in `OVERRIDES` inside the script with a reason.
 - No stylesheet sets a raw px `font-size` or a `border-radius` outside `--radius`, `--radius-sm`, `--radius-pill` and `50%`.
 - Skill descriptions are at least 80 characters. The description is the only text Claude reads when deciding to load a skill on its own.
 - No em dash in any file. The model reads these files as its writing example.
 - `COMPONENTS.md`'s File column names only snippet files that exist, and every snippet file is named by it. That column is the one map from a component to its markup, so neither side can drift without failing here.
+- Every `SKILL.md` has a "What to read" section in three parts, Always / Only if / Never, with no stylesheet under Always or Only if and no snippet under Never. That section is the read rule that keeps a run small, so it cannot ask the model to read what `assemble.py` injects.
+- Every backticked file path in any markdown file under the plugin resolves, relative to that file or, for a bare name, anywhere in the plugin. The docs point at the source of truth instead of restating it, so a pointer that dangles is a broken rule.
 
-Off-palette values are a decision, not an accident. Anything the check flags gets fixed or written into `plugins/aperia/brand/DEVIATIONS.md` with a reason. That file is both the audit trail and the allowlist. It currently covers the semantic status colors, the report theme's light tint ramp, the deck theme's dark chart ramp, the PowerPoint template accent alternates, and the `#004583` vs `#004785` mismatch between the supplied SVG assets and the guideline table.
+Off-palette values are a decision, not an accident. Anything the check flags gets fixed or written into `plugins/aperia/skills/apply-branding/brand/DEVIATIONS.md` with a reason. That file is both the audit trail and the allowlist. It currently covers the semantic status colors, the report theme's light tint ramp, the deck theme's dark chart ramp, the PowerPoint template accent alternates, and the `#004583` vs `#004785` mismatch between the supplied SVG assets and the guideline table.
 
 Approval is structural: only hexes inside a fenced ```approved block count. Mentioning a value in prose, in a "was" column, or in a paragraph explaining why it was dropped does not approve it. Approval is plugin-wide rather than per file, so a value approved for one theme will pass in the other; scope it by narrative if that matters.
 
@@ -73,7 +75,7 @@ The script stays outside `plugins/` on purpose: a Desktop install mounts the ski
 
 `apply-branding/SKILL.md` carries `user-invocable: false`, so it does not appear in the slash-command list. Claude still loads it on its own from the description, which is what the freeform branding path needs.
 
-Do not remove its `SKILL.md` to hide it further. Claude Desktop mounts only the folders under `skills/` that have one, so without it `brand/` and `components/` never reach an install and every marker fills empty. That is the bug #11 fixed.
+Do not remove its `SKILL.md` to hide it further. Claude Desktop mounts only the folders under `skills/` that have one, so without it `brand/` and `components/` never reach an install and every marker fills empty.
 
 ## Where the shared layers live
 
@@ -81,7 +83,7 @@ Do not remove its `SKILL.md` to hide it further. Claude Desktop mounts only the 
 
 The reason for that spot is Claude Desktop. It mounts each folder under `skills/` that contains a `SKILL.md`, side by side at `/mnt/skills/plugins/<plugin>:<skill>/`, and nothing else: not the plugin root, not a folder without a `SKILL.md`. Layers at the plugin root never arrived, and both skills were broken there from 0.3.0 to 0.8.0. A folder that is a skill arrives, so the layers live in one. `apply-branding` is a real skill, the freeform branding entry point, and the carrier of the layers at the same time.
 
-The folder name differs by client: `apply-branding` in Claude Code, `aperia:apply-branding` on Desktop. Prose paths are written with the plain name and each consumer skill says so in Step 0; the three scripts that cross into the layer look for both names. This relies on both clients mounting a plugin's skills beside each other, which is observed on Claude Code and Desktop and promised by neither. If a client ever isolated skills from one another, the fallback is a committed copy of the layers inside each skill, which commit `9b51f83` on the 0.9.0 branch implemented before this layout replaced it.
+The folder name differs by client: `apply-branding` in Claude Code, `aperia:apply-branding` on Desktop. Prose paths are written with the plain name and each consumer skill says so under "What to read"; the three scripts that cross into the layer look for both names. This relies on both clients mounting a plugin's skills beside each other, which is observed on Claude Code and Desktop and promised by neither. If a client ever isolated skills from one another, the fallback is a committed copy of the layers inside each skill, which the 0.9.0 history implemented before this layout replaced it.
 
 A skill folder on its own is not complete, so the Claude Desktop skill uploader, which takes one folder, is not an install path. Install through the marketplace, or upload the whole plugin as a zip with `.claude-plugin/plugin.json` at the archive root.
 

@@ -223,6 +223,10 @@ def main(path):
             if img.get("alt") is None:
                 warn(tag, "image without an alt attribute")
 
+        for logo in s.select("svg.logo"):
+            if not logo.get("aria-label"):
+                err(tag, 'logo without aria-label="Aperia", copy the footer from snippets.html')
+
         # Title Case on headings
         for h in s.select("h1, h2, h3"):
             txt = h.get_text(" ", strip=True)

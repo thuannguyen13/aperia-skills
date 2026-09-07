@@ -8,44 +8,29 @@ metadata:
 
 # Apply Aperia Branding
 
-Builds any artifact that is not a scrolling report or a slide deck in the Aperia identity, or re-skins one the user brings. This folder also holds the two layers every Aperia skill reads: `brand/` and `components/`. Nothing here is duplicated elsewhere.
+## What to read
 
-## Step 0: Read the brand layer first (required)
+**Always.** `brand/BRAND.md` in full, then `components/COMPONENTS.md` in full.
 
-1. Read **`brand/BRAND.md`** in full. It carries the rules: palette roles, type, logo, the graphic element, photography, voice, and the format notes for Office, Excel, HTML and diagrams.
-2. Read **`components/COMPONENTS.md`** for the component and chart toolkits and the rules that govern them, then then only the snippet files the components you picked actually need. `COMPONENTS.md`'s toolkit tables carry a **File** column naming the one file each component's markup is in: `components/base/` holds `structure.html`, `emphasis.html`, `tables.html`, `charts.html` and `timelines.html`, and `components/charts/` holds `trend.html`, `compare.html`, `proportion.html` and `intensity.html`. Icons are in `components/icons/index.html`. Do not read all nine.
+**Only if picked.** The one snippet file the **File** column in `COMPONENTS.md` names for each component you chose. `components/icons/index.html` only if the artifact carries an icon. For an HTML artifact, `references/page.html`, the skeleton to start from.
 
-**Do not work from memory of the palette or the type rules.** The values live in `brand/tokens.css`. If a value is not there, it is not an Aperia value.
+**Never.** `components/base/styles.css`, `components/charts/styles.css`, `components/icons/styles.css`. `assemble.py` injects them; skim one only when a class's behaviour is unclear.
 
 ## When this is the wrong skill
 
 - A long-form document the reader scrolls through is `create-report`.
 - A presentation is `create-slides`.
-- A PowerPoint, Word or Excel file cannot be produced here; say so. The format notes in `BRAND.md` still tell you how to brand one the user builds themselves.
+- No PowerPoint, Word or Excel file is produced here. Say so.
 
-Say which skill fits and stop, rather than building a report or a deck here.
+Name the skill that fits and stop.
 
-## HTML output
+## Workflow
 
-Write the page around one style marker, `<style>/* @aperia page */</style>`, adding the word `charts` or `icons` when those toolkits are used, then run:
-
-```bash
-python3 <this skill dir>/components/assemble.py <file.html>
-```
-
-It fills the marker with `brand/tokens.css`, `components/base/styles.css` and the optional toolkits, byte for byte, and replaces its own block on every re-run. Page-specific rules go in a second `<style>` after the marker, never inside the injected one. Load Inter with a `<link>` in `<head>` as `COMPONENTS.md` shows, and inline the SVG assets from `brand/assets/` rather than linking them.
-
-Use the components as documented: wrap content in `.wrap`, take sizes from the `--text-*` tokens, keep the graphic element top-right and behind the content, and run the checklist in `COMPONENTS.md` before delivering.
+1. Read the user's content and pick each component from the tables in `COMPONENTS.md`.
+2. Start from `references/page.html`. Its marker, `<style>/* @aperia page */</style>`, gets the word `charts` or `icons` added when those toolkits are used.
+3. Run `python3 <this skill dir>/components/assemble.py <file.html>`, and again after any later edit.
+4. Save as `<slug>.html` in the working directory unless the user names a location, and tell the user the path.
 
 ## Other outputs
 
-For anything that is not HTML, `BRAND.md` is the whole brief: palette in HEX for digital and Pantone or CMYK for print, Inter with Arial as the fallback, the logo rules, the graphic element rules, and the format notes. Take every value from `brand/tokens.css` and every rule from `BRAND.md`, and run the Application Checklist at the end of `BRAND.md` before delivering.
-
-## Icons
-
-`python3 <this skill dir>/components/icons/icon.py <slug>` emits an inline Lucide icon, fetched on demand. If the fetch fails, leave the icon out; it is never the only signal.
-
-## Files
-
-- `brand/`: `BRAND.md`, `tokens.css`, `DEVIATIONS.md`, `palette.py`, `assets/`.
-- `components/`: `COMPONENTS.md`, `assemble.py`, `base/`, `charts/`, `icons/`.
+For anything that is not HTML, `BRAND.md` is the brief and `brand/tokens.css` holds every value: HEX for digital, Pantone or CMYK for print. Read `tokens.css` only in this case; nothing injects the values there.

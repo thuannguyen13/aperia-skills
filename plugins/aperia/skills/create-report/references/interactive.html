@@ -27,7 +27,7 @@
      container class from milestoneForm, so this one mount serves both forms:
      "cards" gives .mstone-row, "timeline" gives .vtimeline.
      id must be "m-" + the DATA key. Four or fewer entries use cards, more than
-     four use timeline; see SKILL.md, "Milestones and environment chains: cards or timeline". -->
+     four use timeline; see SKILL.md, "Delivery-plan components", milestoneForm. -->
 <div id="m-mvp"></div>
 
 
@@ -35,6 +35,10 @@
 <!-- ids are "f-" (search), "fc-" (match count), "ct-" (status summary),
      "g-" (the Gantt itself), each followed by the DATA key.
      The expand/collapse buttons carry the key in a data attribute. -->
+<!-- The plan block sits in its own .wrap, nothing else inside it: the script
+     adds .full to this div when the grid needs the width, and prose must not
+     widen with it. -->
+<div class="wrap">
 <div class="sg-bar">
   <input id="f-mvp" type="search" placeholder="Search features, descriptions or tags…" aria-label="Search MVP features">
   <button class="sg-btn" data-expand="mvp">Expand All</button>
@@ -51,6 +55,7 @@
 <div class="sg-counts" id="ct-mvp"></div>
 <div class="sgantt"><div id="g-mvp"></div></div>
 <p class="sg-cap">Caption: what the columns are, what is shown, and that dates are targets.</p>
+</div>
 
 
 <!-- ========== EDIT MODE (optional, only for a plan with editable:true) ========== -->
@@ -132,9 +137,9 @@
                       d    date label, e.g. "25–30 Sep"
                       t    title
                       x    one-line note
-                      cls  done | next | goal | risk, plus est for a dashed
-                           (estimated) border, or "envc e-qa" for an
-                           environment-coloured card
+                      cls  done | risk, nothing for ahead (blue), plus est for
+                           an estimated date (hollow dot, dashed date), or
+                           "envc e-qa" for an environment card
                       flag optional short chip, e.g. "Only real data"
      envForm          "cards" (default) or "timeline". Which form renders the
                       environments array. Four or fewer fit one row in .wrap; more
@@ -177,7 +182,7 @@ const DATA = {
   mvp: {
     milestoneForm: "cards",
     milestones: [
-      {d:"8 Sep", t:"Dev Complete", x:"End of Sprint 6.", cls:"goal"},
+      {d:"8 Sep", t:"Dev Complete", x:"End of Sprint 6."},
       {d:"25–30 Sep", t:"Staging On Live Data", x:"The only pass on real data.", cls:"risk", flag:"Only real data"}
     ],
     envForm: "cards",
@@ -223,7 +228,7 @@ PLANS.forEach(k => DATA[k].rows.forEach(r => {
 /* Column widths come from CSS custom properties, so the ≤700px breakpoint can
    narrow the label column without touching this script. */
 function gridStyle(n){
-  return "grid-template-columns:var(--sg-labelw) repeat(" + n + ",1fr) var(--sg-endw)";
+  return "grid-template-columns:var(--sg-labelw) repeat(" + n + ",minmax(var(--sg-colw),1fr)) var(--sg-endw)";
 }
 
 /* =======================================================================
@@ -241,8 +246,8 @@ function gridStyle(n){
      title  string, optional. A second line under the head. Milestones use it;
             environments have nothing to put there and omit it.
      note   string, optional. The body line.
-     cls    string, optional. Marker state and variant: done | next | goal | risk,
-            plus est, or "envc e-qa" for an environment entry.
+     cls    string, optional. Marker state and variant: done | risk, nothing for
+            ahead, plus est, or "envc e-qa" for an environment entry.
 
    An entry may declare lead/chip/title/note directly. The two built-in mappers
    below translate the friendlier milestone and environment shapes onto it.
@@ -385,18 +390,26 @@ function renderGantt(key){
   applyView(key);
 }
 
-/* The horizontal scrollbox is conditional, because an overflow ancestor would
-   capture the sticky header. Add .scrolls only when the grid genuinely overflows.
-   Always measure with the class off: once it is on, clientWidth excludes the
-   scrollbar, and comparing against that oscillates on the boundary. */
+/* Width is decided here, not by the author. The grid's minimum width is the
+   label column plus --sg-colw per column plus the end column. When that does not
+   fit the .wrap the plan sits in, the .wrap gets .full (viewport width, same side
+   padding) and the header keeps sticking. When it still does not fit, as on a
+   narrow viewport, the box gets .scrolls and scrolls sideways, at the cost of the
+   sticky header, because an overflow ancestor captures it. Always measure with
+   both classes off: once .scrolls is on, clientWidth excludes the scrollbar and
+   the comparison oscillates on the boundary. */
 function syncScrollbox(key){
   const host = document.getElementById("g-" + key);
   if (!host) return;
   const box = host.closest(".sgantt");
   const wrap = host.querySelector(".sg-wrap");
   if (!box || !wrap) return;
+  const outer = box.closest(".wrap");
+  const overflows = () => wrap.scrollWidth > box.clientWidth + 1;
   box.classList.remove("scrolls");
-  box.classList.toggle("scrolls", wrap.scrollWidth > box.clientWidth + 1);
+  if (outer) outer.classList.remove("full");
+  if (outer && overflows()) outer.classList.add("full");
+  box.classList.toggle("scrolls", overflows());
 }
 
 /* Re-measure on resize, coalesced to one pass per frame, and once more after web

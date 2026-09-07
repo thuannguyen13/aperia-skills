@@ -23,7 +23,7 @@ Resolve it one way or the other, then delete this section:
 - If the guideline table is authoritative → update the two SVGs to `#004785`.
 - If the artwork is authoritative → correct the Dark Blue row in `BRAND.md`.
 
-`snippets.html` reproduces the same stops, so whichever way it goes, update it too.
+Three inlined copies reproduce the same stops, so whichever way it goes, update them too: `../components/base/emphasis.html`, `../../create-report/references/snippets.html` and `../../create-slides/references/snippets.html`.
 
 **Approved provisionally.** The value is in the shipped artwork, so failing the build on it would block every release without moving the decision forward. It stays approved until the brand owner rules, and this section stays open.
 
@@ -35,7 +35,7 @@ Resolve it one way or the other, then delete this section:
 
 ## 2. Resolved: series 4 and 5 remapped to palette
 
-`../components/base/styles.css` and the `../components/base/` snippets were inherited from the earlier standalone report skill and carried two off-palette blues in the 4th and 5th chart series positions.
+`../components/base/styles.css` and the `../components/base/` snippets carried two off-palette blues in the 4th and 5th chart series positions.
 
 | Was | Now | Notes |
 |---|---|---|
@@ -66,9 +66,9 @@ No action needed. Do not add new values to this set, and do not use these as cha
 
 ---
 
-## 4. Open: light blue-grey tints in the report theme
+## 4. Open: light blue-grey tints in the base component theme
 
-The report theme uses a family of light blue-grey tints for card fills, table highlights, badge backgrounds, and borders that are **not** in the guideline palette:
+`../components/base/styles.css` uses a family of light blue-grey tints for card fills, table highlights, badge backgrounds, and borders that are **not** in the guideline palette:
 
 ```approved
 #EAF3FB   surface fill       #EAFAFF   surface fill       #F4F8FC   surface fill
@@ -88,7 +88,7 @@ Two ways to close it, both requiring the brand owner:
 1. **Extend the guideline** with a sanctioned tint ramp derived from Aperia Blue. This is the honest fix, since the theme demonstrably needs the steps.
 2. **Reduce to palette.** Map surfaces to `#F1F2F2`, borders to `#A7A9AC` at low opacity, muted-on-dark to `#C8EAF5`, body type to `#000000`. Re-check contrast on every dark panel afterward.
 
-Until then: the report theme and the deck theme both draw on this set. The deck has a related and separate gap of its own, recorded in section 5.
+Until then: every HTML output draws on this set, since reports and freeform pages inject the base theme, and the deck theme reuses part of it. The deck has a related and separate gap of its own, recorded in section 5.
 
 ---
 
@@ -121,7 +121,7 @@ Closing it needs the same brand-owner decision as section 4, and ideally the sam
 
 ## 6. Accepted: PowerPoint template accent alternates
 
-`skills/create-slides/SKILL.md` documents a conditional swap for the case where an HTML deck is shown alongside one built on the official Aperia PowerPoint template, which ships two slightly different accents:
+`../../create-slides/SKILL.md` documents a conditional swap for the case where an HTML deck is shown alongside one built on the official Aperia PowerPoint template, which ships two slightly different accents:
 
 | Guideline | Template alternate |
 |---|---|
@@ -197,3 +197,12 @@ This is a policy entry, not an approval of specific values. Each scale gets reco
 The guideline makes Light (300) the default body weight and Regular (400) the Office body weight. Every HTML theme in this plugin sets body copy in Regular, and `tokens.css` now does the same, so the value has one home. Light at 14px to 16px on a screen is thin enough to hurt legibility, especially on Windows rendering, and the guideline's own Office exception exists for the same reason. Headings and emphasis are unchanged. Body copy is still never Bold.
 
 No `approved` block. Weights are not colors; this section records the decision so no theme reintroduces Light as a local choice.
+
+---
+
+## 10. Open: two derived leadings in the type ramp
+
+The Figma design system stops at 32/48. The `--leading-xl` (36) and `--leading-2xl` (40) values in `tokens.css` continue its +4 progression and were not taken from Figma. Confirm them with the designer before treating them as final. Two Figma steps, 10/12 and 11/16, are not in the web ramp because both fall below `--min-size`; they stay print and Figma only.
+
+No `approved` block. Sizes are not colors; this records where two numbers came from.
+

@@ -28,7 +28,7 @@
   /* Grouped Gantt geometry, the one set of custom properties unique to the
      sgantt subsystem in this file, so it lives here rather than in the
      shared base layer, which no other surface needs. */
-  --sg-labelw:256px; --sg-endw:92px; --sg-colw:104px;
+  --sg-labelw:256px; --sg-endw:92px; --sg-colw:104px; /* --sg-colw is each column's minimum; the grid widens its .wrap, then scrolls, when the sum does not fit */
 }
 
 /* Chrome-only page mechanics: smooth in-page scrolling for nav-link jumps,
@@ -64,6 +64,7 @@ nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,.95); bac
 .nav-drawer ul li a:hover { background:var(--muted); color:var(--aperia-blue) }
 
 /* hero (Aperia Blue gradient) */
+.hero code, .dark-panel code, .cta-box code { background:rgba(255,255,255,.14) }
 .hero { padding:0; border-bottom:1px solid var(--border); background:linear-gradient(120deg, var(--aperia-blue) 0%, var(--dark-blue) 55%, var(--sapphire) 130%); position:relative; overflow:hidden }
 .hero-inner { padding:90px 0 80px; position:relative; z-index:1 }
 .hero .eyebrow { font-family:var(--label); font-size:var(--text-xs); letter-spacing:.1em; text-transform:uppercase; color:var(--sky-blue); margin-bottom:20px }

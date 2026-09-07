@@ -2,6 +2,10 @@
 
 For people editing this repo. To install and use the plugin, see [README.md](README.md).
 
+## Component rule
+
+Fewer components, each high quality and adaptable, over many narrow ones. A new component earns its place only when no existing one can take the case with a modifier class or a second example. A variant that shares a layout with an existing component is a modifier on that component, not a new class family; 0.9.1 folded Scenario Bars into `bchart` on this rule. Each component has one gallery entry; a second use is a second example under the same header, not a second header.
+
 ## Change the brand
 
 1. Edit `plugins/aperia/skills/apply-branding/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only.

@@ -25,8 +25,25 @@ Checks:
      --radius-sm, --radius-pill, 50% or 0.
   9. No em dash anywhere in the plugin or the repo docs. The model reads
      these files as its writing example.
+ 10. Every SKILL.md carries metadata.version equal to plugin.json, so a
+     mounted copy can say which release it is.
+ 11. COMPONENTS.md's File column, the one map from a component to the file
+     holding its markup, names only files that exist, and every snippet
+     file is named by it. Neither side can drift without failing here.
+ 12. Every SKILL.md has a "What to read" section in three parts, Always /
+     Only if / Never; no stylesheet is under Always or Only if, and no
+     snippet is under Never. The read rule is what keeps a run small, so it
+     cannot tell the model to read what the assemble script injects.
+ 13. Every file path written in backticks in any markdown file under the
+     plugin resolves, relative to that file or, for a bare name, anywhere
+     in the plugin. A path is a pointer to the source of truth, and a
+     pointer that dangles is worse than the copy it replaced.
 
-The palette itself is read by plugins/aperia/brand/palette.py, which the
+The two shared layers live inside plugins/aperia/skills/apply-branding/,
+a real skill, so every client that mounts a plugin's skills side by side
+carries them along for the other two.
+
+The palette itself is read by skills/apply-branding/brand/palette.py, which the
 deck QA script shares, so neither holds a copy of it.
 
 Usage: python3 scripts/validate.py
@@ -110,7 +127,8 @@ FRONTMATTER = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)
 
 
 def check_skills(plugin_name, plugin_dir):
-    """Check 3."""
+    """Checks 3 and 10 (the version half)."""
+    plugin_version = str(load_json(plugin_dir / ".claude-plugin" / "plugin.json", "plugin.json").get("version", ""))
     skills_dir = plugin_dir / "skills"
     if not skills_dir.is_dir():
         fail(f"{plugin_name}: no skills/ directory")
@@ -149,6 +167,14 @@ def check_skills(plugin_name, plugin_dir):
                 f"Users invoke the directory name."
             )
 
+        version = re.search(r"^\s+version:\s*\"?([^\"\n]+)\"?\s*$", match.group(1), re.M)
+        if not version:
+            fail(f"{rel}/SKILL.md: frontmatter has no metadata.version, so a mounted "
+                 f"copy cannot say which release it is")
+        elif version.group(1).strip() != plugin_version:
+            fail(f"{rel}/SKILL.md: metadata.version is {version.group(1).strip()}, "
+                 f"plugin.json says {plugin_version}")
+
         if not description:
             fail(f"{rel}/SKILL.md: frontmatter has no 'description'")
         elif len(description) < 80:
@@ -161,13 +187,14 @@ HEX = re.compile(r"#([0-9a-fA-F]{6})\b")
 # tokens.css is the single source of brand values, guideline and system alike.
 TOKENS = "tokens.css"
 
-# Stylesheets the checks below walk: the layers and every skill theme.
-STYLESHEETS = ("brand", "ui-components", "skills")
+# Where the shared layers live, relative to the plugin. They sit inside a
+# skill, so one walk of skills/ covers every stylesheet.
+LAYERS = Path("skills") / "apply-branding"
 
 
 def brand_css(plugin_dir):
     """The token file as one string, or None if it is missing."""
-    path = plugin_dir / "brand" / TOKENS
+    path = plugin_dir / LAYERS / "brand" / TOKENS
     if not path.exists():
         return None, [TOKENS]
     return path.read_text(), []
@@ -175,7 +202,7 @@ def brand_css(plugin_dir):
 
 def palette_module(plugin_dir):
     """brand/palette.py, the plugin's own palette reader, loaded from its path."""
-    path = plugin_dir / "brand" / "palette.py"
+    path = plugin_dir / LAYERS / "brand" / "palette.py"
     if not path.exists():
         return None
     spec = importlib.util.spec_from_file_location("palette", path)
@@ -198,7 +225,7 @@ def check_palette(plugin_name, plugin_dir):
 
     # tokens.css is the single source of brand values. Every color it defines
     # is, by definition, the palette.
-    palette = palette_mod.tokens(plugin_dir / "brand")
+    palette = palette_mod.tokens(plugin_dir / LAYERS / "brand")
     if not palette:
         fail(f"{plugin_name}/{TOKENS}: no color values found, so the palette is empty")
         return
@@ -215,7 +242,7 @@ def check_palette(plugin_name, plugin_dir):
         if not re.search(rf"--series-{n}\s*:", tokens):
             fail(f"{plugin_name}/{TOKENS}: missing chart series step '--series-{n}'")
 
-    deviations_path = plugin_dir / "brand" / "DEVIATIONS.md"
+    deviations_path = plugin_dir / LAYERS / "brand" / "DEVIATIONS.md"
     if not deviations_path.exists():
         fail(f"{plugin_name}: brand/DEVIATIONS.md is missing, so off-palette "
              f"values have nowhere to be recorded")
@@ -223,7 +250,7 @@ def check_palette(plugin_name, plugin_dir):
     # Approval is structural, not textual. Only the fenced ```approved blocks
     # count, so a hex named in prose, in a "was" column, or in a paragraph about a
     # value that was removed does not silently pass.
-    recorded, has_blocks = palette_mod.approved(plugin_dir / "brand")
+    recorded, has_blocks = palette_mod.approved(plugin_dir / LAYERS / "brand")
     if not has_blocks:
         fail(f"{plugin_name}/DEVIATIONS.md: no ```approved blocks found. Off-palette "
              f"values are approved by listing them in one, not by mentioning them.")
@@ -267,15 +294,14 @@ def root_tokens(path):
 
 def stylesheets(plugin_dir):
     """Every stylesheet other than tokens.css itself."""
-    for folder in STYLESHEETS:
-        for sheet in sorted((plugin_dir / folder).rglob("*.css")):
-            if sheet.name != TOKENS:
-                yield sheet
+    for sheet in sorted((plugin_dir / "skills").rglob("*.css")):
+        if sheet.name != TOKENS:
+            yield sheet
 
 
 def check_single_source(plugin_name, plugin_dir):
     """Check 6."""
-    brand = root_tokens(plugin_dir / "brand" / TOKENS)
+    brand = root_tokens(plugin_dir / LAYERS / "brand" / TOKENS)
     if not brand:
         return
     for sheet in stylesheets(plugin_dir):
@@ -308,6 +334,80 @@ def check_literals(plugin_name, plugin_dir):
                      f"Use --radius, --radius-sm or --radius-pill.")
 
 
+def check_snippet_routing(plugin_name, plugin_dir):
+    """Check 11. COMPONENTS.md's File column is the only map from a component
+    to the file holding its markup, so it has to stay level with the disk."""
+    ui = plugin_dir / LAYERS / "components"
+    doc = ui / "COMPONENTS.md"
+    if not doc.exists():
+        fail(f"{plugin_name}: no COMPONENTS.md at {doc.relative_to(ROOT)}")
+        return
+    cited = set(re.findall(r"\| `((?:base|charts)/[\w.-]+\.html)` \|", doc.read_text()))
+    if not cited:
+        fail(f"{plugin_name}: COMPONENTS.md has no File column; components cannot be found")
+        return
+    ondisk = {f"{d}/{p.name}" for d in ("base", "charts") for p in (ui / d).glob("*.html")}
+    for rel in sorted(cited - ondisk):
+        fail(f"{plugin_name}: COMPONENTS.md routes to {rel}, which does not exist")
+    for rel in sorted(ondisk - cited):
+        fail(f"{plugin_name}: {rel} is not named by any File column row, "
+             f"so nothing can find what is in it")
+
+
+def check_read_rule(plugin_name, plugin_dir):
+    """Check 12. "What to read" in every SKILL.md is the read rule: three parts, and
+    every path in it resolves. A stale name here sends the model to a file
+    that is gone, and a stylesheet under Always defeats the assemble step."""
+    leads = ("**Always.**", "**Only if", "**Never.**")
+    for skill_md in sorted((plugin_dir / "skills").glob("*/SKILL.md")):
+        rel = skill_md.relative_to(ROOT)
+        text = skill_md.read_text()
+        match = re.search(r"^## What to read.*?$(.*?)(?=^## )", text, re.M | re.S)
+        if not match:
+            fail(f"{rel}: no '## What to read' section, so nothing says what to read")
+            continue
+        step0 = match.group(1)
+        parts = {}
+        for lead in leads:
+            i = step0.find(lead)
+            if i < 0:
+                fail(f"{rel}: What to read has no {lead} part")
+            parts[lead] = i
+        if len([i for i in parts.values() if i >= 0]) < 3:
+            continue
+        order = sorted(parts, key=parts.get)
+        if order != list(leads):
+            fail(f"{rel}: What to read parts are out of order, expected Always, Only if, Never")
+        bounds = [parts[l] for l in leads] + [len(step0)]
+        for n, lead in enumerate(leads):
+            body = step0[bounds[n]:bounds[n + 1]]
+            for name in PATH.findall(body):
+                if lead != "**Never.**" and name.endswith(".css"):
+                    fail(f"{rel}: What to read puts {name} under {lead}, but assemble.py injects stylesheets")
+                if lead == "**Never.**" and name.endswith(".html"):
+                    fail(f"{rel}: What to read puts {name} under Never, but snippets are what the model copies")
+        if "BRAND.md" not in step0[bounds[0]:bounds[1]]:
+            fail(f"{rel}: What to read does not read BRAND.md under Always")
+
+
+PATH = re.compile(r"`([\w./-]+\.(?:md|html|css|py|svg|json))`")
+
+
+def check_paths_resolve(plugin_name, plugin_dir):
+    """Check 13. A backticked path in any markdown file is a pointer; it has
+    to land. Relative to the file's own folder, or for a bare file name,
+    anywhere under the plugin."""
+    for md in sorted(plugin_dir.rglob("*.md")):
+        rel = md.relative_to(ROOT)
+        for name in sorted(set(PATH.findall(md.read_text()))):
+            if "/" in name:
+                exists = (md.parent / name).exists()
+            else:
+                exists = any(plugin_dir.rglob(name))
+            if not exists:
+                fail(f"{rel}: names {name}, which does not exist")
+
+
 def check_no_em_dash():
     """Check 9. Repo docs and everything in plugins/."""
     paths = [p for p in ROOT.glob("*.md")]
@@ -326,7 +426,7 @@ NAMED_TOKEN = re.compile(r"`(--[\w-]+)`")
 
 def check_guideline_states_no_values(plugin_name, plugin_dir):
     """Check 7."""
-    brand_md = plugin_dir / "brand" / "BRAND.md"
+    brand_md = plugin_dir / LAYERS / "brand" / "BRAND.md"
     tokens, _ = brand_css(plugin_dir)
     if tokens is None or not brand_md.exists():
         return
@@ -338,7 +438,7 @@ def check_guideline_states_no_values(plugin_name, plugin_dir):
              f"{TOKENS}; name the token instead, so there is one copy of the value.")
 
     # A token the guideline names must exist, or the pointer dangles.
-    defined = root_tokens(plugin_dir / "brand" / TOKENS)
+    defined = root_tokens(plugin_dir / LAYERS / "brand" / TOKENS)
     for m in NAMED_TOKEN.finditer(text):
         if m.group(1) not in defined:
             fail(f"{plugin_name}/BRAND.md: names '{m.group(1)}', which {TOKENS} "
@@ -353,6 +453,9 @@ def main():
         check_single_source(plugin_name, plugin_dir)
         check_guideline_states_no_values(plugin_name, plugin_dir)
         check_literals(plugin_name, plugin_dir)
+        check_snippet_routing(plugin_name, plugin_dir)
+        check_read_rule(plugin_name, plugin_dir)
+        check_paths_resolve(plugin_name, plugin_dir)
     check_no_em_dash()
 
     for msg in NOTES:

@@ -11,6 +11,7 @@ read them, then decide.
 
 It cannot check what the slide *looks* like. Still open the file.
 """
+import glob
 import importlib.util
 import os
 import re
@@ -24,10 +25,19 @@ except ImportError:
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # The palette is read from the brand layer, not copied here: tokens.css plus
-# the approved blocks in DEVIATIONS.md, through the same module validate.py
-# uses. See ../../../brand/palette.py.
-BRAND_DIR = os.path.join(HERE, "..", "..", "..", "brand")
-_spec = importlib.util.spec_from_file_location("palette", os.path.join(BRAND_DIR, "palette.py"))
+# the approved blocks in DEVIATIONS.md, through brand/palette.py in the
+# apply-branding skill beside this one.
+# Clients name a mounted skill folder differently, apply-branding in Claude
+# Code and aperia:apply-branding on Claude Desktop, so look for both.
+_SKILLS = os.path.join(HERE, "..", "..")
+_LAYER = next((d for d in [os.path.join(_SKILLS, "apply-branding")] + sorted(glob.glob(os.path.join(_SKILLS, "*:apply-branding")))
+               if os.path.isdir(d)), None)
+if _LAYER is None:
+    sys.exit("qa.py: the apply-branding skill, which holds the brand layer, is not "
+             f"installed beside create-slides under {os.path.normpath(_SKILLS)}.")
+BRAND_DIR = os.path.join(_LAYER, "brand")
+_PALETTE = os.path.join(BRAND_DIR, "palette.py")
+_spec = importlib.util.spec_from_file_location("palette", _PALETTE)
 palette = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(palette)
 
@@ -212,6 +222,10 @@ def main(path):
         for img in s.select("img"):
             if img.get("alt") is None:
                 warn(tag, "image without an alt attribute")
+
+        for logo in s.select("svg.logo"):
+            if not logo.get("aria-label"):
+                err(tag, 'logo without aria-label="Aperia", copy the footer from snippets.html')
 
         # Title Case on headings
         for h in s.select("h1, h2, h3"):

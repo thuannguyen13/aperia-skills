@@ -1,5 +1,3 @@
 # These files are pasted verbatim into every generated report and deck, so
 # their compact formatting is part of the output size, not a style preference.
-plugins/aperia/brand/**
-plugins/aperia/ui-components/**
 plugins/aperia/skills/**/references/**

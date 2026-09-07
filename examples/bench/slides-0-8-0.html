@@ -1,6 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toolkit 0.8.0 Release Readout | Aperia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style data-aperia="slides">
+/* Assembled by ui-components/assemble.py from the words in data-aperia.
+   Do not edit inside this block: it is replaced on every run. Put
+   document-specific rules in a separate <style> after it. */
+
+/* ---- tokens.css (brand) ---- */
+/* Aperia brand tokens. Aperia Brand Guidelines v1.0
+   Source of truth: BRAND.md. This is the only token file.
+
+   Two kinds of value live here and the split is deliberate:
+
+     GUIDELINE     color, typography, shape. Taken from BRAND.md, which took
+                   them from Aperia Brand Guidelines v1.0. Do not add a value
+                   here that the guideline does not state; an off-palette one
+                   belongs in DEVIATIONS.md, approved, or nowhere.
+     SYSTEM        spacing, elevation, motion. The guideline is silent on all
+                   three, so any scale for them is derived from what the
+                   components already do, not signed off by the brand owner.
+                   None are defined yet; when they are they go in a SYSTEM
+                   section below this one, never mixed into the guideline
+                   block. Policy in DEVIATIONS.md section 8.
+
+   Rules and metadata that are not values (accessible pairings, logo
+   clearspace, graphic-element placement, the 5pt print minimum, Office body
+   weight) live in BRAND.md prose.
+
+   Does not load Inter. Link the font in <head>, before any <style> block:
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"> */
+
+:root {
+  /* ===================================================================
+     GUIDELINE VALUES
+     =================================================================== */
+
+  /* --- Core palette ------------------------------------------------------ */
+  --aperia-blue:    #002F67;  /* primary: hero fills, dark panels, headings on light */
+  --dark-blue:      #004785;  /* secondary blue, gradient partner                     */
+  --sapphire-blue:  #0072BC;  /* accent: labels, links, highlights, chart series      */
+  --sky-blue:       #7ED3F7;  /* light accent, eyebrow text on dark                   */
+  --light-blue:     #C8EAF5;  /* tints, soft fills                                    */
+
+  /* --- Neutral palette --------------------------------------------------- */
+  --black:          #000000;
+  --dark-gray:      #58595B;  /* muted body copy, captions   */
+  --medium-gray:    #A7A9AC;  /* subtle UI, rules, disabled  */
+  --light-gray:     #F1F2F2;  /* muted backgrounds, cards    */
+  --white:          #FFFFFF;
+
+  /* --- Semantic aliases (map to palette only, never new hex) ------------- */
+  --bg:             var(--white);
+  --bg-muted:       var(--light-gray);
+  --fg:             var(--aperia-blue);
+  --fg-muted:       var(--dark-gray);
+  --rule:           var(--medium-gray);
+  --link:           var(--sapphire-blue);
+  --on-dark:        var(--white);
+  --eyebrow-on-dark: var(--sky-blue);
+
+  /* --- Approved gradients (palette colors only) -------------------------- */
+  --grad-hero:      linear-gradient(135deg, var(--aperia-blue), var(--dark-blue));
+  --grad-light:     linear-gradient(135deg, var(--white), var(--light-blue));
+
+  /* --- Chart series order -------------------------------------------------
+     The sanctioned ramp, in order: build every chart from series-1 outward. */
+  --series-1: var(--aperia-blue);
+  --series-2: var(--dark-blue);
+  --series-3: var(--sapphire-blue);
+  --series-4: var(--sky-blue);
+  --series-5: var(--light-blue);
+  --series-6: var(--dark-gray);
+  --series-7: var(--medium-gray);
+
+  /* --- Typography -------------------------------------------------------- */
+  --font-sans: 'Inter', Arial, Helvetica, sans-serif;  /* Arial is the sanctioned fallback */
+  --fw-light:  300;   /* the guideline's body weight; too thin on screen, see DEVIATIONS.md section 9 */
+  --fw-regular: 400;  /* body, on screen and in Office */
+  --fw-medium: 500;   /* pull quotes, large paragraphs */
+  --fw-semibold: 600; /* UI emphasis in the HTML themes, never body copy */
+  --fw-bold:   700;   /* brief highlights, headings */
+  --leading-body: 1.5;
+  --min-size: 12px;   /* on-screen floor: nothing renders below this */
+
+  /* Type scale, from the Aperia Figma design system. See BRAND.md > Typography.
+     Size-semantic names, never role names, never tied to an h1..h6 tag.
+     Use each size with its paired leading. Ten steps. Figma's 10 and 11 are
+     omitted: they sit below the 12px on-screen floor. */
+  --text-xs:   12px;  --leading-xs:   16px;
+  --text-sm:   14px;  --leading-sm:   20px;
+  --text-base: 16px;  --leading-base: 24px;
+  --text-md:   18px;  --leading-md:   28px;
+  --text-lg:   20px;  --leading-lg:   32px;
+  --text-xl:   24px;  --leading-xl:   36px;
+  --text-2xl:  28px;  --leading-2xl:  40px;
+  --text-3xl:  32px;  --leading-3xl:  48px;
+  --text-4xl:  36px;  --leading-4xl:  52px;   /* leading derived, not from Figma */
+  --text-5xl:  40px;  --leading-5xl:  56px;   /* leading derived, not from Figma */
+
+  /* --- Shape --------------------------------------------------------------- */
+  --radius:      8px;     /* cards, panels, inputs                      */
+  --radius-sm:   4px;     /* bars, swatches, small chips, focus rings   */
+  --radius-pill: 100px;   /* pills: badges, tags, chips, round buttons  */
+}
+
+/* Guideline defaults: never underline, never justify, left-align by default. */
+body { font-family: var(--font-sans); font-weight: var(--fw-regular);
+       line-height: var(--leading-body); text-align: left;
+       color: var(--fg); background: var(--bg); }
+h1, h2, h3, h4 { text-decoration: none; text-align: left; }
+a { color: var(--link); text-decoration: none; }
+
+/* ---- slides.css (references) ---- */
 /* =====================================================================
    APERIA HTML SLIDES: THEME
-   Injected by ../apply-branding/components/assemble.py after ../apply-branding/brand/tokens.css,
+   Injected by ../../ui-components/assemble.py after ../../brand/tokens.css,
    which it reads for every palette, weight and type value. Nothing here
    restates a brand value; the deck marker is a style element holding the
    comment `@aperia slides`.
@@ -20,9 +140,9 @@
    ===================================================================== */
 
 :root {
-  /* The palette comes from ../apply-branding/brand/tokens.css and is not repeated here.
+  /* The palette comes from ../../brand/tokens.css and is not repeated here.
      Two aliases for names the brand layer spells differently, same as
-     ../apply-branding/components/base/styles.css. */
+     ../../ui-components/base/styles.css. */
   --sapphire:var(--sapphire-blue); --med-gray:var(--medium-gray);
   --sans:var(--font-sans); --label:var(--sans); /* no mono typeface: BRAND.md sanctions Inter only */
   /* mapped roles (light slide). --fg is the one deliberate override of the
@@ -37,7 +157,7 @@
   --ov:0.1733;        /* thumbnail scale in overview mode */
   /* Shape in canvas units. Both override the screen-px brand radii on purpose:
      15 canvas units is 8px at the scale a 1920 canvas shows on a laptop.
-     Recorded as an override in the repo validator. --radius-pill stays the brand value. */
+     Recorded in validate.py OVERRIDES. --radius-pill stays the brand value. */
   --radius:15px;        /* cards, panels, stat cards, chart blocks */
   --radius-sm:7.5px;    /* bars, swatches, small chips             */
 
@@ -63,10 +183,10 @@
      Leadings stay unitless ratios at the use site. A ratio already scales with
      the canvas, where a px leading would have to be mapped a second time.
 
-     The brand steps themselves come from ../apply-branding/brand/tokens.css. Each tier
+     The brand steps themselves come from ../../brand/tokens.css. Each tier
      below defines only the steps this theme uses. A step that is missing here
      maps by the same factor, it is not a new size: adding a step to the ramp
-     itself is a change to ../apply-branding/brand/BRAND.md, never a local decision. */
+     itself is a change to ../../brand/BRAND.md, never a local decision. */
   --canvas-k:  1.625;   /* slide face: brand step x 1.625 */
   --canvas-kd: 3.25;    /* display:    brand step x 3.25  */
 
@@ -212,8 +332,6 @@ ul.s-list li small { display:block; font-size:var(--slide-text-sm); color:var(--
 /* badges */
 .badge { display:inline-flex; align-items:center; font-family:var(--label); font-size:var(--slide-text-xs); font-weight:500;
          padding:6px 18px; border-radius:calc(var(--radius-pill) * var(--canvas-k)); letter-spacing:.02em }
-code { font:inherit; font-weight:500; background:var(--muted); border-radius:var(--radius-sm); padding:0 8px } /* Inter, not monospace: BRAND.md sanctions no other face */
-.s-dark code { background:rgba(255,255,255,.14) }
 .b-blue { background:#eaf3fb; color:var(--dark-blue); border:1.5px solid #bfdcf0 }
 .b-sky { background:#eafaff; color:var(--sapphire); border:1.5px solid var(--sky-blue) }
 .b-gray { background:var(--muted); color:var(--muted-fg); border:1.5px solid var(--border) }
@@ -351,11 +469,8 @@ code { font:inherit; font-weight:500; background:var(--muted); border-radius:var
 .col-val { position:absolute; top:-45px; left:0; right:0; text-align:center; font-family:var(--label);
            font-size:var(--slide-text-base); font-weight:600; color:var(--aperia-blue) }
 .s-dark .col-val { color:var(--white) }
-/* No margin-top: this border-top IS the chart's baseline, so it has to meet the
-   bottom of .col-bar. The old 21px margin floated the rule below the columns.
-   That 21px moved into padding-top, so the label text sits where it always did. */
-.col-lbl { font-size:var(--slide-text-sm); line-height:1.35; text-align:center; color:var(--muted-fg);
-           padding-top:39px; border-top:1.5px solid var(--border); width:100% }
+.col-lbl { font-size:var(--slide-text-sm); line-height:1.35; text-align:center; margin-top:21px; color:var(--muted-fg);
+           padding-top:18px; border-top:1.5px solid var(--border); width:100% }
 .s-dark .col-lbl { color:#cfe0f0; border-top-color:rgba(255,255,255,.2) }
 
 /* --- horizontal ranked bars --- */
@@ -489,3 +604,415 @@ body.ov .ui-notes, body.ov .ui-count, body.ov .ui-hint, body.ov .ui-progress { d
   body.ov { --ov:0.1467 }
   body.ov .deck { padding:16px; gap:14px }
 }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="apg-a" x1="279.9" y1="319.7" x2="397.4" y2="-3.1" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#002f67"/><stop offset="1" stop-color="#004583"/>
+    </linearGradient>
+    <linearGradient id="apg-b" x1="174.1" y1="306.1" x2="252.7" y2="90.3" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#002f67"/><stop offset="1" stop-color="#0072bc"/>
+    </linearGradient>
+    <linearGradient id="apg-c" x1="114.4" y1="-194.4" x2="203.7" y2="50.8"
+                    gradientTransform="translate(0 86.2) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#002f67"/><stop offset="1" stop-color="#004583"/>
+    </linearGradient>
+  </defs>
+
+  <symbol id="ap-shape-double" viewBox="0 0 406.1 283.3">
+    <path fill="url(#apg-a)" d="M406.6,283.3h-226.8l84.9-212.2C281.9,28.1,323.6-.2,369.9-.2L406.1,0l.5,283.3Z"/>
+    <path fill="url(#apg-b)" d="M247.4,283.3H111.3l50.9-127.3c10.3-25.8,35.3-42.8,63.2-42.8h90l-68,170.1Z"/>
+  </symbol>
+
+  <symbol id="ap-shape-single" viewBox="0 0 226.8 283.5">
+    <path fill="url(#apg-c)" d="M226.8,283.5H0L84.9,71.3C102.3,28.3,143.9,0,190.2,0h36.6v283.5Z"/>
+  </symbol>
+
+  <symbol id="ap-logo" viewBox="0 0 135 40">
+    <g fill="currentColor">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M22.9449 25.9157L25.7618 32.8812H32.9321L19.6159 1.63916H13.3163L0 32.8812H7.01664L9.83355 25.9157H22.9449ZM12.292 19.9234L16.3893 9.83377L20.5378 19.9234H12.292Z"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M41.4854 29.8082C43.1243 31.7032 45.3266 33.3421 48.9118 33.3421C54.5456 33.3421 59.7184 28.9887 59.7184 21.1014V20.999C59.7184 13.0604 54.4432 8.70703 48.9118 8.70703C45.3779 8.70703 43.1243 10.346 41.4854 12.5483V9.11676H34.7249V40.0002H41.4854V29.8082ZM47.2216 14.392C50.3458 14.392 53.0091 17.0041 53.0091 20.9477V21.0502C53.0091 25.045 50.3458 27.6059 47.2216 27.6059C44.0462 27.6059 41.4342 24.9938 41.4342 21.0502V20.9477C41.4342 17.0041 44.0974 14.392 47.2216 14.392Z"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M68.0154 23.3549H84.5583C84.6096 22.7403 84.6096 22.3305 84.5583 21.6647V21.5623C84.5583 14.8017 80.922 8.65576 72.9834 8.65576C66.0692 8.65576 61.2549 14.2896 61.2549 21.0501V21.1526C61.2549 28.4253 66.5302 33.4445 73.6493 33.4445C77.9514 33.4445 81.1781 31.7544 83.3804 28.9887L79.5391 25.5572C77.6953 27.2985 76.0564 28.0156 73.8029 28.0156C70.8323 28.0156 68.6813 26.4278 68.0154 23.3549ZM67.9643 19.1551C68.4764 16.0821 70.269 14.0847 73.0859 14.0847C75.9028 14.0847 77.6954 16.1333 78.1051 19.1551H67.9643Z"/>
+      <path d="M101.357 15.7234C96.9015 15.7234 94.1358 18.4379 94.1358 24.1229V32.8809H87.3752V9.1165H94.1358V13.8796C95.5186 10.6018 97.721 8.45069 101.716 8.65555V15.7234H101.357V15.7234Z"/>
+      <path d="M104.021 32.8811V9.1167H110.781V32.8811H104.021Z"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M128.809 30.32V32.8808H135.314V19.1036C135.314 12.6504 132.087 8.86035 124.712 8.86035C120.666 8.86035 118.105 9.6286 115.493 10.7554L117.183 15.877C119.334 15.1088 121.178 14.5966 123.739 14.5966C127.119 14.5966 128.861 16.1331 128.861 18.95V19.3597C127.17 18.7963 125.48 18.3866 123.073 18.3866C117.439 18.3866 113.496 20.7938 113.496 25.9666V26.0691C113.496 30.781 117.183 33.3418 121.639 33.3418C124.917 33.3418 127.17 32.1126 128.809 30.32ZM124.661 22.4327C126.3 22.4327 127.785 22.7912 128.963 23.3034V24.5326C128.963 26.9398 126.812 28.6811 123.688 28.6811C121.485 28.6811 120 27.6056 120 25.813V25.7106C120 23.6107 121.793 22.4327 124.661 22.4327Z"/>
+      <ellipse cx="107.401" cy="3.53393" rx="3.53393" ry="3.53393"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="deck" id="deck">
+
+  <!-- 01 COVER -->
+  <section class="stage">
+    <article class="slide s-dark s-cover">
+      <svg class="shape shape-cover" viewBox="0 0 406.1 283.3" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-double"/></svg>
+      <div class="s-body">
+        <svg class="logo cover-logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg>
+        <div class="kicker">Release Readout</div>
+        <h1>Toolkit 0.8.0 <em>One Source For Every Value</em></h1>
+        <div class="s-meta">
+          <div>Prepared for<strong>Toolkit Maintainers</strong></div>
+          <div>Release<strong>0.8.0</strong></div>
+          <div>Date<strong>September 2026</strong></div>
+        </div>
+      </div>
+      <aside class="notes">Open on the shape of the release, not the list. This is the version where the stylesheets stopped being copied by hand and the palette stopped being restated. Everything else follows from those two moves.</aside>
+    </article>
+  </section>
+
+  <!-- 02 AGENDA -->
+  <section class="stage">
+    <article class="slide s-dark s-agenda">
+      <svg class="shape shape-panel" viewBox="0 0 226.8 283.5" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-single"/></svg>
+      <div class="s-body center">
+        <div class="kicker">Agenda</div>
+        <h2>What We Will Cover</h2>
+        <ol class="agenda-list">
+          <li>Summary <span>3 min</span></li>
+          <li>What Changed <span>10 min</span></li>
+          <li>Verification <span>5 min</span></li>
+          <li>Next Steps <span>4 min</span></li>
+        </ol>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Do not read this out. Say that the middle section is the one that changes how they author a document, and that next steps are four rules, not a backlog.</aside>
+    </article>
+  </section>
+
+  <!-- 03 SECTION: SUMMARY -->
+  <section class="stage">
+    <article class="slide s-dark s-section">
+      <svg class="shape shape-panel" viewBox="0 0 226.8 283.5" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-single"/></svg>
+      <div class="s-body center">
+        <div class="s-num-big">01 / 04</div>
+        <h1>Summary</h1>
+        <hr class="s-rule">
+      </div>
+      <aside class="notes">One line of transition. The release has a single idea behind it, so name that idea before any of the individual changes.</aside>
+    </article>
+  </section>
+
+  <!-- 04 SUMMARY -->
+  <section class="stage">
+    <article class="slide s-light s-text">
+      <div class="s-body">
+        <div class="kicker">Summary</div>
+        <h2>Every Value Has One Home</h2>
+        <p class="s-lede">0.8.0 puts the stylesheets, the palette and the type ramp behind one source.</p>
+        <div class="fill-c">
+        <ul class="s-list">
+          <li>Styles are injected by a script, not pasted by the model</li>
+          <li>slides.css reads tokens.css instead of restating it</li>
+          <li>validate.py fails what the docs used to only ask for</li>
+        </ul>
+        </div>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Land the third point hardest. The first two remove the drift that already happened; the check is what stops the next one. Hand off into the numbers.</aside>
+    </article>
+  </section>
+
+  <!-- 05 NUMBERS -->
+  <section class="stage">
+    <article class="slide s-dark flat s-numbers">
+      <svg class="shape shape-panel" viewBox="0 0 226.8 283.5" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-single"/></svg>
+      <div class="s-body center">
+        <div class="kicker">Scale Of The Change</div>
+        <h2>The Release In Three Numbers</h2>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-val">90 KB</div><div class="stat-lbl">CSS no longer hand-copied into each generated document</div></div>
+          <div class="stat-card"><div class="stat-val">4</div><div class="stat-lbl">New validate.py failures, from raw px to em dashes</div></div>
+          <div class="stat-card"><div class="stat-val">26</div><div class="stat-lbl">Literal white hex values replaced with the token</div></div>
+        </div>
+        <p class="insight">The 90 KB is the visible saving; the four checks are what stop it coming back.</p>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Say the first number, then skip to the third and let the middle sit on screen. The 90 KB is per output, so it compounds across every document the toolkit has produced.</aside>
+    </article>
+  </section>
+
+  <!-- 06 SECTION: WHAT CHANGED -->
+  <section class="stage">
+    <article class="slide s-dark s-section">
+      <svg class="shape shape-panel" viewBox="0 0 226.8 283.5" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-single"/></svg>
+      <div class="s-body center">
+        <div class="s-num-big">02 / 04</div>
+        <h1>What Changed</h1>
+        <hr class="s-rule">
+      </div>
+      <aside class="notes">Four slides here, and they build: the three moves, the docs that caught up, the new authoring sequence, then the before and after table.</aside>
+    </article>
+  </section>
+
+  <!-- 07 THREE MOVES -->
+  <section class="stage">
+    <article class="slide s-light s-icons">
+      <div class="s-body">
+        <div class="kicker">What Changed</div>
+        <h2>Three Moves</h2>
+        <div class="g3 fill">
+          <div class="iblock">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg>
+            <h3>Inject</h3><p>assemble.py fills the style marker from the layer files, byte for byte.</p>
+          </div>
+          <div class="iblock">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+            <h3>Consolidate</h3><p>slides.css reads tokens.css, and qa.py reads the palette through palette.py.</p>
+          </div>
+          <div class="iblock">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            <h3>Enforce</h3><p>The shipped CSS now passes the rules it was written to describe.</p>
+          </div>
+        </div>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Consolidate is the one to dwell on. Six chart label sizes moved onto the ramp and a new four pixel radius token replaced every small literal, which is what Enforce then guards.</aside>
+    </article>
+  </section>
+
+  <!-- 08 DOCS -->
+  <section class="stage">
+    <article class="slide s-light s-text">
+      <div class="s-body">
+        <div class="kicker">What Changed</div>
+        <h2>The Text Caught Up With The Code</h2>
+        <div class="fill-c">
+        <ul class="s-list">
+          <li>Version stamps and chartSeries corrected in DEVIATIONS.md</li>
+          <li>Skill names fixed in BRAND.md; MAINTAINING.md edit order restored</li>
+          <li>Stale "three skills" and "720px" removed from the slides skill</li>
+          <li>Skill descriptions rewritten to name the output they produce</li>
+          <li>Every em dash replaced; .prettierrc committed</li>
+        </ul>
+        </div>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Mention that 0.7.0 inverted the MAINTAINING.md edit order, which is why anyone following it was editing in the wrong sequence. The slides description now says outright that PowerPoint is not an output.</aside>
+    </article>
+  </section>
+
+  <!-- 09 FLOW -->
+  <section class="stage">
+    <article class="slide s-light s-text">
+      <div class="s-body">
+        <div class="kicker">How A Document Is Built Now</div>
+        <h2>Mark, Assemble, Verify</h2>
+        <div class="flow fill">
+          <div class="flow-step"><div class="flow-node">1</div><div class="flow-title">Mark</div><div class="flow-desc">The document carries a bare style marker, no theme.</div></div>
+          <div class="flow-step"><div class="flow-node">2</div><div class="flow-title">Assemble</div><div class="flow-desc">The script fills it with the layer files, in order.</div></div>
+          <div class="flow-step"><div class="flow-node">3</div><div class="flow-title">Verify</div><div class="flow-desc">Checkers read the palette from the brand layer.</div></div>
+          <div class="flow-step"><div class="flow-node">4</div><div class="flow-title">Repeat</div><div class="flow-desc">Any edit touching the marker means assembling again.</div></div>
+        </div>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Step four is the one people forget. The script replaces its own block, so re-running it is always safe and never doubles up the theme.</aside>
+    </article>
+  </section>
+
+  <!-- 10 COMPARISON -->
+  <section class="stage">
+    <article class="slide s-light s-text">
+      <div class="s-body">
+        <div class="kicker">Before And After</div>
+        <h2>0.7.0 Against 0.8.0</h2>
+        <div class="fill-c">
+        <table class="cmp-table">
+          <thead><tr><th>Concern</th><th>0.7.0</th><th class="hl">0.8.0</th></tr></thead>
+          <tbody>
+            <tr><td>Stylesheet delivery</td><td>Pasted by the model</td><td class="hl">Injected by the script</td></tr>
+            <tr><td>Palette source</td><td>Restated in slides.css</td><td class="hl">Read from tokens.css</td></tr>
+            <tr><td>Font loading</td><td>An import and a link</td><td class="hl">One link in head</td></tr>
+            <tr><td>Off-token values</td><td>Documented only</td><td class="hl">Failed by validate.py</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Read across the highlighted column, not down the rows. Each line is the same move: something that was described in prose is now done by a script or failed by a check.</aside>
+    </article>
+  </section>
+
+  <!-- 11 STATEMENT -->
+  <section class="stage">
+    <article class="slide s-dark s-statement">
+      <svg class="shape shape-panel" viewBox="0 0 226.8 283.5" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-single"/></svg>
+      <div class="s-body center">
+        <h1>A Value Lives In One File, Or It Drifts.</h1>
+        <p class="s-sub">The pasted stylesheets were the symptom. The restated hexes were the cause.</p>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Say the line and stop. This is the pivot from what changed into how it is now checked, so let the room sit with it for a beat.</aside>
+    </article>
+  </section>
+
+  <!-- 12 SECTION: VERIFICATION -->
+  <section class="stage">
+    <article class="slide s-dark s-section">
+      <svg class="shape shape-panel" viewBox="0 0 226.8 283.5" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-single"/></svg>
+      <div class="s-body center">
+        <div class="s-num-big">03 / 04</div>
+        <h1>Verification</h1>
+        <hr class="s-rule">
+      </div>
+      <aside class="notes">Short section, one slide. The point is that the guidance is now executable, so nobody has to remember it during review.</aside>
+    </article>
+  </section>
+
+  <!-- 13 CHECKS -->
+  <section class="stage">
+    <article class="slide s-light s-text">
+      <div class="s-body">
+        <div class="kicker">Verification</div>
+        <h2>What The Checker Now Fails</h2>
+        <div class="fill-c">
+        <ul class="s-list">
+          <li>Raw px font-size in a shipped stylesheet</li>
+          <li>A border-radius off the token scale</li>
+          <li>Skill descriptions under eighty characters</li>
+          <li>Any em dash, in docs, comments or snippets</li>
+        </ul>
+        <div class="callout"><strong>Also:</strong> the palette check reads three-digit hex and rgb() values, and check 6 now covers skills/ too.</div>
+        </div>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">The eighty character rule sounds arbitrary; it exists because a one-line description is what the model reads when deciding whether a skill applies. Say that before moving on.</aside>
+    </article>
+  </section>
+
+  <!-- 14 SECTION: NEXT STEPS -->
+  <section class="stage">
+    <article class="slide s-dark s-section">
+      <svg class="shape shape-panel" viewBox="0 0 226.8 283.5" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-single"/></svg>
+      <div class="s-body center">
+        <div class="s-num-big">04 / 04</div>
+        <h1>Next Steps</h1>
+        <hr class="s-rule">
+      </div>
+      <aside class="notes">Frame these as working rules that follow from the release, not as a backlog. Nothing here needs a decision from the room.</aside>
+    </article>
+  </section>
+
+  <!-- 15 NEXT STEPS -->
+  <section class="stage">
+    <article class="slide s-light s-text">
+      <div class="s-body">
+        <div class="kicker">Next Steps</div>
+        <h2>What This Asks Of Maintainers</h2>
+        <div class="fill-c">
+        <ul class="s-list">
+          <li>Author from a bare marker, never a pasted theme</li>
+          <li>Re-run assemble after any edit that touches the marker</li>
+          <li>Keep document-specific rules in a second style block</li>
+          <li>No closing style tag inside a layer file<small>The script refuses it; the browser would end the block early.</small></li>
+        </ul>
+        </div>
+      </div>
+      <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+      <aside class="notes">Point them at examples/toolkit-0-8-0-release.html, which is this release written up with create-report and assembled from a bare marker, so it is the reference for all four rules at once.</aside>
+    </article>
+  </section>
+
+  <!-- 16 CLOSING -->
+  <section class="stage">
+    <article class="slide s-dark s-end">
+      <svg class="shape shape-cover" viewBox="0 0 406.1 283.3" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-double"/></svg>
+      <div class="s-body center">
+        <h1>Questions</h1>
+      </div>
+      <aside class="notes">Nothing on screen but the word. Say where the changelog and the example document live, then open the floor and stop talking.</aside>
+    </article>
+  </section>
+
+</div>
+
+<div class="deck-ui ui-progress"><i id="prog"></i></div>
+<div class="deck-ui ui-count">
+  <button id="prev" aria-label="Previous slide">&#8592;</button>
+  <span id="count">01 / 01</span>
+  <button id="next" aria-label="Next slide">&#8594;</button>
+</div>
+<div class="deck-ui ui-hint">&#8592; &#8594; move &nbsp;·&nbsp; O overview &nbsp;·&nbsp; N notes &nbsp;·&nbsp; F full screen</div>
+<div class="deck-ui ui-notes" id="notesbar"><h4>Presenter Notes</h4><p id="notestext"></p></div>
+
+<script>
+(function () {
+  const deck   = document.getElementById('deck');
+  const stages = Array.from(deck.querySelectorAll('.stage'));
+  const count  = document.getElementById('count');
+  const prog   = document.getElementById('prog');
+  const notes  = document.getElementById('notestext');
+  const pad    = n => String(n).padStart(2, '0');
+  let cur = 0;
+
+  /* fit the 1920x1080 canvas to the viewport */
+  function fit() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    document.documentElement.style.setProperty('--scale', s);
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  /* stamp slide numbers */
+  stages.forEach((st, i) => {
+    const n = st.querySelector('.s-num');
+    if (n) n.textContent = pad(i + 1) + ' / ' + pad(stages.length);
+  });
+
+  function render() {
+    count.textContent = pad(cur + 1) + ' / ' + pad(stages.length);
+    prog.style.width = ((cur + 1) / stages.length * 100) + '%';
+    const n = stages[cur].querySelector('.notes');
+    notes.textContent = n ? n.textContent.trim() : 'No notes for this slide.';
+  }
+
+  function go(i, smooth) {
+    cur = Math.max(0, Math.min(stages.length - 1, i));
+    deck.scrollTo({ top: cur * deck.clientHeight, behavior: smooth === false ? 'auto' : 'smooth' });
+    render();
+  }
+
+  deck.addEventListener('scroll', () => {
+    if (document.body.classList.contains('ov')) return;
+    const i = Math.round(deck.scrollTop / deck.clientHeight);
+    if (i !== cur) { cur = i; render(); }
+  }, { passive: true });
+
+  document.getElementById('prev').onclick = () => go(cur - 1);
+  document.getElementById('next').onclick = () => go(cur + 1);
+
+  function overview(on) {
+    document.body.classList.toggle('ov', on);
+    if (!on) requestAnimationFrame(() => go(cur, false));
+  }
+  stages.forEach((st, i) => st.addEventListener('click', () => {
+    if (document.body.classList.contains('ov')) { cur = i; overview(false); }
+  }));
+
+  document.addEventListener('keydown', e => {
+    const ov = document.body.classList.contains('ov');
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ':
+        if (!ov) { e.preventDefault(); go(cur + 1); } break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+        if (!ov) { e.preventDefault(); go(cur - 1); } break;
+      case 'Home': e.preventDefault(); go(0); break;
+      case 'End':  e.preventDefault(); go(stages.length - 1); break;
+      case 'o': case 'O': overview(!ov); break;
+      case 'n': case 'N': document.body.classList.toggle('notes-on'); break;
+      case 'f': case 'F':
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+        break;
+      case 'Escape': if (ov) overview(false); break;
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

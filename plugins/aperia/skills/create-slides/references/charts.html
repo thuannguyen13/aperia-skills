@@ -1,0 +1,120 @@
+<!-- =====================================================================
+     APERIA HTML SLIDES: NUMBERS AND CHARTS
+     Read only if a slide carries a stat row or a chart. Skeleton, fragments
+     and the other layouts are in snippets.html beside this file.
+     Series colors: c1 c2 c3 c4 c5 only. Data labels on. No gridlines.
+     Every chart slide ends with exactly one .insight line.
+     ===================================================================== -->
+
+<!-- BIG NUMBERS (dark) -->
+<section class="stage">
+  <article class="slide s-dark flat s-numbers">
+    <svg class="shape shape-panel" viewBox="0 0 226.8 283.5" preserveAspectRatio="xMaxYMin meet" aria-hidden="true"><use href="#ap-shape-single"/></svg>
+    <div class="s-body center">
+      <div class="kicker">Where We Are</div>
+      <h2>The Case In Three Numbers</h2>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-val">41%</div><div class="stat-lbl">Of flagged merchants never get a second look</div></div>
+        <div class="stat-card"><div class="stat-val">12 wks</div><div class="stat-lbl">To ship the standalone workspace</div></div>
+        <div class="stat-card"><div class="stat-val">2&times;</div><div class="stat-lbl">Integration cost if we build inside VisionWeb first</div></div>
+      </div>
+      <p class="insight">The 2&times; is the whole argument, the other two numbers only set it up.</p>
+    </div>
+    <div class="s-foot"><svg class="logo" viewBox="0 0 135 40" aria-label="Aperia"><use href="#ap-logo"/></svg><span class="s-num"></span></div>
+    <aside class="notes">Do not read all three. Say the first, skip to the third, let the middle sit on screen.</aside>
+  </article>
+</section>
+
+<!-- VERTICAL COLUMN CHART: bar heights are % of the tallest -->
+<div class="chart-frame">
+  <div class="chart-note">Alerts Cleared Per Analyst Per Week</div>
+  <div class="colchart">
+    <div class="col"><div class="col-bar c5" style="height:46%"><span class="col-val">58</span></div><div class="col-lbl">Q1</div></div>
+    <div class="col"><div class="col-bar c5" style="height:58%"><span class="col-val">73</span></div><div class="col-lbl">Q2</div></div>
+    <div class="col"><div class="col-bar c5" style="height:64%"><span class="col-val">81</span></div><div class="col-lbl">Q3</div></div>
+    <div class="col"><div class="col-bar c3" style="height:100%"><span class="col-val">126</span></div><div class="col-lbl">Q4 (pilot)</div></div>
+  </div>
+  <p class="insight">The pilot quarter is not a trend, it is the first quarter with one screen.</p>
+</div>
+
+<!-- HORIZONTAL RANKED BARS: sort descending, always -->
+<div class="chart-frame">
+  <div class="chart-note">Analyst Hours Per Week, By Task</div>
+  <div class="bchart">
+    <div class="brow"><div class="bname">Cross-system lookup<small>manual</small></div><div class="btrack-wrap"><div class="btrack"><div class="bfill c1" style="width:100%"></div></div></div><div class="bval">14.0</div></div>
+    <div class="brow"><div class="bname">Evidence assembly</div><div class="btrack-wrap"><div class="btrack"><div class="bfill c2" style="width:61%"></div></div></div><div class="bval">8.5</div></div>
+    <div class="brow"><div class="bname">Case write-up</div><div class="btrack-wrap"><div class="btrack"><div class="bfill c3" style="width:39%"></div></div></div><div class="bval">5.5</div></div>
+    <div class="brow"><div class="bname">Actual decisioning</div><div class="btrack-wrap"><div class="btrack"><div class="bfill c4" style="width:23%"></div></div></div><div class="bval">3.2</div></div>
+  </div>
+  <p class="insight">Only three of thirty-one hours a week are spent on the judgment we hire analysts for.</p>
+</div>
+
+<!-- STACKED PROPORTIONAL BAR: use this instead of a pie for 4+ parts -->
+<div class="chart-frame">
+  <div class="chart-note">Where The Integration Budget Goes</div>
+  <div class="stack-wrap">
+    <div class="stack">
+      <div class="seg c1" style="width:38%">38%</div>
+      <div class="seg c2" style="width:27%">27%</div>
+      <div class="seg c3" style="width:21%">21%</div>
+      <div class="seg c4" style="width:14%">14%</div>
+    </div>
+    <ul class="stack-legend">
+      <li><i class="c1"></i>Data plumbing 38%</li>
+      <li><i class="c2"></i>Rules engine 27%</li>
+      <li><i class="c3"></i>Workspace UI 21%</li>
+      <li><i class="c4"></i>Migration allowance 14%</li>
+    </ul>
+  </div>
+  <p class="insight">Two thirds of the spend is plumbing that Titan would make us pay for twice.</p>
+</div>
+
+<!-- DONUT: ONLY for 2-3 parts. Four or more goes to the stacked bar above.
+     On a dark slide use `s-dark flat`: the centre hole is a solid fill and will
+     not sit cleanly on the gradient. Write the segment colors as palette vars and
+     make the legend swatches match them exactly. -->
+<div class="donut-wrap">
+  <div class="donut" style="background:conic-gradient(var(--sapphire) 0 62%, var(--light-blue) 62% 100%)">
+    <div class="donut-center"><div class="donut-val">62%</div><div class="donut-lbl">Covered</div></div>
+  </div>
+  <div>
+    <ul class="stack-legend" style="flex-direction:column; gap:12px">
+      <li><i style="background:var(--sapphire)"></i>Scored by Brighterion today, 62%</li>
+      <li><i style="background:var(--light-blue)"></i>No signal available, 38%</li>
+    </ul>
+  </div>
+</div>
+
+<!-- LINE / TREND: inline SVG, viewBox 0 0 900 260, no gridlines -->
+<div class="chart-frame">
+  <div class="chart-note">Open Cases, Rolling 6 Months</div>
+  <svg class="lchart" viewBox="0 0 1350 390" preserveAspectRatio="none" aria-hidden="true">
+    <line class="base" x1="0" y1="230" x2="900" y2="230"/>
+    <polyline class="ln ln1" points="60,70 220,95 380,60 540,120 700,165 860,205"/>
+    <g><circle class="dot" cx="60" cy="70" r="5"/><circle class="dot" cx="220" cy="95" r="5"/><circle class="dot" cx="380" cy="60" r="5"/><circle class="dot" cx="540" cy="120" r="5"/><circle class="dot" cx="700" cy="165" r="5"/><circle class="dot" cx="860" cy="205" r="5"/></g>
+    <g><text class="dlbl" x="60" y="52">1,420</text><text class="dlbl" x="220" y="77">1,310</text><text class="dlbl" x="380" y="42">1,480</text><text class="dlbl" x="540" y="102">1,050</text><text class="dlbl" x="700" y="147">760</text><text class="dlbl" x="860" y="187">540</text></g>
+    <g><text class="axlbl" x="60" y="252">Mar</text><text class="axlbl" x="220" y="252">Apr</text><text class="axlbl" x="380" y="252">May</text><text class="axlbl" x="540" y="252">Jun</text><text class="axlbl" x="700" y="252">Jul</text><text class="axlbl" x="860" y="252">Aug</text></g>
+  </svg>
+  <p class="insight">The backlog only started falling once triage moved into one screen in June.</p>
+</div>
+
+<!-- GANTT: a schedule over time. left% and width% are on a shared axis. -->
+<div class="chart-frame">
+  <div class="chart-note">Delivery Plan</div>
+  <div class="gantt">
+    <div class="gantt-row"><div class="gantt-label">Discovery</div><div class="gantt-track"><div class="gantt-bar c1" style="left:0%; width:18%">3 wks</div></div></div>
+    <div class="gantt-row"><div class="gantt-label">Data plumbing</div><div class="gantt-track"><div class="gantt-bar c2" style="left:14%; width:34%">6 wks</div></div></div>
+    <div class="gantt-row"><div class="gantt-label">Workspace build</div><div class="gantt-track"><div class="gantt-bar c3" style="left:40%; width:38%">7 wks</div></div></div>
+    <div class="gantt-row"><div class="gantt-label">Pilot &amp; hardening</div><div class="gantt-track"><div class="gantt-bar c4" style="left:74%; width:26%">4 wks</div></div></div>
+  </div>
+  <div class="gantt-axis"><span>Wk 0</span><span>Wk 4</span><span>Wk 8</span><span>Wk 12</span><span>Wk 16</span></div>
+  <p class="insight">Pilot starts in week twelve, before the Titan migration window opens.</p>
+</div>
+
+<!-- PROPORTIONAL EFFORT BARS: relative size only, NOT a schedule -->
+<div class="tline-bars">
+  <div class="tline-bar c1" style="flex:3">Discovery · 3 wks</div>
+  <div class="tline-bar c2" style="flex:6">Plumbing · 6 wks</div>
+  <div class="tline-bar c3" style="flex:7">Build · 7 wks</div>
+  <div class="tline-bar c4" style="flex:4">Pilot · 4 wks</div>
+</div>

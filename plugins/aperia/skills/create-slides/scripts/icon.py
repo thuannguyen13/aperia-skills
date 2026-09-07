@@ -1,43 +1,42 @@
 #!/usr/bin/env python3
 """Emit inline Lucide SVG markup for Aperia HTML slides.
 
-The icon inherits its color from CSS (`stroke="currentColor"`), so the theme
-handles the tone rule automatically: dark blue on light slides, sky blue on
-dark ones. Never hard-code a stroke color.
+A thin wrapper over the shared ../apply-branding/components/icons/icon.py, which fetches
+each icon from the Lucide CDN on demand. This adds the slide-specific
+stroke width and the .iblock helper, nothing else.
 
     python3 scripts/icon.py shield-check users refresh-cw
     python3 scripts/icon.py --search shield
     python3 scripts/icon.py --block database Consolidate "One evidence store."
 
-As a module:
-
-    from icon import svg, block
-    html = svg("shield-check")
+The icon inherits its color from CSS (`stroke="currentColor"`), so the theme
+handles the tone rule automatically: dark blue on light slides, sky blue on
+dark ones. Never hard-code a stroke color.
 """
-import json
+import glob
+import importlib.util
 import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# Shared with ui-components/icons/icon.py, one 2000+ icon asset for the
-# whole plugin, not a copy per skill. See ../../../ui-components/COMPONENTS.md.
-ICONS_PATH = os.path.join(HERE, "..", "..", "..", "ui-components", "icons", "lucide-icons.json")
+# Clients name a mounted skill folder differently, apply-branding in Claude
+# Code and aperia:apply-branding on Claude Desktop, so look for both.
+_SKILLS = os.path.join(HERE, "..", "..")
+_LAYER = next((d for d in [os.path.join(_SKILLS, "apply-branding")] + sorted(glob.glob(os.path.join(_SKILLS, "*:apply-branding")))
+               if os.path.isdir(d)), None)
+if _LAYER is None:
+    sys.exit("icon.py: the apply-branding skill, which holds the shared icon script, is not "
+             f"installed beside create-slides under {os.path.normpath(_SKILLS)}.")
+SHARED = os.path.join(_LAYER, "components", "icons", "icon.py")
+_spec = importlib.util.spec_from_file_location("shared_icon", SHARED)
+shared = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(shared)
 
-with open(ICONS_PATH, encoding="utf-8") as fh:
-    ICONS = json.load(fh)
-
-TPL = ('<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-       'stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round" '
-       'aria-hidden="true">{paths}</svg>')
+STROKE = 1.6  # slide faces are read from further away than a page
 
 
-def svg(slug: str, stroke_width: float = 1.6) -> str:
-    """Return inline SVG markup for a Lucide slug (e.g. 'shield-check')."""
-    if slug not in ICONS:
-        near = [k for k in ICONS if slug in k][:8]
-        hint = f" Did you mean: {', '.join(near)}?" if near else ""
-        raise KeyError(f"No Lucide icon '{slug}'.{hint}")
-    return TPL.format(w=stroke_width, paths=ICONS[slug])
+def svg(slug: str) -> str:
+    return shared.svg(slug, STROKE)
 
 
 def block(slug: str, heading: str, body: str) -> str:
@@ -46,20 +45,18 @@ def block(slug: str, heading: str, body: str) -> str:
             f'  <h3>{heading}</h3><p>{body}</p>\n</div>')
 
 
-def search(term: str):
-    return sorted(k for k in ICONS if term.lower() in k)
-
-
 if __name__ == "__main__":
     args = sys.argv[1:]
     if not args:
         print(__doc__)
-        print(f"{len(ICONS)} icons bundled.")
     elif args[0] == "--search":
-        hits = search(args[1])
+        hits = shared.search(args[1])
         print("\n".join(hits) if hits else "no match")
     elif args[0] == "--block":
         print(block(args[1], args[2], args[3]))
     else:
-        for slug in args:
-            print(svg(slug))
+        try:
+            for slug in args:
+                print(svg(slug))
+        except KeyError as e:
+            sys.exit(str(e.args[0]))

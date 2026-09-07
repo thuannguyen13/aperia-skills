@@ -1,0 +1,154 @@
+<!-- Ready-to-paste markup. Needs the `charts` marker word so charts/styles.css
+     is injected; its header defines the shared 640x300 chart frame every SVG
+     below uses. Recompute point positions with the formulas there, never
+     eyeball them. Sibling groups: compare.html, proportion.html, intensity.html. -->
+
+<!-- ==========================================================
+     TREND OVER TIME
+     A continuous x-axis. These share one 640x300 viewBox and plot geometry,
+     documented in styles.css, so several on a page read consistently.
+     ========================================================== -->
+
+<!-- ========== Line Chart ========== -->
+<!-- Single or multi-line. A comparison series is dashed. -->
+<!-- Data: monthly volume, axis max 600. x_i = 44 + i*115.2 (n=6 points).
+     A second, dashed series reads as "the comparison", per the vt-item
+     convention elsewhere in this library (solid = current, dashed = other). -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Monthly transaction volume, current year vs prior year">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/>
+      <line x1="44" y1="203.5" x2="620" y2="203.5"/>
+      <line x1="44" y1="141" x2="620" y2="141"/>
+      <line x1="44" y1="78.5" x2="620" y2="78.5"/>
+      <line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="38" y="270" text-anchor="end">0</text>
+      <text x="38" y="207.5" text-anchor="end">150</text>
+      <text x="38" y="145" text-anchor="end">300</text>
+      <text x="38" y="82.5" text-anchor="end">450</text>
+      <text x="38" y="20" text-anchor="end">600</text>
+      <text x="44" y="284" text-anchor="middle">Jan</text>
+      <text x="159.2" y="284" text-anchor="middle">Feb</text>
+      <text x="274.4" y="284" text-anchor="middle">Mar</text>
+      <text x="389.6" y="284" text-anchor="middle">Apr</text>
+      <text x="504.8" y="284" text-anchor="middle">May</text>
+      <text x="620" y="284" text-anchor="middle">Jun</text>
+    </g>
+    <path class="cf-line s3 compare" d="M44,149.3 L159.2,141 L274.4,124.3 L389.6,116 L504.8,99.3 L620,86.8"/>
+    <path class="cf-line s1" d="M44,132.7 L159.2,95.2 L274.4,107.7 L389.6,74.3 L504.8,53.5 L620,32.7"/>
+    <g class="cf-dot s1">
+      <circle cx="44" cy="132.7" r="3.5"/><circle cx="159.2" cy="95.2" r="3.5"/><circle cx="274.4" cy="107.7" r="3.5"/>
+      <circle cx="389.6" cy="74.3" r="3.5"/><circle cx="504.8" cy="53.5" r="3.5"/><circle cx="620" cy="32.7" r="3.5"/>
+    </g>
+  </svg>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Volume, current year</li>
+    <li><i class="dashed" style="color:var(--sapphire)"></i>Volume, prior year</li>
+  </ul>
+</div>
+
+<!-- ========== Area Chart ========== -->
+<!-- Single, or stacked as cumulative polygons. -->
+<!-- Single: fill the line path down to the baseline (y=266) at low opacity,
+     stroke drawn separately for a crisp top edge.
+     Stacked: TWO layers, each a filled polygon whose bottom edge is the
+     cumulative total below it and whose top edge is the cumulative total
+     including it, never fill each series independently, which would hide
+     the lower layer. -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Volume, area chart">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/><line x1="44" y1="203.5" x2="620" y2="203.5"/>
+      <line x1="44" y1="141" x2="620" y2="141"/><line x1="44" y1="78.5" x2="620" y2="78.5"/><line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="44" y="284" text-anchor="middle">Jan</text><text x="159.2" y="284" text-anchor="middle">Feb</text>
+      <text x="274.4" y="284" text-anchor="middle">Mar</text><text x="389.6" y="284" text-anchor="middle">Apr</text>
+      <text x="504.8" y="284" text-anchor="middle">May</text><text x="620" y="284" text-anchor="middle">Jun</text>
+    </g>
+    <path class="cf-area s1" opacity=".16" d="M44,132.7 L159.2,95.2 L274.4,107.7 L389.6,74.3 L504.8,53.5 L620,32.7 L620,266 L44,266 Z"/>
+    <path class="cf-line s1" d="M44,132.7 L159.2,95.2 L274.4,107.7 L389.6,74.3 L504.8,53.5 L620,32.7"/>
+  </svg>
+  <ul class="cf-legend"><li><i style="background:var(--aperia-blue)"></i>Volume</li></ul>
+</div>
+
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Volume by channel, stacked area">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/><line x1="44" y1="203.5" x2="620" y2="203.5"/>
+      <line x1="44" y1="141" x2="620" y2="141"/><line x1="44" y1="78.5" x2="620" y2="78.5"/><line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="44" y="284" text-anchor="middle">Jan</text><text x="159.2" y="284" text-anchor="middle">Feb</text>
+      <text x="274.4" y="284" text-anchor="middle">Mar</text><text x="389.6" y="284" text-anchor="middle">Apr</text>
+      <text x="504.8" y="284" text-anchor="middle">May</text><text x="620" y="284" text-anchor="middle">Jun</text>
+    </g>
+    <!-- Layer 1, Card present: bottom edge is the baseline (266), top edge is its own cumulative -->
+    <polygon class="cf-area s1" opacity=".85" points="44,266 44,182.7 159.2,170.2 274.4,178.5 389.6,161.8 504.8,153.5 620,141 620,266"/>
+    <!-- Layer 2, E-commerce: bottom edge = layer 1's top line, top edge = combined cumulative -->
+    <polygon class="cf-area s3" opacity=".85" points="44,182.7 159.2,170.2 274.4,178.5 389.6,161.8 504.8,153.5 620,141 620,20.2 504.8,45.2 389.6,66 274.4,91 159.2,91 44,120.2"/>
+  </svg>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Card present</li>
+    <li><i style="background:var(--sapphire)"></i>E-commerce</li>
+  </ul>
+</div>
+
+<!-- ========== Combo Chart ========== -->
+<!-- Bars plus a line, dual axis. Label both axes. -->
+<!-- Left axis (bars) and right axis (line) are DIFFERENT scales sharing the
+     same 0-266..16 pixel range, label both axes so the reader never assumes
+     one scale. Bar slot width = 576/n; bar width narrower than the slot,
+     centered: bar_x = slot_start + (slot_width - bar_width)/2. -->
+<div class="chart-card">
+  <svg viewBox="0 0 640 300" role="img" aria-label="Volume (bars, left axis) and decline rate (line, right axis)">
+    <g class="cf-grid">
+      <line x1="44" y1="266" x2="620" y2="266"/><line x1="44" y1="182.7" x2="620" y2="182.7"/>
+      <line x1="44" y1="99.3" x2="620" y2="99.3"/><line x1="44" y1="16" x2="620" y2="16"/>
+    </g>
+    <g class="cf-axis">
+      <text x="38" y="270" text-anchor="end">0</text><text x="38" y="103" text-anchor="end">400</text><text x="38" y="20" text-anchor="end">600</text>
+      <text x="626" y="270" text-anchor="start">0%</text><text x="626" y="103" text-anchor="start">2%</text><text x="626" y="20" text-anchor="start">3%</text>
+      <text x="92" y="284" text-anchor="middle">Jan</text><text x="188" y="284" text-anchor="middle">Feb</text>
+      <text x="284" y="284" text-anchor="middle">Mar</text><text x="380" y="284" text-anchor="middle">Apr</text>
+      <text x="476" y="284" text-anchor="middle">May</text><text x="572" y="284" text-anchor="middle">Jun</text>
+    </g>
+    <g class="cf-bar s1">
+      <rect x="72" y="132.7" width="40" height="133.3" rx="2"/>
+      <rect x="168" y="95.2" width="40" height="170.8" rx="2"/>
+      <rect x="264" y="107.7" width="40" height="158.3" rx="2"/>
+      <rect x="360" y="74.3" width="40" height="191.7" rx="2"/>
+      <rect x="456" y="53.5" width="40" height="212.5" rx="2"/>
+      <rect x="552" y="32.7" width="40" height="233.3" rx="2"/>
+    </g>
+    <path class="cf-line s3" d="M92,91 L188,116 L284,66 L380,132.7 L476,157.7 L572,174.3"/>
+    <g class="cf-dot s3">
+      <circle cx="92" cy="91" r="3.5"/><circle cx="188" cy="116" r="3.5"/><circle cx="284" cy="66" r="3.5"/>
+      <circle cx="380" cy="132.7" r="3.5"/><circle cx="476" cy="157.7" r="3.5"/><circle cx="572" cy="174.3" r="3.5"/>
+    </g>
+  </svg>
+  <ul class="cf-legend">
+    <li><i style="background:var(--aperia-blue)"></i>Volume (left axis)</li>
+    <li><i style="background:var(--sapphire)"></i>Decline rate (right axis)</li>
+  </ul>
+</div>
+
+<!-- ========== Sparkline ========== -->
+<!-- A trend at a glance, no axes. -->
+<!-- viewBox is 0 0 120 32; x_i = i*(120/(n-1)), y = 28 - ((v-min)/(max-min))*24.
+     Pair with a .spark-delta badge stating the direction in words, since
+     color alone (up/down) is not the message on its own. -->
+<div class="spark-card">
+  <div class="spark-main">
+    <div class="spark-val">1,284</div>
+    <div class="spark-lbl">Transactions today</div>
+    <span class="spark-delta up">↑ 12% vs. 7-day avg</span>
+  </div>
+  <svg class="spark-svg" viewBox="0 0 120 32" preserveAspectRatio="none" role="img" aria-label="8-day transaction count trend, rising">
+    <path d="M0,28 L17.1,22.47 L34.3,16.95 L51.4,20.11 L68.6,14.58 L85.7,10.63 L102.9,7.47 L120,4 L120,32 L0,32 Z" fill="var(--sapphire)" opacity=".12"/>
+    <path d="M0,28 L17.1,22.47 L34.3,16.95 L51.4,20.11 L68.6,14.58 L85.7,10.63 L102.9,7.47 L120,4" fill="none" stroke="var(--sapphire)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="120" cy="4" r="2.5" fill="var(--sapphire)"/>
+  </svg>
+</div>

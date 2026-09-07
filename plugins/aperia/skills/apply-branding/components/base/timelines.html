@@ -1,0 +1,323 @@
+<!-- Ready-to-paste markup. The rules that govern it, .wrap, unique gradient
+     ids, and which component to pick, are in ../COMPONENTS.md, not repeated
+     here. Sibling groups: structure.html, emphasis.html, tables.html, charts.html. -->
+
+<!-- ==========================================================
+     SCHEDULES AND TIMELINES
+     Anything laid out against time or sequence. Pick by what the content is:
+     durations on an axis, relative effort, a process, or dated checkpoints.
+     They are not interchangeable, see COMPONENTS.md before mixing them.
+     ========================================================== -->
+
+<!-- ========== Gantt ========== -->
+<!-- A schedule: few phases on a continuous time axis. -->
+<!--
+  Use for a phased plan/roadmap where phases progress over time. Each phase is
+  its own ROW, positioned on a shared axis.
+  POSITIONING MATH (T = total days): bar left% = (start day/T)*100, width% = (duration/T)*100
+  Example: T=60d. Foundations 0-5, Flagship 5-22, Content 22-45, Unique 45-60.
+    left/width: 0/8.3, 8.3/28.3, 36.7/38.3, 75/25 (verify each left+width lines up with the next left)
+  Axis ticks: no space ("60d" not "60 d"); first tick left-aligns, last tick
+  right-aligns to the axis edges (already handled by the CSS :first-child/:last-child rules).
+  MOBILE (≤700px): CSS resets bars to left-anchored fills; you MUST set per-bar
+  width overrides in the @media block scaled to the longest phase, or bars
+  render as slivers. See the shipped example in styles.css and recompute it.
+-->
+<div class="gantt">
+  <div class="gantt-axis">
+    <span class="gtick" style="left:0%">0d</span>
+    <span class="gtick" style="left:25%">15d</span>
+    <span class="gtick" style="left:50%">30d</span>
+    <span class="gtick" style="left:75%">45d</span>
+    <span class="gtick" style="left:100%">60d</span>
+  </div>
+  <div class="gantt-row">
+    <div class="gantt-label">
+      <div class="gl-name"><span class="gl-dot" style="background:var(--aperia-blue)">1</span>Phase A</div>
+      <div class="gl-sub">~5 days</div>
+    </div>
+    <div class="gantt-track"><div class="gantt-bar b1" style="left:0%;width:8.3%">5d</div></div>
+  </div>
+  <div class="gantt-row">
+    <div class="gantt-label">
+      <div class="gl-name"><span class="gl-dot" style="background:var(--dark-blue)">2</span>Phase B</div>
+      <div class="gl-sub">~17 days</div>
+    </div>
+    <div class="gantt-track"><div class="gantt-bar b2" style="left:8.3%;width:28.3%">17d</div></div>
+  </div>
+  <div class="gantt-detail">
+    <div class="gantt-item">
+      <div class="gantt-item-name">01 · Phase A <span>~5 days</span></div>
+      <div class="gantt-item-desc">What happens and why it matters.</div>
+    </div>
+    <div class="gantt-item">
+      <div class="gantt-item-name">02 · Phase B <span>~17 days</span></div>
+      <div class="gantt-item-desc">What happens and why it matters.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Effort Bars ========== -->
+<!-- Relative effort only, explicitly NOT a schedule. Bars sit flush. -->
+<!-- Shows how total EFFORT is distributed across phases (relative size only).
+     flex:N where N = phase duration. Do NOT use this for a schedule where
+     phases start where the last ends, flush bars read as one segmented bar,
+     not a sequence. Use gantt or a milestone timeline for that. -->
+<div class="tline">
+  <div class="tline-bars">
+    <div class="tline-bar b1" style="flex:5"><div class="tl-inner">01 · Phase A · 5 d</div></div>
+    <div class="tline-bar b2" style="flex:17"><div class="tl-inner">02 · Phase B · 17 d</div></div>
+    <div class="tline-bar b3" style="flex:23"><div class="tl-inner">03 · Phase C · 23 d</div></div>
+    <div class="tline-bar b4" style="flex:15"><div class="tl-inner">04 · Phase D · 15 d</div></div>
+  </div>
+  <div class="tline-axis">
+    <span>0 d</span><span>~15 d</span><span>~30 d</span><span>~45 d</span><span>~60 d</span>
+  </div>
+  <div class="tline-detail">
+    <div class="tline-item">
+      <div class="tline-phase-name">01 · Phase A <span>~5 days</span></div>
+      <div class="tline-item-desc">What happens and why it matters.</div>
+    </div>
+    <div class="tline-item">
+      <div class="tline-phase-name">02 · Phase B <span>~17 days</span></div>
+      <div class="tline-item-desc">What happens and why it matters.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Step Flow ========== -->
+<!-- A sequential process or method pipeline. -->
+<!-- Each stage FEEDS the next. Do not use principles for this: a grid implies
+     the items are parallel/unordered. Optional .flow-formula chip surfaces a
+     formula or multiplier inline. Node colors auto-cycle for the first 4 steps. -->
+<div class="flow">
+  <div class="flow-step">
+    <div class="flow-rail"><div class="flow-node">1</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Stage One Name</div>
+      <div class="flow-desc">What this stage does and what it produces for the next stage.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-rail"><div class="flow-node">2</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Stage Two Name <span class="flow-formula">(O + 4×M + P) ÷ 6</span></div>
+      <div class="flow-desc">What this stage does. The formula chip shows the calculation applied here.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-rail"><div class="flow-node">3</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Stage Three Name</div>
+      <div class="flow-desc">The final stage and how it rolls up to the result.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Risk Block ========== -->
+<!-- Assumptions, risks and dependencies. -->
+<div class="ard">
+  <article class="ard-col A">
+    <span class="ard-tag">Assumptions</span>
+    <h3>Assumptions<span class="ard-cnt">2</span></h3>
+    <div class="ard-item">Stakeholders are available for weekly review.</div>
+    <div class="ard-item">Current infrastructure can absorb the added load.</div>
+  </article>
+  <article class="ard-col R">
+    <span class="ard-tag">Risks</span>
+    <h3>Risks<span class="ard-cnt">1</span></h3>
+    <div class="ard-item">
+      Vendor API rate limits may throttle peak traffic.
+      <div class="ard-meta"><span class="ard-sev high">High</span><span>Owner: Platform</span></div>
+    </div>
+  </article>
+  <article class="ard-col D">
+    <span class="ard-tag">Dependencies</span>
+    <h3>Dependencies<span class="ard-cnt">1</span></h3>
+    <div class="ard-item">
+      Design system tokens must ship before component work starts.
+      <div class="ard-meta"><span class="ard-sev med">Medium</span><span>Owner: Design</span></div>
+    </div>
+  </article>
+</div>
+
+<!-- ==========================================================
+     DATED CHECKPOINTS
+     mstone-row, vtimeline, htimeline and envchain all render the same four-field
+     entry: lead / chip / title / note / cls. See COMPONENTS.md, "The entry
+     contract", before mixing and matching. Status classes throughout: done
+     (green) · risk (amber) · est (amber, hollow marker, dashed line) · nothing
+     (blue, "ahead"). Environment entries add envc plus one of
+     e-dev/e-qa/e-uat/e-stag/e-prod, which colors the chip only, never the
+     marker or a card edge.
+     ========================================================== -->
+
+<!-- ========== Milestone Cards ========== -->
+<!-- Up to 4 dated checkpoints. -->
+<!-- More than 4 entries wraps this grid to a ragged second row, switch to
+     vtimeline instead of widening the container. -->
+<div class="mstone-row">
+  <div class="mstone done">
+    <div class="m-date">Jan 2026</div>
+    <div class="m-title">Milestone Title</div>
+    <div class="m-note">One line on what shipped or completed.</div>
+  </div>
+  <div class="mstone">
+    <div class="m-date">Mar 2026</div>
+    <div class="m-title">Milestone Title</div>
+    <div class="m-note">One line on what's next.</div>
+  </div>
+  <div class="mstone risk">
+    <div class="m-date">Jun 2026</div>
+    <div class="m-title">Milestone Title</div>
+    <div class="m-note">One line on what's at risk.</div>
+    <span class="m-flag">At Risk</span>
+  </div>
+  <div class="mstone est">
+    <div class="m-date">Sep 2026</div>
+    <div class="m-title">Milestone Title</div>
+    <div class="m-note">One line, estimated date.</div>
+  </div>
+</div>
+
+<!-- ========== Vertical Timeline ========== -->
+<!-- More than 4 checkpoints, or 5+ environments. -->
+<div class="vtimeline">
+  <div class="vt-item done">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Jan 2026</span></div>
+      <div class="vt-title">Milestone Title</div>
+      <div class="vt-note">What shipped or completed.</div>
+    </div>
+  </div>
+  <div class="vt-item risk">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Jun 2026</span><span class="vt-chip">At Risk</span></div>
+      <div class="vt-title">Milestone Title</div>
+      <div class="vt-note">What's at risk and why.</div>
+    </div>
+  </div>
+  <div class="vt-item est">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Sep 2026</span><span class="vt-chip">Estimated</span></div>
+      <div class="vt-title">Milestone Title</div>
+      <div class="vt-note">Estimated date, subject to change.</div>
+    </div>
+  </div>
+  <div class="vt-item">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Dec 2026</span></div>
+      <div class="vt-title">Final Milestone</div>
+      <div class="vt-note">The last item omits vt-line via :last-child, no class needed.</div>
+    </div>
+  </div>
+</div>
+
+<!-- vtimeline used for an environment chain of 5+: same shape, envc + e-* entries -->
+<div class="vtimeline">
+  <div class="vt-item envc e-dev">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Development</span><span class="vt-chip">Synthetic</span></div>
+      <div class="vt-note">What this environment is for.</div>
+    </div>
+  </div>
+  <div class="vt-item envc e-prod done">
+    <div class="vt-rail"><span class="vt-dot"></span><span class="vt-line"></span></div>
+    <div class="vt-body">
+      <div class="vt-head"><span class="vt-lead">Production</span><span class="vt-chip">Live</span></div>
+      <div class="vt-note">What this environment is for.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Horizontal Timeline ========== -->
+<!-- Sideways form, up to about 6 entries. -->
+<!-- Same entry shape and status vocabulary as vtimeline, laid out left to
+     right along a rail. Use for a short roadmap or compact process that
+     benefits from reading left-to-right; past ~6 entries or with more body
+     text per entry, use vtimeline instead. At <=700px this collapses to the
+     same vertical rail as vtimeline automatically (styles.css handles it),
+     no separate markup needed for mobile. -->
+<div class="htimeline">
+  <div class="ht-item done">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body">
+      <div class="ht-head"><span class="ht-lead">Jan 2026</span></div>
+      <div class="ht-title">Kickoff</div>
+      <div class="ht-note">What shipped or completed.</div>
+    </div>
+  </div>
+  <div class="ht-item done">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body">
+      <div class="ht-head"><span class="ht-lead">Mar 2026</span></div>
+      <div class="ht-title">Phase 1 Complete</div>
+      <div class="ht-note">What shipped or completed.</div>
+    </div>
+  </div>
+  <div class="ht-item risk">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body">
+      <div class="ht-head"><span class="ht-lead">Jun 2026</span><span class="ht-chip">At Risk</span></div>
+      <div class="ht-title">Phase 2</div>
+      <div class="ht-note">What's at risk and why.</div>
+    </div>
+  </div>
+  <div class="ht-item est">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body">
+      <div class="ht-head"><span class="ht-lead">Sep 2026</span><span class="ht-chip">Estimated</span></div>
+      <div class="ht-title">Launch</div>
+      <div class="ht-note">Estimated date, subject to change.</div>
+    </div>
+  </div>
+</div>
+
+<!-- htimeline used for an environment chain: same envc + e-* entries as vtimeline -->
+<div class="htimeline">
+  <div class="ht-item envc e-dev">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body"><div class="ht-head"><span class="ht-lead">DEV</span><span class="ht-chip">Synthetic</span></div></div>
+  </div>
+  <div class="ht-item envc e-qa">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body"><div class="ht-head"><span class="ht-lead">QA</span><span class="ht-chip">Synthetic</span></div></div>
+  </div>
+  <div class="ht-item envc e-prod done">
+    <div class="ht-rail"><span class="ht-line"></span><span class="ht-dot"></span><span class="ht-line"></span></div>
+    <div class="ht-body"><div class="ht-head"><span class="ht-lead">PROD</span><span class="ht-chip">Live</span></div></div>
+  </div>
+</div>
+
+<!-- ========== Environment Chain ========== -->
+<!-- DEV to PROD, up to 4 environments. -->
+<!-- 5+ environments do not get a vertical variant of this card, render them
+     as vtimeline (or htimeline) with envc e-* entries instead, above. -->
+<div class="envchain">
+  <div class="envcard e-dev">
+    <span class="e-step">Step 1</span>
+    <h3>Development</h3>
+    <span class="env-badge">Synthetic</span>
+    <div class="e-note">Where features are built and unit tested.</div>
+  </div>
+  <div class="env-arrow">→</div>
+  <div class="envcard e-uat">
+    <span class="e-step">Step 2</span>
+    <h3>UAT</h3>
+    <span class="env-badge">Synthetic</span>
+    <div class="e-note">Client sign-off environment.</div>
+    <div class="e-client">Client Access</div>
+  </div>
+  <div class="env-arrow">→</div>
+  <div class="envcard e-prod">
+    <span class="e-step">Step 3</span>
+    <h3>Production</h3>
+    <span class="env-badge">Live</span>
+    <div class="e-note">The environment end users touch.</div>
+  </div>
+</div>

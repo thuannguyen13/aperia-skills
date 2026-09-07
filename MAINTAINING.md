@@ -4,7 +4,7 @@ For people editing this repo. To install and use the plugin, see [README.md](REA
 
 ## Change the brand
 
-1. Edit `plugins/aperia/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only.
+1. Edit `plugins/aperia/skills/apply-branding/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only.
 2. Bump `version` in `plugins/aperia/.claude-plugin/plugin.json`.
 3. Add a `CHANGELOG.md` entry.
 4. Run `python3 scripts/validate.py`, then `claude plugin validate .`.
@@ -29,61 +29,68 @@ No dependencies beyond Python 3. CI runs the same script on every push and pull 
 - Every plugin `source` in `marketplace.json` resolves, the two `name` values agree, and `version` is semver. A name mismatch would make the documented install id wrong.
 - Every skill has a `SKILL.md` with `name` and `description` frontmatter, and the name matches its directory, since the directory is what `/aperia:<name>` uses.
 - `tokens.css` defines the core and neutral palette and the seven chart series steps.
-- Every color in the plugin, as six-digit hex, three-digit hex or `rgb()`/`rgba()`, is either in `tokens.css` or listed in a fenced ```approved block in `brand/DEVIATIONS.md`. The palette is read through `plugins/aperia/brand/palette.py`, which the deck's `qa.py` also uses, so no script holds a copy of it.
+- Every color in the plugin, as six-digit hex, three-digit hex or `rgb()`/`rgba()`, is either in `tokens.css` or listed in a fenced ```approved block in `brand/DEVIATIONS.md`. The palette is read through `plugins/aperia/skills/apply-branding/brand/palette.py`, which the deck's `qa.py` also uses, so no script holds a copy of it.
 - No stylesheet redefines a token `tokens.css` defines, except the overrides listed in `OVERRIDES` inside the script with a reason.
 - No stylesheet sets a raw px `font-size` or a `border-radius` outside `--radius`, `--radius-sm`, `--radius-pill` and `50%`.
 - Skill descriptions are at least 80 characters. The description is the only text Claude reads when deciding to load a skill on its own.
 - No em dash in any file. The model reads these files as its writing example.
+- `COMPONENTS.md`'s File column names only snippet files that exist, and every snippet file is named by it. That column is the one map from a component to its markup, so neither side can drift without failing here.
+- Every `SKILL.md` has a "What to read" section in three parts, Always / Only if / Never, with no stylesheet under Always or Only if and no snippet under Never. That section is the read rule that keeps a run small, so it cannot ask the model to read what `assemble.py` injects.
+- Every backticked file path in any markdown file under the plugin resolves, relative to that file or, for a bare name, anywhere in the plugin. The docs point at the source of truth instead of restating it, so a pointer that dangles is a broken rule.
 
-Off-palette values are a decision, not an accident. Anything the check flags gets fixed or written into `plugins/aperia/brand/DEVIATIONS.md` with a reason. That file is both the audit trail and the allowlist. It currently covers the semantic status colors, the report theme's light tint ramp, the deck theme's dark chart ramp, the PowerPoint template accent alternates, and the `#004583` vs `#004785` mismatch between the supplied SVG assets and the guideline table.
+Off-palette values are a decision, not an accident. Anything the check flags gets fixed or written into `plugins/aperia/skills/apply-branding/brand/DEVIATIONS.md` with a reason. That file is both the audit trail and the allowlist. It currently covers the semantic status colors, the report theme's light tint ramp, the deck theme's dark chart ramp, the PowerPoint template accent alternates, and the `#004583` vs `#004785` mismatch between the supplied SVG assets and the guideline table.
 
 Approval is structural: only hexes inside a fenced ```approved block count. Mentioning a value in prose, in a "was" column, or in a paragraph explaining why it was dropped does not approve it. Approval is plugin-wide rather than per file, so a value approved for one theme will pass in the other; scope it by narrative if that matters.
 
 ## assemble.py
 
 ```bash
-python3 plugins/aperia/ui-components/assemble.py <file.html>
+python3 plugins/aperia/skills/apply-branding/components/assemble.py <file.html>
 ```
 
 Fills a document's style marker, `<style>/* @aperia report [charts] [icons] */</style>` or `<style>/* @aperia slides */</style>`, with the stylesheets in the order the recipe names. The model never reads or types the CSS; the script copies the files in. Re-running replaces the injected block from the same words, so it is safe after every content edit. `--print report charts` writes the CSS to stdout for inspection.
 
 Values are controlled in two places and no third. A change for every future output is an edit to the repo file. A change for one document is a second `<style>` block the model writes after the marker; later rules win, and the next assemble run leaves that block alone. Nothing is ever edited inside the injected block.
 
-The script resolves the layers from its own location, so it works from a plugin install and from a standalone bundle without a rewrite.
+The script resolves the layers from its own location.
 
 A layer file must never contain a closing style tag, even inside a comment, because the browser ends the style element there. The script refuses to inject one.
 
-`examples/` holds one assembled output per skill, built from a bare marker with the script. Rebuild them after a theme change so they keep showing what the skills produce.
 
-## bundle-skills.py
+## gallery.py
 
 ```bash
-python3 scripts/bundle-skills.py
+python3 scripts/gallery.py [out.html]      # default: gallery.html
 ```
 
-Builds `dist/<skill>/` and `dist/<skill>.zip`, one standalone bundle per skill, for the Claude Desktop skill uploader. Neither is committed.
+Renders the three snippet libraries as one page so the components can be reviewed by eye, then runs `assemble.py` on it, so the gallery is styled by the same layers a real document gets. Each component carries its name, an anchor and the class names its markup uses; a sticky index lists all of them, grouped by source file; the raw markup sits behind a disclosure on each one.
 
-The plugin install and the uploader lay files out differently. An install copies the whole of `plugins/aperia/`, so `brand/` and `ui-components/` sit beside `skills/` and `../../brand/BRAND.md` resolves. The uploader takes one folder per skill with nothing above it, so the same reference resolves to nothing. `create-slides` survives that because its theme is self-contained; `create-report` does not, because its base components live in `ui-components/` and its own `references/styles.css` defines one variable and reads 36 from elsewhere.
+The page is generated, never hand-edited, so it cannot drift from what the skills actually copy. Nothing under `plugins/` is written, and the snippet libraries are read exactly as the skills read them.
 
-So the script copies each layer a skill reads into a copy of that skill and rewrites the references to match. The repo still keeps one copy of each layer; the duplication happens at build time. It fails if a reference escapes a bundle or points at a file the bundle does not contain, which is the packaging break it exists to catch, and CI runs it on every push and pull request for that reason.
+It globs the snippet files in `base/`, `charts/` and `icons/` rather than listing them, so a new group file appears in the gallery with no edit to the script, and parses the `<!-- ===== NAME ===== -->` comments they already use. A comment whose name line is followed by prose and a plain `-->` is a group heading and renders as one; each file's banner header, a bare run of `=`, is not a component and does not appear. Add a component to a library and it appears here with no change to this script.
 
-Run it before uploading, and after moving anything between the layers and the skills.
+The script stays outside `plugins/` on purpose: a Desktop install mounts the skills, and the gallery is for whoever is working on them, not for the model. The generated file is gitignored.
 
-## Conventions
+## Why apply-branding is hidden from the picker
 
-- `brand/` and `ui-components/` hold reference files only, with no frontmatter, so neither loads as a skill alongside the two real ones. `brand/` is the visual identity (palette, type, logo, the graphic element); `ui-components/` is the component library built on top of it (cards, badges, callouts, tables, the chart toolkit, the icon set, milestone/status timelines), see `ui-components/COMPONENTS.md`.
-- Skills reach both by relative path: `../../brand/BRAND.md` and `../../brand/assets/`, `../../ui-components/base/styles.css` and friends. A skill never keeps its own copy of either layer, if you're about to paste component CSS into a skill's own `references/`, it almost certainly belongs in `ui-components/` instead.
-- `create-slides` is the one exception: its canvas-unit coordinate system can't literally share `ui-components/base/styles.css` (screen px vs. a fixed 1920×1080 canvas), so it keeps its own `slides.css` implementation, translated to match the same design language (`ui-components/COMPONENTS.md`'s color/sentiment/chart rules) rather than sharing the file.
-- Each `SKILL.md` opens with a gate requiring the brand-layer read (and the component-layer read, for skills that build HTML) and closes with a checklist that includes the guideline's Application Checklist.
-- Reference paths are written two ways, and `bundle-skills.py` depends on the difference. Prose and comments name a layer from the **skill root**, `../../brand/tokens.css`, whatever file they sit in, because the skill root is where a reader starts. Code under `scripts/` resolves against its own file instead, so it climbs the real number of levels. Keep new references in whichever form matches, or the bundles fail to build.
-- If a color or type value isn't in `BRAND.md` or `tokens.*`, it isn't an Aperia value.
+`apply-branding/SKILL.md` carries `user-invocable: false`, so it does not appear in the slash-command list. Claude still loads it on its own from the description, which is what the freeform branding path needs.
+
+Do not remove its `SKILL.md` to hide it further. Claude Desktop mounts only the folders under `skills/` that have one, so without it `brand/` and `components/` never reach an install and every marker fills empty.
+
+## Where the shared layers live
+
+`brand/` and `components/` sit inside `plugins/aperia/skills/apply-branding/`, and the other two skills read them as `../apply-branding/brand/` and `../apply-branding/components/`. One copy, no build step.
+
+The reason for that spot is Claude Desktop. It mounts each folder under `skills/` that contains a `SKILL.md`, side by side at `/mnt/skills/plugins/<plugin>:<skill>/`, and nothing else: not the plugin root, not a folder without a `SKILL.md`. Layers at the plugin root never arrived, and both skills were broken there from 0.3.0 to 0.8.0. A folder that is a skill arrives, so the layers live in one. `apply-branding` is a real skill, the freeform branding entry point, and the carrier of the layers at the same time.
+
+The folder name differs by client: `apply-branding` in Claude Code, `aperia:apply-branding` on Desktop. Prose paths are written with the plain name and each consumer skill says so under "What to read"; the three scripts that cross into the layer look for both names. This relies on both clients mounting a plugin's skills beside each other, which is observed on Claude Code and Desktop and promised by neither. If a client ever isolated skills from one another, the fallback is a committed copy of the layers inside each skill, which the 0.9.0 history implemented before this layout replaced it.
+
+A skill folder on its own is not complete, so the Claude Desktop skill uploader, which takes one folder, is not an install path. Install through the marketplace, or upload the whole plugin as a zip with `.claude-plugin/plugin.json` at the archive root.
+
+## Icons
+
+Nothing is bundled. `skills/apply-branding/components/icons/icon.py` fetches each icon from the Lucide CDN (`cdn.jsdelivr.net/npm/lucide-static`) on first use, pinned to the release named at the top of the script, and caches it under `~/.cache/aperia-icons/`. Bump the version there on purpose. A sandbox that blocks that host cannot produce icons; the script says so and the skill leaves the icon out.
 
 ## Ad-hoc branding
 
-There is currently no skill for a freeform request that fits neither
-`create-report` nor `create-slides` (a landing page, an email, a one-off
-graphic). If that need comes back, either add a thin skill whose only job is
-to load `brand/` (and `ui-components/`, if the output needs any of its
-pieces) and let the model build the requested format on top, or extend one
-of the two existing skills, don't duplicate the reference layers into a new
-copy either way.
+`apply-branding` covers a freeform request that fits neither `create-report` nor `create-slides`: a landing page, an email, a one-off graphic. Its `SKILL.md` loads the layers it holds and lets the model build the requested format on top, with the `page` recipe in `assemble.py` for HTML. Do not add a fourth skill for a new format; extend `apply-branding` or one of the two existing skills.

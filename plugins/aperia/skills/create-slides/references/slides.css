@@ -291,13 +291,13 @@ code { font:inherit; font-weight:500; background:var(--muted); border-radius:var
 .img-half { width:100%; height:100%; object-fit:cover; display:block }
 
 /* comparison table */
-.cmp-table { width:100%; border-collapse:collapse; font-size:var(--slide-text-base); margin-top:12px }
-.cmp-table th { text-align:left; padding:21px 27px; font-family:var(--label); font-size:var(--slide-text-xs); font-weight:500;
+.table { width:100%; border-collapse:collapse; font-size:var(--slide-text-base); margin-top:12px }
+.table th { text-align:left; padding:21px 27px; font-family:var(--label); font-size:var(--slide-text-xs); font-weight:500;
                 letter-spacing:.05em; text-transform:uppercase; background:var(--muted); color:var(--muted-fg);
                 border:1.5px solid var(--border) }
-.cmp-table th.hl { background:#eaf3fb; color:var(--dark-blue); border-color:#bfdcf0 }
-.cmp-table td { padding:22.5px 27px; border:1.5px solid var(--border); vertical-align:top; line-height:1.45 }
-.cmp-table td.hl { background:#f6fafe }
+.table th.hl { background:#eaf3fb; color:var(--dark-blue); border-color:#bfdcf0 }
+.table td { padding:22.5px 27px; border:1.5px solid var(--border); vertical-align:top; line-height:1.45 }
+.table td.hl { background:#f6fafe }
 .ic-ok { color:var(--success); font-weight:700 }
 .ic-no { color:var(--danger); font-weight:700 }
 .ic-mid { color:var(--warning); font-weight:700 }

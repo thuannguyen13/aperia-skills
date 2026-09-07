@@ -28,8 +28,8 @@ This layer carries no page chrome (nav, hero, footer) and no data-driven grouped
 | 2 to 4 standalone key numbers | `stat-row`, never `bchart` | `base/structure.html` |
 | Inline note | `callout` (blue=neutral, green=positive, amber=warning, red=critical) | `base/emphasis.html` |
 | A labelled warning or provenance note | `callout tagged` (add `.soft` for neutral) | `base/emphasis.html` |
-| Comparison of options | `cmp-table` with ✓/✗/~ marks, recommended column gets `.hl` | `base/tables.html` |
-| Categorical list with role/type/focus tags | `cmp-table` with badge columns and two-line cells, never `bchart` | `base/tables.html` |
+| Comparison of options | `table` with ✓/✗/~ marks, recommended column gets `.hl` | `base/tables.html` |
+| Categorical list with role/type/focus tags | `table` with badge columns and two-line cells, never `bchart` | `base/tables.html` |
 | Role-based before/after outcomes | `outcome-grid` with ↓/↑ | `base/tables.html` |
 | Concerns / FAQs | `concerns` accordion (interactive, ships a tiny script) | `base/emphasis.html` |
 | Parallel / unordered principles | `principles` grid, never for a sequence | `base/structure.html` |
@@ -86,7 +86,7 @@ Lucide (MIT), fetched on demand: `python3 icons/icon.py shield-check` emits inli
 
 ### Chart rules
 
-- **No manufactured percentages.** If a number has to be invented to make a `bchart` or `stack` work, the data is categorical: use `cmp-table`.
+- **No manufactured percentages.** If a number has to be invented to make a `bchart` or `stack` work, the data is categorical: use `table`.
 - **`bchart`**: no inline `style=` on `.bval`/`.bname`/`.beff`; only row content inside `.bchart`; header row uses the same column divs, count and order as data rows; `.bval` holds a number and at most a `.bdelta` line. Rows use the flex model, not fixed-px grids.
 - **No absolute-positioned labels over a bar track and no z-index stacking inside one.** Segments sit side by side under `display:flex; overflow:hidden`.
 - **Series color order is fixed**: `s1` aperia-blue, `s2` dark-blue, `s3` sapphire, `s4` sky-blue (dark text on an area fill), `s5` light-blue, `s6` dark-gray, `s7` neutral for a long tail or "other". Assign from `s1` outward in order of importance; never skip ahead.

@@ -123,13 +123,13 @@ code { font:inherit; font-weight:var(--fw-medium); background:var(--muted); bord
 
 
 /* comparison table: recommended column gets .hl */
-.cmp-table { width:100%; border-collapse:collapse; font-size:var(--text-sm); margin:26px 0 }
-.cmp-table th { text-align:left; padding:10px 14px; font-weight:600; font-size:var(--text-xs); letter-spacing:.05em; text-transform:uppercase; background:var(--muted); border:1px solid var(--border); color:var(--muted-fg) }
-.cmp-table th.hl { background:#eaf3fb; color:var(--dark-blue); border-color:#bfdcf0 }
-.cmp-table td { padding:12px 14px; border:1px solid var(--border); vertical-align:top; line-height:1.5 }
-.cmp-table td.hl { background:#f6fafe }
-.cmp-table tr:hover td { background:var(--muted) }
-.cmp-table tr:hover td.hl { background:#eef5fc }
+.table { width:100%; border-collapse:collapse; font-size:var(--text-sm); margin:26px 0 }
+.table th { text-align:left; padding:10px 14px; font-weight:600; font-size:var(--text-xs); letter-spacing:.05em; text-transform:uppercase; background:var(--muted); border:1px solid var(--border); color:var(--muted-fg) }
+.table th.hl { background:#eaf3fb; color:var(--dark-blue); border-color:#bfdcf0 }
+.table td { padding:12px 14px; border:1px solid var(--border); vertical-align:top; line-height:1.5 }
+.table td.hl { background:#f6fafe }
+.table tr:hover td { background:var(--muted) }
+.table tr:hover td.hl { background:#eef5fc }
 .ic-ok { color:#16a34a; font-weight:700 }
 .ic-no { color:#dc2626; font-weight:700 }
 .ic-mid { color:#b45309; font-weight:700 }

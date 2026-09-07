@@ -141,7 +141,7 @@
 
 /* --- Radar chart: up to 5-7 axes, 1-2 overlaid profiles --- */
 /* More than ~7 axes crowds the labels; if the content has more dimensions
-   than that, use cmp-table instead. Grid rings are drawn as concentric
+   than that, use table instead. Grid rings are drawn as concentric
    circles (not polygons), a deliberate simplification that keeps the scale
    honest without the extra geometry, and reads identically at a glance. */
 .radar-card { margin:24px 0; padding:22px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }

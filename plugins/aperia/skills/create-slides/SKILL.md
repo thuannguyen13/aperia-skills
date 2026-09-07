@@ -67,7 +67,7 @@ Every slide is a fixed 1920 × 1080 box, scaled to fit the viewport on screen an
 Full markup for each is in `references/snippets.html`; `s-numbers` and the charts are in `references/charts.html`. `s-text`, `s-two-col`, `s-icons`, `s-agenda` and `s-numbers` style nothing; `qa.py` keys on them, so keep applying them.
 
 - **The closing slide carries the graphic element and a heading, nothing else.** The ask, the date and the contact are spoken from the notes. `qa.py` fails anything more.
-- Components drop into any layout and are not slide classes: `.card`, `.iblock`, `.callout`, `.badge`, `.cmp-table`, `.flow`, `.stat-row`, the `.g2` `.g3` `.g4` grids, the charts. A comparison-table slide is `s-light s-text` holding a `.cmp-table`.
+- Components drop into any layout and are not slide classes: `.card`, `.iblock`, `.callout`, `.badge`, `.table`, `.flow`, `.stat-row`, the `.g2` `.g3` `.g4` grids, the charts. A comparison-table slide is `s-light s-text` holding a `.table`.
 - Height helpers: `.fill` takes the leftover height and keeps the element's own display (on a `.g2`/`.g3`/`.g4` the rows center); `.fill-c` is the flex-column version for a bullet list or loose block.
 
 ### Sequences are diagrams, not bullets
@@ -137,7 +137,7 @@ CSS and SVG only, no chart library.
 | A schedule progressing over time | `.gantt` rows on a shared axis | Flush proportional bars |
 | Relative effort size, explicitly not a schedule | `.tline-bars` with `flex:N` | Equal-width boxes |
 | 2 to 4 standalone numbers where the number is the message | `.stat-row` on `s-numbers` | Bars encoding the same number twice |
-| Categorical list with role/type tags, no numeric axis | `.cmp-table` or `.card` grid | A bar chart with invented percentages |
+| Categorical list with role/type tags, no numeric axis | `.table` or `.card` grid | A bar chart with invented percentages |
 
 - Series colors only: `.c1` navy, `.c2` dark blue, `.c3` sapphire, `.c4` sky, `.c5` light blue. Never restyle a series by hand; each `.cN` carries its own label color in `--on` and remaps on dark slides.
 - A legend matches its own fills. The donut sets colors inline via `conic-gradient`; write its legend swatches inline from the same values.
@@ -145,7 +145,7 @@ CSS and SVG only, no chart library.
 - One insight per chart: every chart slide ends with one `.insight` line stating the conclusion, not describing the chart. `qa.py` fails a chart slide without one. An `s-numbers` slide gets one too, saying which number is the argument; `qa.py` does not check that one.
 - No pie charts. 2 to 3 parts is the donut, everything else the stacked bar.
 - Never invent numbers to make a chart work. Categorical data is a table or cards.
-- A table kept from the source is `.cmp-table` with the contents intact, read across not down: a handful of rows, at most four columns, or it goes to the notes or an appendix.
+- A table kept from the source is `.table` with the contents intact, read across not down: a handful of rows, at most four columns, or it goes to the notes or an appendix.
 - One chart per slide.
 
 ## Length

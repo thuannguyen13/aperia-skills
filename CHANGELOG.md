@@ -16,6 +16,8 @@ Fixes from a Claude Desktop run of both skills.
 - One table. `stack-table` and `cmp-table` shared header, borders and hover and differed by 3px of cell padding; both are now `.table`, with `.hl`, the `ic-*` marks, the two-line cell and badges as add-ons. The categorical example sits under the same header. The deck theme and skill use the new name too.
 - Step Flow rail reaches the next node. The gap between steps sat outside the rail, so the line stopped short; it now runs through the body's padding. Node shadow removed, line at 1px like the other rails.
 - The report wordmark is one `#ap-logo` sprite referenced by `<use>`, as the deck already did, instead of the path data pasted in the nav and again in the footer. The stylesheet sets its color per surface.
+- The report content column is 1200px, up from 920px, leaving 1128px inside the side padding. The nav matches.
+- Report sections are divided by a 1px border between them. `create-report` previously allowed whitespace only; `<hr>` and every other divider line stay banned, and `qa.py` still fails an `<hr>`.
 
 ## 0.9.0
 

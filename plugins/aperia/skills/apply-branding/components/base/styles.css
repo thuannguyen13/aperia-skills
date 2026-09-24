@@ -64,10 +64,10 @@
 .text-2xl { font-size:clamp(var(--text-lg),3vw,var(--text-2xl)); line-height:clamp(var(--leading-lg),4.8vw,var(--leading-2xl)) }
 .text-5xl { font-size:clamp(var(--text-2xl),4.4vw,var(--text-5xl)); line-height:clamp(var(--leading-2xl),6.6vw,var(--leading-5xl)) }
 body { font-family:var(--sans); font-weight:400; background:var(--bg); color:var(--fg); font-size:var(--text-base); line-height:1.65; -webkit-font-smoothing:antialiased }
-/* Content container. Cap at 920px by default; components that cannot fit their
-   named columns in 848px usable space get .wrap.full (full viewport width,
+/* Content container. Cap at 1200px by default; components that cannot fit their
+   named columns in 1128px usable space get .wrap.full (full viewport width,
    same side padding) instead, decide by arithmetic, not by feel. */
-.wrap { max-width:920px; margin:0 auto; padding:0 36px }
+.wrap { max-width:1200px; margin:0 auto; padding:0 36px }
 .wrap.full { max-width:none }
 h2 { font-weight:600; line-height:1.2; letter-spacing:-.015em; margin-bottom:10px }
 h3 { font-weight:600 }

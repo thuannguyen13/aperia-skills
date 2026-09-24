@@ -10,7 +10,7 @@ This layer carries no page chrome (nav, hero, footer) and no data-driven grouped
 
 1. One marker where the styles go, `<style>/* @aperia report */</style>` (`page` for a freeform page, `slides` for a deck). Add the word `charts` when a picked component's File is under `charts/`, and `icons` when the page carries an icon. Run `assemble.py <file>` after the document is written and after every later edit. Nothing is typed inside the injected block; document-specific rules go in a second `<style>` after it.
 2. Load Inter with a `<link>` in `<head>`: `https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap`. Arial fallback comes from the `--sans` token.
-3. Wrap content in `<div class="wrap">`, 920px, unless it already sits in a width-capped container.
+3. Wrap content in `<div class="wrap">`, 1200px, unless it already sits in a width-capped container.
 4. Pick from the tables below, read the one file the **File** column names, copy the block, fill in real content. No empty cards, no lorem ipsum.
 5. The `concerns` accordion ships its toggle script (in `base/emphasis.html`, after the markup) once per page.
 6. Sizes come from the `--text-*` tokens with their `--leading-*`, shape from `--radius`, `--radius-sm`, `--radius-pill` or `50%`. No raw px sizes, no other radius.

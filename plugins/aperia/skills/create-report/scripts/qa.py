@@ -194,7 +194,7 @@ def main(path):
         if lbl is not None and re.match(r"^\s*(\d+|[ivx]+)[.)]?\s", lbl.get_text(), re.I):
             err(sid, "numbered sec-label, sections are not numbered")
         if s.select_one("hr"):
-            err(sid, "divider line, whitespace only between sections")
+            err(sid, "<hr> divider, the section border is the only divider")
     if not soup.find(id="main"):
         err("doc", 'no element with id="main"')
 

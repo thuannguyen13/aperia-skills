@@ -96,7 +96,7 @@ A skip link (`<a href="#main" class="skip-link">`) is the first element in `<bod
 ### Structure
 
 - Nav links match every section `id`.
-- No divider lines anywhere: no hairline on the eyebrow, no rule above a `part-head`, no border between sections. Whitespace only.
+- Sections are divided by the 1px border `styles.css` draws between them. No other divider lines: no hairline on the eyebrow, no rule above a `part-head`, no `<hr>`.
 - Section order, default: Summary, Problem/Context, Options/Evidence, Decision, Plan, Ask. The middle two only when there are options to weigh.
 - Section order, delivery plan: Summary, one section per plan, Recommendation, Ask.
 - `h2` and `h3` in Title Case.
@@ -128,7 +128,7 @@ Needs `beautifulsoup4`; if missing, the script prints the install command. Check
 - [ ] `assemble.py` run after the last edit; the marker names `charts` and `icons` only if used; nothing edited inside the injected block
 - [ ] Nav strip scrolls horizontally; hamburger and drawer wired; every nav link resolves
 - [ ] Hero `<em>` subtitle: Title Case, no dash, no inline size
-- [ ] Every section opens with an unnumbered `sec-label`; no divider line anywhere; section order follows the flow for the content type
+- [ ] Every section opens with an unnumbered `sec-label`; no divider line beyond the section border; section order follows the flow for the content type
 - [ ] Footer reads `Title · Subtitle · Month Year`; skip link present
 - [ ] Only the scripts the report uses are shipped
 - [ ] No pie chart anywhere

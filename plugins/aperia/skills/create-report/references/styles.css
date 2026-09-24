@@ -37,6 +37,7 @@
    scrolling document of <section> elements. */
 html { scroll-behavior:smooth }
 section { padding:72px 0; position:relative }
+section + section { border-top:1px solid var(--border) }
 
 /* =====================================================
    NAV: desktop scroll strip + mobile hamburger drawer

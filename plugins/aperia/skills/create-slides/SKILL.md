@@ -2,7 +2,7 @@
 name: create-slides
 description: Build an on-brand Aperia slide deck as one self-contained HTML file that runs in the browser and prints to a 16:9 PDF. Use for presentations, readouts, and pitch decks. It does not produce PowerPoint.
 metadata:
-  version: "0.9.0"
+  version: "0.9.1"
 ---
 
 # Aperia Deck
@@ -67,7 +67,7 @@ Every slide is a fixed 1920 × 1080 box, scaled to fit the viewport on screen an
 Full markup for each is in `references/snippets.html`; `s-numbers` and the charts are in `references/charts.html`. `s-text`, `s-two-col`, `s-icons`, `s-agenda` and `s-numbers` style nothing; `qa.py` keys on them, so keep applying them.
 
 - **The closing slide carries the graphic element and a heading, nothing else.** The ask, the date and the contact are spoken from the notes. `qa.py` fails anything more.
-- Components drop into any layout and are not slide classes: `.card`, `.iblock`, `.callout`, `.badge`, `.cmp-table`, `.flow`, `.stat-row`, the `.g2` `.g3` `.g4` grids, the charts. A comparison-table slide is `s-light s-text` holding a `.cmp-table`.
+- Components drop into any layout and are not slide classes: `.card`, `.iblock`, `.callout`, `.badge`, `.table`, `.flow`, `.stat-row`, the `.g2` `.g3` `.g4` grids, the charts. A comparison-table slide is `s-light s-text` holding a `.table`.
 - Height helpers: `.fill` takes the leftover height and keeps the element's own display (on a `.g2`/`.g3`/`.g4` the rows center); `.fill-c` is the flex-column version for a bullet list or loose block.
 
 ### Sequences are diagrams, not bullets
@@ -119,7 +119,7 @@ Graphic element on a slide, on top of the `BRAND.md` rules: `.shape-cover` (doub
 
 ### Icons
 
-Lucide, fetched on demand. `python3 <this skill dir>/scripts/icon.py shield-check users` emits inline SVG; `--search shield` finds a slug. If the fetch fails, leave the icon out. `stroke="currentColor"`, colored by the theme; never hard-code a stroke. One icon per heading, one stroke weight throughout, never mixed with emoji or filled glyphs.
+Lucide, fetched on demand. `python3 <this skill dir>/scripts/icon.py shield-check users` emits inline SVG; `--search shield` finds a slug. The script tries two hosts; where neither is reachable, set `APERIA_ICONS_DIR` to a folder of Lucide SVGs (the `icons/` folder of a `lucide-static` package) and it reads from there. Otherwise leave the icon out. `stroke="currentColor"`, colored by the theme; never hard-code a stroke. One icon per heading, one stroke weight throughout, never mixed with emoji or filled glyphs.
 
 ---
 
@@ -133,11 +133,11 @@ CSS and SVG only, no chart library.
 | Ranked quantities, one scale | `.bchart` horizontal bars, **sorted descending** | Unsorted list |
 | Part-to-whole, **2 to 3 parts** | `.donut` | none |
 | Part-to-whole, **4+ parts** | `.stack` proportional bar, % in the legend | A pie or a donut |
-| A trend over time | `.lchart` inline SVG line | Columns per period |
+| A trend over time, up to 5 series | `.lchart` inline SVG line, one `<g class="ln lnN">` per series | Columns per period |
 | A schedule progressing over time | `.gantt` rows on a shared axis | Flush proportional bars |
 | Relative effort size, explicitly not a schedule | `.tline-bars` with `flex:N` | Equal-width boxes |
 | 2 to 4 standalone numbers where the number is the message | `.stat-row` on `s-numbers` | Bars encoding the same number twice |
-| Categorical list with role/type tags, no numeric axis | `.cmp-table` or `.card` grid | A bar chart with invented percentages |
+| Categorical list with role/type tags, no numeric axis | `.table` or `.card` grid | A bar chart with invented percentages |
 
 - Series colors only: `.c1` navy, `.c2` dark blue, `.c3` sapphire, `.c4` sky, `.c5` light blue. Never restyle a series by hand; each `.cN` carries its own label color in `--on` and remaps on dark slides.
 - A legend matches its own fills. The donut sets colors inline via `conic-gradient`; write its legend swatches inline from the same values.
@@ -145,14 +145,14 @@ CSS and SVG only, no chart library.
 - One insight per chart: every chart slide ends with one `.insight` line stating the conclusion, not describing the chart. `qa.py` fails a chart slide without one. An `s-numbers` slide gets one too, saying which number is the argument; `qa.py` does not check that one.
 - No pie charts. 2 to 3 parts is the donut, everything else the stacked bar.
 - Never invent numbers to make a chart work. Categorical data is a table or cards.
-- A table kept from the source is `.cmp-table` with the contents intact, read across not down: a handful of rows, at most four columns, or it goes to the notes or an appendix.
+- A table kept from the source is `.table` with the contents intact, read across not down: a handful of rows, at most four columns, or it goes to the notes or an appendix.
 - One chart per slide.
 
 ## Length
 
 - Short input (memo, notes, under ~800 words): one slide per point, roughly 5 to 10 slides.
 - Long input (report, full document): the executive narrative, roughly 12 to 24 slides. Detail that does not survive goes into the notes.
-- Aim at 40 words of body copy per slide, table cells included. `qa.py` warns and then errors past its word and bullet limits; an error means the slide was always two slides.
+- Aim at 40 words of body copy per slide. `qa.py` counts table body cells at half weight, so a real comparison table fits without shortening its cells. It warns and then errors past its word and bullet limits; an error means the slide was always two slides.
 
 ## Presenter notes
 

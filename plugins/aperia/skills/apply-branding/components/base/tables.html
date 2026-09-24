@@ -8,21 +8,20 @@
      values are categorical or the reader needs to look one up.
      ========================================================== -->
 
-<!-- ========== Comparison Table ========== -->
-<!-- The recommended column gets .hl. -->
-<table class="cmp-table">
+<!-- ========== Table ========== -->
+<!-- The one table. Add-ons: .hl on the recommended column, .ic-ok / .ic-no / .ic-mid marks in a cell, a two-line cell (.layer-name over .layer-tool), and badges. -->
+<table class="table">
   <thead><tr><th>Criterion</th><th>Option A</th><th class="hl">Option B (Recommended)</th><th>Option C</th></tr></thead>
   <tbody>
     <tr><td>Feature X</td><td><span class="ic-mid">~</span> Partial</td><td class="hl"><span class="ic-ok">✓</span> Full</td><td><span class="ic-no">✗</span> None</td></tr>
   </tbody>
 </table>
 
-<!-- ========== Stack Table ========== -->
-<!-- Categorical rows with role / type / focus badges. -->
-<!-- Use when data is categorical with no real numeric axis, or the end column
+<!-- Second use of the same table: categorical rows with role / type / focus badges.
+     Use when data is categorical with no real numeric axis, or the end column
      needs a text label / badge rather than a number. Never invent a % to force
      this into a bar chart instead, see bchart's notes below. -->
-<table class="stack-table">
+<table class="table">
   <thead>
     <tr>
       <th style="width:200px">Source / Item</th>
@@ -81,19 +80,5 @@
     <div class="tier-count">6</div>
     <div class="tier-of">Static · ~12 hr</div>
     <div class="tier-list">Item G · Item H · Item I</div>
-  </div>
-</div>
-
-<!-- ========== Swatch Grid ========== -->
-<!-- Lays out palette values for reference. -->
-<!-- A small set of named colors with hex, e.g. a palette strip. -->
-<div class="swatch-grid">
-  <div class="swatch">
-    <div class="swatch-chip" style="background:var(--aperia-blue)"></div>
-    <div class="swatch-body"><div class="swatch-name">Aperia Blue</div><span class="swatch-hex">#002F67</span></div>
-  </div>
-  <div class="swatch">
-    <div class="swatch-chip" style="background:var(--sapphire)"></div>
-    <div class="swatch-body"><div class="swatch-name">Sapphire</div><span class="swatch-hex">#0072BC</span></div>
   </div>
 </div>

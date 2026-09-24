@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.9.1
+
+Fixes from a Claude Desktop run of both skills.
+
+- The deck line chart takes five series. `slides.css` defined `ln1` and `ln2` only; a run with three channels wrote its own CSS once and dropped a channel once. A series is now `<g class="ln lnN">` holding its polyline, dots, labels and name, colored through `currentColor` in the ramp order the bars use, with dark-slide remaps. A bare `polyline.ln1` from an older deck still renders.
+- The line chart snippet is drawn in its own box. It declared a 1350 by 390 viewBox and plotted every point in 900 by 260 coordinates, so the example filled the top-left two thirds. Rewritten at canvas scale with two series.
+- `qa.py` counts table body cells at half weight. Cells counted as prose, so any real comparison table tripped the 55-word warning and a run shortened "24 months" to "24m" to pass.
+- `icon.py` tries a second host, unpkg after jsdelivr, and reads from `APERIA_ICONS_DIR` when set to a folder of Lucide SVGs. jsdelivr is blocked in some sandboxes, which left `.iblock` unusable there.
+- New `create-report/scripts/qa.py`, following the slides script: assembled marker naming only the toolkits in use, sprite, skip link, nav links resolving, drawer after nav, footer, section labels, palette, duplicate ids, placeholders, dashes, classes no stylesheet defines, one of `gantt` or `sgantt`, no hand-added `full` or `max-height` on the plan block, `DATA` present when a plan is mounted, no `transform:scale`. Both bench runs and the Desktop run improvised these checks.
+- `swatch-grid` removed from the base layer. It laid out named colors with hex values, which no report or deck in this toolkit needs; no skill named it and no run used it.
+- Scenario Bars folded into `bchart`. Both were name, track and value rows; the scenario one only added a hatched second segment and a delta, at the cost of eleven `scn-*` classes and a second row layout to keep aligned. `bchart` now takes the scenario dimensions (200px name column, 26px track, 88px value), stacks `.bfill` segments on a flex track, and adds `.bfill.add` (hatched addition), `.btrack.out` (out of scope) and `.bdelta` (`pos`, `warn`, `danger`). The `scn-*` classes are gone, and the scenario example sits under the Ranked Bars header as a second use of one component.
+- Pie Chart removed. `piechart` and `donutchart` shared every rule, the report skill banned the pie, and the deck never had one; `donutchart` is the one circular form. The report `qa.py` fails a hand-made pie.
+- Line, Area and Combo are one Trend Chart entry with three forms. They already shared the `cf-*` classes and the 640 by 300 frame; only the three headers were separate.
+- One table. `stack-table` and `cmp-table` shared header, borders and hover and differed by 3px of cell padding; both are now `.table`, with `.hl`, the `ic-*` marks, the two-line cell and badges as add-ons. The categorical example sits under the same header. The deck theme and skill use the new name too.
+- Step Flow rail reaches the next node. The gap between steps sat outside the rail, so the line stopped short; it now runs through the body's padding. Node shadow removed, line at 1px like the other rails.
+- The report wordmark is one `#ap-logo` sprite referenced by `<use>`, as the deck already did, instead of the path data pasted in the nav and again in the footer. The stylesheet sets its color per surface.
+- The report content column is 1200px, up from 920px, leaving 1128px inside the side padding. The nav matches.
+- Report sections are divided by a 1px border between them. `create-report` previously allowed whitespace only; `<hr>` and every other divider line stay banned, and `qa.py` still fails an `<hr>`.
+
 ## 0.9.0
 
 - `brand/` and `components/` moved into a third skill, `apply-branding`. Desktop mounts only folders under `skills/` that have a `SKILL.md`, so layers at the plugin root never arrived. Broken since 0.3.0. The other skills read them as `../apply-branding/`. `bundle-skills.py` and `dist/` are gone.

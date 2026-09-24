@@ -9,8 +9,10 @@
      documented in styles.css, so several on a page read consistently.
      ========================================================== -->
 
-<!-- ========== Line Chart ========== -->
-<!-- Single or multi-line. A comparison series is dashed. -->
+<!-- ========== Trend Chart ========== -->
+<!-- One component, three forms on the same frame: line, area, and combo (bars plus a line on a second axis). A comparison series is dashed. -->
+
+<!-- LINE: single or multi-line. -->
 <!-- Data: monthly volume, axis max 600. x_i = 44 + i*115.2 (n=6 points).
      A second, dashed series reads as "the comparison", per the vt-item
      convention elsewhere in this library (solid = current, dashed = other). -->
@@ -49,8 +51,7 @@
   </ul>
 </div>
 
-<!-- ========== Area Chart ========== -->
-<!-- Single, or stacked as cumulative polygons. -->
+<!-- AREA: single, or stacked as cumulative polygons. -->
 <!-- Single: fill the line path down to the baseline (y=266) at low opacity,
      stroke drawn separately for a crisp top edge.
      Stacked: TWO layers, each a filled polygon whose bottom edge is the
@@ -96,8 +97,7 @@
   </ul>
 </div>
 
-<!-- ========== Combo Chart ========== -->
-<!-- Bars plus a line, dual axis. Label both axes. -->
+<!-- COMBO: bars plus a line, dual axis. Label both axes. -->
 <!-- Left axis (bars) and right axis (line) are DIFFERENT scales sharing the
      same 0-266..16 pixel range, label both axes so the reader never assumes
      one scale. Bar slot width = 576/n; bar width narrower than the slot,

@@ -2,6 +2,10 @@
 
 For people editing this repo. To install and use the plugin, see [README.md](README.md).
 
+## Component rule
+
+Fewer components, each high quality and adaptable, over many narrow ones. A new component earns its place only when no existing one can take the case with a modifier class or a second example. A variant that shares a layout with an existing component is a modifier on that component, not a new class family; 0.9.1 folded Scenario Bars into `bchart` on this rule. Each component has one gallery entry; a second use is a second example under the same header, not a second header.
+
 ## Change the brand
 
 1. Edit `plugins/aperia/skills/apply-branding/brand/`: `tokens.css` holds every value, `BRAND.md` holds the rules and names the tokens, `assets/` must match. A value changes in `tokens.css` only; a rule changes in `BRAND.md` only.
@@ -83,7 +87,7 @@ Do not remove its `SKILL.md` to hide it further. Claude Desktop mounts only the 
 
 The reason for that spot is Claude Desktop. It mounts each folder under `skills/` that contains a `SKILL.md`, side by side at `/mnt/skills/plugins/<plugin>:<skill>/`, and nothing else: not the plugin root, not a folder without a `SKILL.md`. Layers at the plugin root never arrived, and both skills were broken there from 0.3.0 to 0.8.0. A folder that is a skill arrives, so the layers live in one. `apply-branding` is a real skill, the freeform branding entry point, and the carrier of the layers at the same time.
 
-The folder name differs by client: `apply-branding` in Claude Code, `aperia:apply-branding` on Desktop. Prose paths are written with the plain name and each consumer skill says so under "What to read"; the three scripts that cross into the layer look for both names. This relies on both clients mounting a plugin's skills beside each other, which is observed on Claude Code and Desktop and promised by neither. If a client ever isolated skills from one another, the fallback is a committed copy of the layers inside each skill, which the 0.9.0 history implemented before this layout replaced it.
+The folder name differs by client: `apply-branding` in Claude Code, `aperia:apply-branding` on Desktop. Prose paths are written with the plain name and each consumer skill says so under "What to read"; the scripts that cross into the layer look for both names. This relies on both clients mounting a plugin's skills beside each other, which is observed on Claude Code and Desktop and promised by neither. If a client ever isolated skills from one another, the fallback is a committed copy of the layers inside each skill, which the 0.9.0 history implemented before this layout replaced it.
 
 A skill folder on its own is not complete, so the Claude Desktop skill uploader, which takes one folder, is not an install path. Install through the marketplace, or upload the whole plugin as a zip with `.claude-plugin/plugin.json` at the archive root.
 

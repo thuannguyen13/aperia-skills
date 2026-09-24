@@ -80,7 +80,8 @@ def warn(slide, msg):
 
 
 def slide_words(slide):
-    """Visible narrative words: excludes notes, footer, and chart data labels."""
+    """Visible narrative words: excludes notes, footer, and chart data labels.
+    Table body cells count at half weight; a cell is scanned, not read."""
     clone = BeautifulSoup(str(slide), "html.parser")
     for tag in clone.select("aside.notes, .s-foot, svg"):
         tag.decompose()
@@ -89,7 +90,11 @@ def slide_words(slide):
             continue
         if DATA_LABELS & set(tag.get("class") or []):
             tag.decompose()
-    return len(clone.get_text(" ", strip=True).split())
+    cells = 0
+    for td in clone.select("td"):
+        cells += len(td.get_text(" ", strip=True).split())
+        td.decompose()
+    return len(clone.get_text(" ", strip=True).split()) + (cells + 1) // 2
 
 
 def main(path):

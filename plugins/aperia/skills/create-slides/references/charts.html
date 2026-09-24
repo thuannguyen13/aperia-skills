@@ -85,15 +85,28 @@
   </div>
 </div>
 
-<!-- LINE / TREND: inline SVG, viewBox 0 0 900 260, no gridlines -->
+<!-- LINE / TREND: inline SVG, viewBox 0 0 1350 390, no gridlines.
+     Plot inside the box: x from 90 to 1290, baseline y=345, value labels 27 above
+     the dot, axis labels at y=378. One <g class="ln lnN"> per series, ln1 to ln5,
+     each carrying its polyline, dots, value labels and a name at the line end.
+     One series needs no name; two or more do. -->
 <div class="chart-frame">
   <div class="chart-note">Open Cases, Rolling 6 Months</div>
   <svg class="lchart" viewBox="0 0 1350 390" preserveAspectRatio="none" aria-hidden="true">
-    <line class="base" x1="0" y1="230" x2="900" y2="230"/>
-    <polyline class="ln ln1" points="60,70 220,95 380,60 540,120 700,165 860,205"/>
-    <g><circle class="dot" cx="60" cy="70" r="5"/><circle class="dot" cx="220" cy="95" r="5"/><circle class="dot" cx="380" cy="60" r="5"/><circle class="dot" cx="540" cy="120" r="5"/><circle class="dot" cx="700" cy="165" r="5"/><circle class="dot" cx="860" cy="205" r="5"/></g>
-    <g><text class="dlbl" x="60" y="52">1,420</text><text class="dlbl" x="220" y="77">1,310</text><text class="dlbl" x="380" y="42">1,480</text><text class="dlbl" x="540" y="102">1,050</text><text class="dlbl" x="700" y="147">760</text><text class="dlbl" x="860" y="187">540</text></g>
-    <g><text class="axlbl" x="60" y="252">Mar</text><text class="axlbl" x="220" y="252">Apr</text><text class="axlbl" x="380" y="252">May</text><text class="axlbl" x="540" y="252">Jun</text><text class="axlbl" x="700" y="252">Jul</text><text class="axlbl" x="860" y="252">Aug</text></g>
+    <line class="base" x1="0" y1="345" x2="1350" y2="345"/>
+    <g class="ln ln1">
+      <polyline points="90,105 330,142 570,90 810,180 1050,248 1290,308"/>
+      <circle class="dot" cx="90" cy="105" r="7.5"/><circle class="dot" cx="330" cy="142" r="7.5"/><circle class="dot" cx="570" cy="90" r="7.5"/><circle class="dot" cx="810" cy="180" r="7.5"/><circle class="dot" cx="1050" cy="248" r="7.5"/><circle class="dot" cx="1290" cy="308" r="7.5"/>
+      <text class="dlbl" x="90" y="78">1,420</text><text class="dlbl" x="330" y="115">1,310</text><text class="dlbl" x="570" y="63">1,480</text><text class="dlbl" x="810" y="153">1,050</text><text class="dlbl" x="1050" y="221">760</text><text class="dlbl" x="1290" y="281">540</text>
+      <text class="name" x="1310" y="313">Card</text>
+    </g>
+    <g class="ln ln2">
+      <polyline points="90,230 330,222 570,238 810,232 1050,240 1290,244"/>
+      <circle class="dot" cx="90" cy="230" r="7.5"/><circle class="dot" cx="330" cy="222" r="7.5"/><circle class="dot" cx="570" cy="238" r="7.5"/><circle class="dot" cx="810" cy="232" r="7.5"/><circle class="dot" cx="1050" cy="240" r="7.5"/><circle class="dot" cx="1290" cy="244" r="7.5"/>
+      <text class="dlbl" x="90" y="262">610</text><text class="dlbl" x="330" y="254">650</text><text class="dlbl" x="570" y="270">580</text><text class="dlbl" x="810" y="264">600</text><text class="dlbl" x="1050" y="272">570</text><text class="dlbl" x="1290" y="276">560</text>
+      <text class="name" x="1310" y="249">ACH</text>
+    </g>
+    <g><text class="axlbl" x="90" y="378">Mar</text><text class="axlbl" x="330" y="378">Apr</text><text class="axlbl" x="570" y="378">May</text><text class="axlbl" x="810" y="378">Jun</text><text class="axlbl" x="1050" y="378">Jul</text><text class="axlbl" x="1290" y="378">Aug</text></g>
   </svg>
   <p class="insight">The backlog only started falling once triage moved into one screen in June.</p>
 </div>

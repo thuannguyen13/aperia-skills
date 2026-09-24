@@ -9,8 +9,8 @@
    1 aperia-blue, 2 dark-blue, 3 sapphire, 4 sky-blue, 5 light-blue,
    6 dark-gray, 7 medium-gray. Never introduce a color outside this order.
    ----------------------------------------------------------------------
-   SHARED CHART FRAME (linechart / areachart / combochart / scatterchart /
-   bubblechart): one 640x300 viewBox, so any of these can sit side by side
+   SHARED CHART FRAME (trend chart in its line, area and combo forms, scatter
+   plot, bubble chart): one 640x300 viewBox, so any of these can sit side by side
    on a page without their axes visually disagreeing.
      plot origin (top-left of plot area): x=44, y=16
      plot size: 576 wide x 250 tall
@@ -99,7 +99,7 @@
 .gauge-lbl { margin-top:6px; font-size:var(--text-sm); font-weight:500; color:var(--fg); text-align:center }
 .gauge-sub { font-size:var(--text-xs); color:var(--muted-fg); text-align:center; margin-top:2px }
 
-/* --- Pie / donut: a part-to-whole story, at most ~5 slices --- */
+/* --- Donut: a part-to-whole story, at most ~5 slices --- */
 /* Sanctioned, but constrained, see COMPONENTS.md's "Chart rules": at most 5
    slices, sorted descending starting at 12 o'clock going clockwise, every
    slice labeled with its % in the legend (never color/angle alone). Built
@@ -108,7 +108,7 @@
    "color START% END%"; END% of one slice must equal START% of the next,
    and the last slice must end at 100%. */
 .pie-wrap { display:flex; align-items:center; gap:24px; margin:24px 0; padding:22px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow); flex-wrap:wrap }
-.piechart, .donutchart { width:160px; height:160px; border-radius:50%; flex-shrink:0; position:relative }
+.donutchart { width:160px; height:160px; border-radius:50%; flex-shrink:0; position:relative }
 /* The hole is ::before (paints under the element's normal children) so a
    .pie-center child renders on top of it, not hidden beneath it. */
 .donutchart::before { content:''; position:absolute; inset:29%; background:var(--card); border-radius:50% }
@@ -141,7 +141,7 @@
 
 /* --- Radar chart: up to 5-7 axes, 1-2 overlaid profiles --- */
 /* More than ~7 axes crowds the labels; if the content has more dimensions
-   than that, use stack-table instead. Grid rings are drawn as concentric
+   than that, use table instead. Grid rings are drawn as concentric
    circles (not polygons), a deliberate simplification that keeps the scale
    honest without the extra geometry, and reads identically at a glance. */
 .radar-card { margin:24px 0; padding:22px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); box-shadow:var(--shadow) }
@@ -196,12 +196,12 @@
   .spark-card { flex-wrap:wrap }
   .cf-legend { gap:10px }
   .pie-wrap { flex-direction:column; align-items:flex-start }
-  .piechart, .donutchart { margin:0 auto }
+  .donutchart { margin:0 auto }
 }
 
 @media print {
   .chart-card,.gbar,.sbar,.gauge-card,.radar-card,.spark-card,.pie-wrap { box-shadow:none; break-inside:avoid; page-break-inside:avoid }
-  .tm-cell,.fn-row,.hm-cell,.gbar-bar,.sbar-seg,.cf-bar,.cf-area,.piechart,.donutchart {
+  .tm-cell,.fn-row,.hm-cell,.gbar-bar,.sbar-seg,.cf-bar,.cf-area,.donutchart {
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }
 }

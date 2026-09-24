@@ -2,7 +2,7 @@
 name: create-report
 description: Build an on-brand Aperia report, briefing, review, or proposal as one self-contained HTML file with navigation, charts, tables, and roadmap timelines. Use for any long-form document the reader scrolls through.
 metadata:
-  version: "0.9.0"
+  version: "0.9.1"
 ---
 
 # Aperia Report
@@ -28,15 +28,15 @@ A value not in `BRAND.md` or `tokens.css` is not an Aperia value. Brand assets a
 1. **Read the user's content.** Title, subtitle, audience, sections, and the one message the reader should walk away with.
 2. **Map each section to a component** from `COMPONENTS.md`'s tables, or to `phases` / sgantt below when the content is phased work or a grouped schedule.
 3. **Build one self-contained HTML file**: Google Fonts link, the style marker, skip link, nav, hero, sections, dark panel or CTA, footer, scripts. Then run `python3 ../apply-branding/components/assemble.py <file>` from this skill folder. Re-run it after any later edit. Report-specific rules go in a second `<style>` after the marker.
-4. **Brand assets**: logo in nav (Aperia Blue) and footer (white); `pattern-double` in the hero; `pattern-single` in dark panels and CTA boxes.
-5. **Run the checklist** at the end of this file.
+4. **Brand assets**: one `#ap-logo` sprite, referenced by `<use>` in nav (Aperia Blue) and footer (white, both set by the stylesheet); `pattern-double` in the hero; `pattern-single` in dark panels and CTA boxes.
+5. **QA**: `python3 <this skill dir>/scripts/qa.py <file>`, then the checklist at the end of this file.
 6. **Save and deliver.** Tell the user the path and which checklist items were run. No browser in the session: do not search for one; say the narrow-viewport and print passes are still open rather than claiming the file prints.
 
 Minimal content from the user: scaffold and flag what to replace. Never leave a section empty or with lorem.
 
 ## Report-only decisions
 
-- **No pie charts in a report.** Proportions use `stack` or, for more categories, `treemap`. This is stricter than `COMPONENTS.md` on purpose; do not loosen it unless the user asks here.
+- **No pie charts in a report.** The library ships none. Proportions use `stack` or, for more categories, `treemap`; `donutchart` only when a circle is the form the reader expects, at most 5 slices.
 - **`gantt` or `sgantt`**: see the table under Delivery-plan components. A phased roadmap with four workstreams is `gantt`; a sprint plan with thirty features grouped by capability is `sgantt`. Never both in one report.
 - **`phases`**: sequential phases of work, each with a duration pill and a deliverables list. For the work itself, not dated checkpoints (`vtimeline` / `mstone-row`) and not a short conceptual pipeline (`flow`). Markup in `references/snippets.html`; node color cycles `pd-blue`, `pd-sapphire`, `pd-dark`, repeating.
 
@@ -84,7 +84,7 @@ In order:
 
 1. Google Fonts link, Inter only. Labels use the `--label` token; no mono typeface.
 2. The style marker, `<style>/* @aperia report charts icons */</style>`, with `charts` and `icons` present only when used.
-3. Sticky `nav` from `references/snippets.html`: inlined logo left, scroll-link strip right, hamburger for mobile, with the `nav-drawer` right after `</nav>`.
+3. The brand sprite from `references/snippets.html`, which defines `#ap-logo` once, then the sticky `nav`: logo by `<use>` left, scroll-link strip right, hamburger for mobile, with the `nav-drawer` right after `</nav>`.
 4. Gradient `hero`: eyebrow, title, subtitle, optional meta row, inlined `pattern-double` top-right. The `<em>` subtitle inside `<h1>` is Title Case, no dash, no inline size.
 5. Sections, each opening with a `sec-label` eyebrow naming the section, never numbered, then the `h2`.
 6. A `dark-panel` and/or `cta-box` for the recommendation and the ask, each with `pattern-single` top-right.
@@ -96,7 +96,7 @@ A skip link (`<a href="#main" class="skip-link">`) is the first element in `<bod
 ### Structure
 
 - Nav links match every section `id`.
-- No divider lines anywhere: no hairline on the eyebrow, no rule above a `part-head`, no border between sections. Whitespace only.
+- Sections are divided by the 1px border `styles.css` draws between them. No other divider lines: no hairline on the eyebrow, no rule above a `part-head`, no `<hr>`.
 - Section order, default: Summary, Problem/Context, Options/Evidence, Decision, Plan, Ask. The middle two only when there are options to weigh.
 - Section order, delivery plan: Summary, one section per plan, Recommendation, Ask.
 - `h2` and `h3` in Title Case.
@@ -113,14 +113,22 @@ The stylesheet handles the page setup, the solid dark surfaces and the sgantt ex
 
 ---
 
+## QA
+
+```bash
+python3 <this skill dir>/scripts/qa.py <slug>.html
+```
+
+Needs `beautifulsoup4`; if missing, the script prints the install command. Checks that the marker was assembled and names only the toolkits in use, the sprite, skip link, nav links and drawer, footer, section labels, palette, duplicate ids, placeholder text, dashes, classes no stylesheet defines, and the delivery-plan rules below. Errors must be fixed; warnings are judgement calls.
+
 ## Checklist before delivering
 
-`COMPONENTS.md` rules apply to every component taken from it. This covers what only a report has.
+`COMPONENTS.md` rules apply to every component taken from it. This covers what only a report has and the script cannot see.
 
 - [ ] `assemble.py` run after the last edit; the marker names `charts` and `icons` only if used; nothing edited inside the injected block
 - [ ] Nav strip scrolls horizontally; hamburger and drawer wired; every nav link resolves
 - [ ] Hero `<em>` subtitle: Title Case, no dash, no inline size
-- [ ] Every section opens with an unnumbered `sec-label`; no divider line anywhere; section order follows the flow for the content type
+- [ ] Every section opens with an unnumbered `sec-label`; no divider line beyond the section border; section order follows the flow for the content type
 - [ ] Footer reads `Title · Subtitle · Month Year`; skip link present
 - [ ] Only the scripts the report uses are shipped
 - [ ] No pie chart anywhere
